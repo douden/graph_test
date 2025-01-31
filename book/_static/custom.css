@@ -4,3 +4,6 @@
 .content {
     margin-left: 0 !important;
 }
+body {
+    background-color: yellow !important; /* Makes it obvious if the CSS is applied */
+}
