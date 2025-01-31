@@ -17,12 +17,18 @@ div.bd-main {
     width: 100% !important;
 }
 
-/* Hide Previous and Next navigation buttons */
-nav.bd-footer-nav {
+/* Hide the Previous and Next navigation links */
+div#sphinx-book-navigation {
     display: none !important;
 }
 
-/* Hide Previous and Next navigation links specifically */
-div.bd-footer-content {
+/* Hide the footer navigation controls */
+div.prev-next-area {
     display: none !important;
+}
+
+/* Ensure content takes full width after removing navigation */
+div.bd-main {
+    margin-left: 0 !important;
+    width: 100% !important;
 }
