@@ -58,22 +58,22 @@ div.bd-main {
 
 /* Sticky Table of Variables */
 .sticky-variable-table {
-    position: fixed;  /* Keeps the table visible while scrolling */
-    top: 100px;  /* Adjust so it doesn't overlap the header */
-    right: 2%;  /* Keeps it inside the right whitespace */
-    width: 15vw;  /* Make it take up 15% of the screen width */
-    max-width: 300px; /* Prevents it from getting too large */
-    min-width: 200px; /* Prevents it from getting too small */
+    position: fixed;
+    top: 100px;
+    right: 2%;
+    width: 15vw;
+    max-width: 300px;
+    min-width: 200px;
     background-color: white;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     font-size: 14px;
-    z-index: 1000;  /* Ensures it stays above other elements */
+    z-index: 1000;
 }
 
-/* Ensure the table inside the sticky div has a nice appearance */
+/* Ensure the table inside the sticky div is formatted correctly */
 .sticky-variable-table table {
     width: 100%;
     border-collapse: collapse;
@@ -85,24 +85,23 @@ div.bd-main {
     text-align: center;
 }
 
-/* Center the table title */
+/* Center the title */
 .sticky-variable-table h3 {
     text-align: center;
-    font-family: 'Roboto Slab', serif; /* Ensures title uses Roboto Slab */
+    font-family: 'Roboto Slab', serif;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
-/* Increase the font size for math content inside the sticky table */
+/* Make the math text readable */
 .sticky-variable-table td {
-    font-size: 18px;  
+    font-size: 18px;
 }
 
-/* Hide the table on smaller screens */
+/* Hide on small screens */
 @media (max-width: 768px) {
     .sticky-variable-table {
         display: none;
     }
 }
-
 

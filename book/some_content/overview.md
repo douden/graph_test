@@ -1,13 +1,9 @@
-<div class="sticky-variable-table">
-    <h3>Variables</h3>
-
-    | Name  | Value  |
-    |-------|--------|
-    | $\alpha$ | $0.05$ |
-    | $\beta$ | $0.20$ |
-    | $\gamma$ | $\pi$ |
-
-</div>
+```{div} sticky-variable-table
+| Name  | Value  |
+|-------|--------|
+| $\alpha$ | $0.05$ |
+| $\beta$ | $0.20$ |
+| $\gamma$ | $\pi$ |
 
 # Linear regression
 
