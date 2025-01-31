@@ -38,8 +38,11 @@ sphinx:
       - figures   # Include figures folder
       - _static   # Include the _static folder where custom.css is stored
     mathjax3_config:
+      tex:
+        inlineMath: [["$", "$"], ["\\(", "\\)"]]
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]]
       chtml: {
-        mtextInheritFont: true # To typeset text within math prettier
+        mtextInheritFont: true
       }
   extra_extensions:
     - sphinx.ext.imgconverter
