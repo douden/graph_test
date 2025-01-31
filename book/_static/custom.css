@@ -1,12 +1,11 @@
 .sidebar {
     display: none !important;
 }
+
 .content {
     margin-left: 0 !important;
 }
-body {
-    background-color: yellow !important; /* Makes it obvious if the CSS is applied */
-}
+
 /* Hides the left sidebar navigation */
 div#sphinxsidebar, div.bd-sidebar {
     display: none !important;
@@ -16,4 +15,9 @@ div#sphinxsidebar, div.bd-sidebar {
 div.bd-main {
     margin-left: 0 !important;
     width: 100% !important;
+}
+
+/* Hide Previous and Next navigation links */
+div.bd-footer-nav {
+    display: none !important;
 }
