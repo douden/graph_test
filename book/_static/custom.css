@@ -7,3 +7,13 @@
 body {
     background-color: yellow !important; /* Makes it obvious if the CSS is applied */
 }
+/* Hides the left sidebar navigation */
+div#sphinxsidebar, div.bd-sidebar {
+    display: none !important;
+}
+
+/* Adjusts the content area to take the full width */
+div.bd-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+}
