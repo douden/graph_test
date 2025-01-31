@@ -1,10 +1,12 @@
 ```{div} sticky-variable-table
-<h3>Nomenclature</h3>
+```{div} sticky-variable-title
+**Nomenclature**
 | Name  | Value  |
 |-------|--------|
 | $\alpha$ | $0.05$ |
 | $\beta$ | $0.20$ |
 | $\gamma$ | $\pi$ |
+```
 ```
 
 # Linear regression

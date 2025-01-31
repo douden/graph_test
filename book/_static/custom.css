@@ -56,7 +56,7 @@ div.bd-main {
 /* Styling the variable table */
 /* ======================================== */
 
-/* Sticky Table of Variables */
+/* Sticky Table Container */
 .sticky-variable-table {
     position: fixed;
     top: 100px;
@@ -73,28 +73,30 @@ div.bd-main {
     z-index: 1000;
 }
 
+/* Title Styling - Ensures it's centered and formatted correctly */
+.sticky-variable-title {
+    text-align: center;
+    font-family: 'Roboto Slab', serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
 /* Ensure the table inside the sticky div is formatted correctly */
-.sticky-variable-table table {
+.sticky-variable-content table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.sticky-variable-table th, .sticky-variable-table td {
+.sticky-variable-content th, .sticky-variable-content td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
 }
 
-/* Center the title */
-.sticky-variable-table h3 {
-    text-align: center;
-    font-family: 'Roboto Slab', serif;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-/* Make the math text readable */
-.sticky-variable-table td {
+/* Make math text in the table readable */
+.sticky-variable-content td {
     font-size: 18px;
 }
 
