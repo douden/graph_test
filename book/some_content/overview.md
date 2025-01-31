@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 # Linear regression
 
-**Summary.** A linear regression fits a linear function that predicts a dependent variable $y$ based in one or more explanatory variables \\(x\\).
+**Summary.** A linear regression fits a linear function that predicts a dependent variable {math}`y` based in one or more explanatory variables {math}`x`.
 
 ## Definition
 
