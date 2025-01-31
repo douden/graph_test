@@ -4,9 +4,10 @@
     <h3>Nomenclature</h3>
     <table>
         <tr><th>Variable</th>   <th>temperature</th></tr>
-        <tr><td>α</td>          <td>blorb</td></tr>
+        <tr><td>\(\alpha\)</td>          <td>blorb</td></tr>
         <tr><td>β</td>          <td>lambadagogogo</td></tr>
         <tr><td>γ</td>          <td>3.14</td></tr>
+        <tr><td>\(\boldsymbol{A}\)</td>          <td>linear transformation</td></tr>
     </table>
 </div>
 
