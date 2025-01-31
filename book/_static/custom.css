@@ -17,7 +17,11 @@ div.bd-main {
     width: 100% !important;
 }
 
-/* Hide Previous and Next navigation links */
-div.bd-footer-nav {
+.prev-next-bottom {
+    width: 100% !important;
     display: none !important;
-}
+  }
+.prev-next-bottom > a{
+    color: rgba(0,0,0,.65) !important;
+    display: none !important;
+  }
