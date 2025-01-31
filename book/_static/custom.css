@@ -1,3 +1,7 @@
+/* ======================================== */
+/* Removing navigation elements */
+/* ======================================== */
+
 .sidebar {
     display: none !important;
 }
@@ -33,12 +37,18 @@ div.bd-main {
     width: 100% !important;
 }
 
-/* Sticky Table of Variables - Positioned in the White Space */
+/* ======================================== */
+/* Styling the variable table */
+/* ======================================== */
+
+/* Sticky Table of Variables - Dynamic Width */
 .sticky-variable-table {
     position: fixed;  /* Keeps the table visible while scrolling */
-    top: 100px;  /* Adjust to ensure it does not overlap the header */
-    right: 5%;  /* Position it within the white space */
-    max-width: 250px;  /* Prevent it from taking up too much space */
+    top: 100px;  /* Adjust so it doesn't overlap the header */
+    right: 2%;  /* Keep it in the right whitespace */
+    width: 15vw;  /* 15% of the viewport width */
+    max-width: 300px; /* Ensures it doesn't get too large on big screens */
+    min-width: 200px; /* Ensures it doesn't get too small on smaller screens */
     background-color: white;
     padding: 10px;
     border: 1px solid #ccc;
@@ -48,14 +58,21 @@ div.bd-main {
     z-index: 1000;  /* Ensures it stays above other elements */
 }
 
-/* Remove the previous margin adjustment so content is not pushed left */
+/* Ensure the main content area remains properly centered */
 .bd-main {
-    margin-right: 0 !important;
+    margin-right: 0 !important; /* Keeps the main content in place */
 }
 
-/* Responsive fix: Hide the table on small screens */
+/* On smaller screens, reduce width or hide the table */
 @media (max-width: 1024px) {
     .sticky-variable-table {
-        display: none;
+        width: 20vw;  /* Slightly larger on tablets */
+        min-width: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sticky-variable-table {
+        display: none;  /* Hide on small screens */
     }
 }
