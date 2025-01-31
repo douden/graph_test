@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <td>\(\gamma\)</td>
-                <td>worblegorble</td>
+                <td>worblegorble arglblorb</td>
             </tr>
         </tbody>
     </table>
