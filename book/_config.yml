@@ -1,30 +1,28 @@
-Title: TeachBooks template
-author: TeachBooks Team, built with <a href="https://teachbooks.io">TeachBooks</a> and <a href="https://jupyterbook.org/">Jupyter Book</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener noreferrer"">CC BY 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""></a> #add your own name here
-
-execute:
-  execute_notebooks: "off"
-
-only_build_toc_files: true
-
 html:
   favicon: "figures/TB_favicon.ico"
   baseurl: "https://teachbooks.io/" # Replace this with your own URL
   extra_css:
     - _static/custom.css
-  extra_head:
-    - <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            MathJax.typesetPromise();
-        });
-      </script>
 
 sphinx:
   config:
-    html_js_files:
-      - https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js
+    # ⚠️ Remove require.js (causes MathJax conflicts)
+    html_js_files: []
+
+    mathjax3_config:
+      tex:
+        inlineMath: [["$", "$"], ["\\(", "\\)"]]
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+      startup:
+        ready: function () {
+          MathJax.startup.defaultReady();
+          MathJax.typesetPromise();
+        }
+
     thebe_config:
       use_thebe_lite: true
       exclude_patterns: ["**/_*.yml", "**/*.md", "**/*.ipynb"]
+
     html_theme_options:
       logo:
         text: Template
@@ -38,18 +36,12 @@ sphinx:
       use_issues_button: true
       launch_buttons:
         thebe: true
+
     html_show_copyright: false
     html_last_updated_fmt: '%B %-d, %Y'
     html_static_path: 
       - figures   # Include figures folder
       - _static   # Include the _static folder where custom.css is stored
-    mathjax3_config:
-      tex:
-        inlineMath: [["$", "$"], ["\\(", "\\)"]]
-        displayMath: [["$$", "$$"], ["\\[", "\\]"]]
-      chtml: {
-        mtextInheritFont: true
-      }
   extra_extensions:
     - sphinx.ext.imgconverter
     - jupyterbook_patches
