@@ -1,12 +1,32 @@
-```{div} sticky-variable-table
-```{div} sticky-variable-title
-**Nomenclature**
-| Name  | Value  |
-|-------|--------|
-| $\alpha$ | $0.05$ |
-| $\beta$ | $0.20$ |
-| $\gamma$ | $\pi$ |
-```
+<div class="sticky-variable-table">
+    <h3>Nomenclature</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>\\(\alpha\\)</td>
+                <td>\\(0.05\\)</td>
+            </tr>
+            <tr>
+                <td>\\(\beta\\)</td>
+                <td>\\(0.20\\)</td>
+            </tr>
+            <tr>
+                <td>\\(\gamma\\)</td>
+                <td>\\(\pi\\)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    MathJax.typeset();  // Forces MathJax to render inside this HTML block
+</script>
 
 # Linear regression
 
