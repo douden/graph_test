@@ -24,15 +24,6 @@
     </table>
 </div>
 
-<!-- Force MathJax to reprocess the table correctly -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    MathJax.typesetPromise().catch(function (err) {
-        console.error("MathJax rendering error:", err);
-    });
-});
-</script>
-
 
 <!-- Force MathJax to reprocess the table -->
 <script>

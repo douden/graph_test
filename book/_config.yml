@@ -11,6 +11,12 @@ html:
   baseurl: "https://teachbooks.io/" # Replace this with your own URL
   extra_css:
     - _static/custom.css
+  extra_head:
+    - <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            MathJax.typesetPromise();
+        });
+      </script>
 
 sphinx:
   config:
