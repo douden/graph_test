@@ -64,41 +64,46 @@ div.bd-main {
     width: 15vw;
     max-width: 300px;
     min-width: 200px;
-    background-color: #f8f9fa; /* Light neutral background */
+    background-color: #f8f9fa !important; /* Light neutral background */
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    z-index: 1000;
+    border: 1px solid #ccc !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1) !important;
+    font-size: 16px !important;
+    z-index: 1000 !important;
 }
 
 /* Title Styling */
 .sticky-variable-title {
-    text-align: center;
-    font-family: 'Roboto Slab', serif;
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: 10px;
-    color: #333;
+    text-align: center !important;
+    font-family: 'Roboto Slab', serif !important;
+    font-weight: bold !important;
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
+    color: #333 !important;
 }
 
-/* Force proper table formatting */
+/* Force Markdown tables inside sticky-variable-table to use our styles */
 .sticky-variable-content table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white !important; /* Forces white background */
-    border-radius: 5px;
-    overflow: hidden;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    background-color: white !important; /* Ensure full white background */
+    border-radius: 5px !important;
+    overflow: hidden !important;
+}
+
+/* Fix unwanted alternating row colors */
+.sticky-variable-content tbody tr {
+    background-color: white !important;
 }
 
 /* Table Header */
 .sticky-variable-content thead th {
     background-color: #e0e0e0 !important; /* Light gray for header */
-    color: #333;
-    font-weight: bold;
-    padding: 10px;
-    text-align: center;
+    color: #333 !important;
+    font-weight: bold !important;
+    padding: 10px !important;
+    text-align: center !important;
     border-bottom: 2px solid #0056b3 !important; /* Blue separator */
 }
 
@@ -106,14 +111,9 @@ div.bd-main {
 .sticky-variable-content tbody td {
     border: 1px solid #ddd !important;
     padding: 8px !important;
-    text-align: center;
+    text-align: center !important;
     font-size: 16px !important;
-    background-color: white !important; /* Ensures rows don't alternate colors */
-}
-
-/* Fix unwanted alternating row colors */
-.sticky-variable-content tbody tr {
-    background-color: white !important;
+    background-color: white !important; /* Override Sphinx alternating row colors */
 }
 
 /* Hover Effect */
@@ -129,7 +129,7 @@ div.bd-main {
 /* Hide on small screens */
 @media (max-width: 768px) {
     .sticky-variable-table {
-        display: none;
+        display: none !important;
     }
 }
 
