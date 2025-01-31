@@ -7,7 +7,6 @@
 | $\beta$ | $0.20$ |
 | $\gamma$ | $\pi$ |
 ```
-```
 
 # Linear regression
 
