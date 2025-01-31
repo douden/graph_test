@@ -41,6 +41,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 ```{math}
 E = mc^2
+```
+
+This is inline math: $E = mc^2$.
 
 ## Definition
 
