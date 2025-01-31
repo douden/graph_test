@@ -69,7 +69,7 @@ div.bd-main {
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    font-size: 16px; /* Increase font size */
+    font-size: 16px;
     z-index: 1000;
 }
 
@@ -83,22 +83,23 @@ div.bd-main {
     color: #333;
 }
 
-/* Table Styling */
+/* Ensure table has a consistent background */
 .sticky-variable-content table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #ffffff; /* Neutral white background */
+    background-color: white; /* Force full white background */
     border-radius: 5px;
     overflow: hidden;
 }
 
 /* Table Header */
 .sticky-variable-content th {
-    background-color: #e0e0e0; /* Light gray header */
+    background-color: #e0e0e0; /* Light gray for header */
     color: #333;
     font-weight: bold;
     padding: 10px;
     text-align: center;
+    border-bottom: 2px solid #0056b3; /* Blue separator */
 }
 
 /* Table Cells */
@@ -106,12 +107,23 @@ div.bd-main {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
-    font-size: 16px; /* Adjust font size */
+    font-size: 16px;
+    background-color: white; /* Ensures rows don't alternate colors */
+}
+
+/* Fix alternating row colors (force white background) */
+.sticky-variable-content tr {
+    background-color: white !important; /* Ensures consistent row color */
 }
 
 /* Hover Effect */
 .sticky-variable-content tr:hover {
-    background-color: #f1f1f1; /* Subtle row highlight */
+    background-color: #f1f1f1 !important; /* Subtle hover effect */
+}
+
+/* Ensure MathJax inside the table renders correctly */
+.sticky-variable-content td .mjx-math {
+    font-size: 1.1em !important; /* Adjust math font size */
 }
 
 /* Hide on small screens */
@@ -120,4 +132,5 @@ div.bd-main {
         display: none;
     }
 }
+
 
