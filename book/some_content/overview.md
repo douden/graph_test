@@ -1,9 +1,11 @@
 ```{div} sticky-variable-table
+## Variable Table
 | Name  | Value  |
 |-------|--------|
 | $\alpha$ | $0.05$ |
 | $\beta$ | $0.20$ |
 | $\gamma$ | $\pi$ |
+```
 
 # Linear regression
 
