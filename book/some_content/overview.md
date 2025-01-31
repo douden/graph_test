@@ -1,5 +1,5 @@
 ```{div} sticky-variable-table
-<center>###Nomenclature</center>
+<h3>Nomenclature</h3>
 | Name  | Value  |
 |-------|--------|
 | $\alpha$ | $0.05$ |
