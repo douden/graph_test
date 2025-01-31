@@ -9,23 +9,29 @@
         </thead>
         <tbody>
             <tr>
-                <td>\\(\alpha\\)</td>
-                <td>\\(0.05\\)</td>
+                <td>\(\alpha\)</td>
+                <td>\(0.05\)</td>
             </tr>
             <tr>
-                <td>\\(\beta\\)</td>
-                <td>\\(0.20\\)</td>
+                <td>\(\beta\)</td>
+                <td>\(0.20\)</td>
             </tr>
             <tr>
-                <td>\\(\gamma\\)</td>
-                <td>\\(\pi\\)</td>
+                <td>\(\gamma\)</td>
+                <td>\(\pi\)</td>
             </tr>
         </tbody>
     </table>
 </div>
 
+<!-- Force MathJax to reprocess the table -->
 <script>
-    MathJax.typeset();  // Forces MathJax to render inside this HTML block
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+};
+document.addEventListener("DOMContentLoaded", function() {
+    MathJax.typesetPromise();
+});
 </script>
 
 # Linear regression
