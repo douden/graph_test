@@ -33,28 +33,28 @@ div.bd-main {
     width: 100% !important;
 }
 
-/* Styling for the sticky Table of Variables */
+/* Sticky Table of Variables - Positioned in the White Space */
 .sticky-variable-table {
-    position: fixed; /* Keeps it fixed as the user scrolls */
-    top: 100px; /* Adjust this so it doesn’t overlap the header */
-    right: 20px; /* Adjust how far it sits from the right */
-    width: 250px; /* Set width */
-    background-color: white; /* Match page background */
+    position: fixed;  /* Keeps the table visible while scrolling */
+    top: 100px;  /* Adjust to ensure it does not overlap the header */
+    right: 5%;  /* Position it within the white space */
+    max-width: 250px;  /* Prevent it from taking up too much space */
+    background-color: white;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     font-size: 14px;
-    z-index: 1000; /* Ensures it appears above other elements */
+    z-index: 1000;  /* Ensures it stays above other elements */
 }
 
-/* Ensure the content does not get hidden behind the table */
+/* Remove the previous margin adjustment so content is not pushed left */
 .bd-main {
-    margin-right: 300px !important; /* Push content to the left to make space */
+    margin-right: 0 !important;
 }
 
 /* Responsive fix: Hide the table on small screens */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .sticky-variable-table {
         display: none;
     }
