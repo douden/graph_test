@@ -10,15 +10,15 @@
         <tbody>
             <tr>
                 <td>\(\alpha\)</td>
-                <td>\(0.05\)</td>
+                <td>temperature</td>
             </tr>
             <tr>
                 <td>\(\beta\)</td>
-                <td>\(0.20\)</td>
+                <td>blorb</td>
             </tr>
             <tr>
                 <td>\(\gamma\)</td>
-                <td>\(\pi\)</td>
+                <td>worblegorble</td>
             </tr>
         </tbody>
     </table>
