@@ -56,14 +56,14 @@ div.bd-main {
 /* Styling the variable table */
 /* ======================================== */
 
-/* Sticky Table of Variables - Dynamic Width */
+/* Sticky Table of Variables */
 .sticky-variable-table {
     position: fixed;  /* Keeps the table visible while scrolling */
     top: 100px;  /* Adjust so it doesn't overlap the header */
-    right: 2%;  /* Keep it in the right whitespace */
-    width: 15vw;  /* 15% of the viewport width */
-    max-width: 300px; /* Ensures it doesn't get too large on big screens */
-    min-width: 200px; /* Ensures it doesn't get too small on smaller screens */
+    right: 2%;  /* Keeps it inside the right whitespace */
+    width: 15vw;  /* Make it take up 15% of the screen width */
+    max-width: 300px; /* Prevents it from getting too large */
+    min-width: 200px; /* Prevents it from getting too small */
     background-color: white;
     padding: 10px;
     border: 1px solid #ccc;
@@ -73,30 +73,36 @@ div.bd-main {
     z-index: 1000;  /* Ensures it stays above other elements */
 }
 
+/* Ensure the table inside the sticky div has a nice appearance */
+.sticky-variable-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sticky-variable-table th, .sticky-variable-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
 /* Center the table title */
 .sticky-variable-table h3 {
     text-align: center;
-    font-family: 'Roboto Slab', serif; /* Ensure title uses Roboto Slab */
+    font-family: 'Roboto Slab', serif; /* Ensures title uses Roboto Slab */
     font-weight: bold;
     margin-bottom: 10px;
 }
 
-/* Ensure the main content area remains properly centered */
-.bd-main {
-    margin-right: 0 !important; /* Keeps the main content in place */
+/* Increase the font size for math content inside the sticky table */
+.sticky-variable-table td {
+    font-size: 18px;  
 }
 
-/* On smaller screens, reduce width or hide the table */
-@media (max-width: 1024px) {
-    .sticky-variable-table {
-        width: 20vw;  /* Slightly larger on tablets */
-        min-width: 180px;
-    }
-}
-
+/* Hide the table on smaller screens */
 @media (max-width: 768px) {
     .sticky-variable-table {
-        display: none;  /* Hide on small screens */
+        display: none;
     }
 }
+
 
