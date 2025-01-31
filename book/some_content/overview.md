@@ -1,12 +1,12 @@
 # Some content
 
 <div class="sticky-variable-table">
-    <h3>Variables</h3>
+    <h3>Nomenclature</h3>
     <table>
-        <tr><th>Name</th><th>Value</th></tr>
-        <tr><td>α</td><td>0.05</td></tr>
-        <tr><td>β</td><td>0.20</td></tr>
-        <tr><td>γ</td><td>3.14</td></tr>
+        <tr><th>Variable</th>   <th>temperature</th></tr>
+        <tr><td>α</td>          <td>blorb</td></tr>
+        <tr><td>β</td>          <td>lambadagogogo</td></tr>
+        <tr><td>γ</td>          <td>3.14</td></tr>
     </table>
 </div>
 

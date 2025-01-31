@@ -1,4 +1,19 @@
 /* ======================================== */
+/* Global font styling */
+/* ======================================== */
+
+/* Global Font Styles */
+body {
+    font-family: Arial, sans-serif !important; /* Apply Arial to all text */
+}
+
+/* Apply Roboto Slab to all titles */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto Slab', serif !important;
+    font-weight: bold;
+}
+
+/* ======================================== */
 /* Removing navigation elements */
 /* ======================================== */
 
@@ -58,6 +73,14 @@ div.bd-main {
     z-index: 1000;  /* Ensures it stays above other elements */
 }
 
+/* Center the table title */
+.sticky-variable-table h3 {
+    text-align: center;
+    font-family: 'Roboto Slab', serif; /* Ensure title uses Roboto Slab */
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
 /* Ensure the main content area remains properly centered */
 .bd-main {
     margin-right: 0 !important; /* Keeps the main content in place */
@@ -76,3 +99,4 @@ div.bd-main {
         display: none;  /* Hide on small screens */
     }
 }
+
