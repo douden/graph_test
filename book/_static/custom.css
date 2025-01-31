@@ -83,41 +83,41 @@ div.bd-main {
     color: #333;
 }
 
-/* Ensure table has a consistent background */
+/* Force proper table formatting */
 .sticky-variable-content table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white; /* Force full white background */
+    background-color: white !important; /* Forces white background */
     border-radius: 5px;
     overflow: hidden;
 }
 
 /* Table Header */
-.sticky-variable-content th {
-    background-color: #e0e0e0; /* Light gray for header */
+.sticky-variable-content thead th {
+    background-color: #e0e0e0 !important; /* Light gray for header */
     color: #333;
     font-weight: bold;
     padding: 10px;
     text-align: center;
-    border-bottom: 2px solid #0056b3; /* Blue separator */
+    border-bottom: 2px solid #0056b3 !important; /* Blue separator */
 }
 
 /* Table Cells */
-.sticky-variable-content td {
-    border: 1px solid #ddd;
-    padding: 8px;
+.sticky-variable-content tbody td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
     text-align: center;
-    font-size: 16px;
-    background-color: white; /* Ensures rows don't alternate colors */
+    font-size: 16px !important;
+    background-color: white !important; /* Ensures rows don't alternate colors */
 }
 
-/* Fix alternating row colors (force white background) */
-.sticky-variable-content tr {
-    background-color: white !important; /* Ensures consistent row color */
+/* Fix unwanted alternating row colors */
+.sticky-variable-content tbody tr {
+    background-color: white !important;
 }
 
 /* Hover Effect */
-.sticky-variable-content tr:hover {
+.sticky-variable-content tbody tr:hover {
     background-color: #f1f1f1 !important; /* Subtle hover effect */
 }
 
@@ -132,5 +132,6 @@ div.bd-main {
         display: none;
     }
 }
+
 
 
