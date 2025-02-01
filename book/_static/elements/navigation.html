@@ -4,8 +4,20 @@
   <meta charset="UTF-8" />
   <title>D3.js Graph - Start Positions & Percent Distances</title>
   <style>
-    body { margin: 0; padding: 0; font-family: sans-serif; }
-    svg { background-color: #fafafa; }
+    body{
+      margin: 0; overflow: hidden;
+      font-family: Helvetica, sans-serif;
+    }
+    .my_datavizdiv {
+      position: absolute;
+    }
+    #myCheckbox { position: absolute; top: 0; left: 0; }
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: None
+    }
     .link { stroke: #999; stroke-opacity: 0.6; stroke-width: 2px; }
     .node { cursor: pointer; stroke: #fff; stroke-width: 1.5px; }
     .label { font-size: 12px; pointer-events: none; }
