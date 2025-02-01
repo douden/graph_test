@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>D3.js Graph - Start Positions & Percent Distances</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: sans-serif; }
+    svg { background-color: #fafafa; }
+    .link { stroke: #999; stroke-opacity: 0.6; stroke-width: 2px; }
+    .node { cursor: pointer; stroke: #fff; stroke-width: 1.5px; }
+    .label { font-size: 12px; pointer-events: none; }
+  </style>
+</head>
+<body>
+
+<svg id="graph"></svg>
+
+<!-- D3.js v7 (or latest) from CDN -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+  // -----------------------------------------------------------
+  // 1) Compute width & height based on viewport and aspect
+  // -----------------------------------------------------------
+  const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) * 1;
+  const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0) * 1;
+  const aspect = 2;
+  let width, height;
+  if (vw / aspect < vh) {
+    width  = vw;
+    height = vw / aspect;
+  } else {
+    width  = vh * aspect;
+    height = vh;
+  }
+
+  const svg = d3.select("#graph")
+    .attr("width",  width)
+    .attr("height", height);
+
+  // -----------------------------------------------------------
+  // 2) Graph data with node start positions in percentages
+  //    We'll also store a radius as a fraction of the height
+  //    If pinned: true, we fix the node at (fx, fy).
+  // -----------------------------------------------------------
+  const graphData = {
+    nodes: [
+      // e.g., pinned node in the center (50%, 50%), bigger radius
+      { id: "1", text: "Linear Algebra", xPct: 0.50, yPct: 0.50, radiusPct: 0.05, pinned: true },
+      { id: "2", text: "Matrix Multiplication", xPct: 0.25, yPct: 0.30, radiusPct: 0.03, link: "https://example.com" },
+      { id: "3", text: "Linear Regression", xPct: 0.80, yPct: 0.40, radiusPct: 0.03 }
+    ],
+    links: [
+      { source: "1", target: "2" },
+      { source: "1", target: "3" },
+    ]
+  };
+
+  // Convert percentages to actual x, y in pixels, also fix pinned if needed.
+  // Also convert radiusPct -> radius in pixels
+  graphData.nodes.forEach(d => {
+    d.x = d.xPct * width;
+    d.y = d.yPct * height;
+    d.radius = d.radiusPct * height; // e.g. 5% of height => radius in px
+    if (d.pinned) {
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+  });
+
+  // -----------------------------------------------------------
+  // 3) Use percentages of height for distances, charges, etc.
+  //    For example: link distance ~ 15% of height
+  //                charge strength ~ -30% of height
+  // -----------------------------------------------------------
+  const linkDistance = 0.15 * height;
+  const chargeStrength = -0.3 * height;
+
+  // Create force simulation
+  const simulation = d3.forceSimulation(graphData.nodes)
+    .force("link", d3.forceLink(graphData.links)
+      .id(d => d.id)
+      .distance(linkDistance))
+    .force("charge", d3.forceManyBody().strength(chargeStrength))
+    .force("collision", d3.forceCollide().radius(d => d.radius))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .on("tick", ticked);
+
+  // -----------------------------------------------------------
+  // 4) Draw links, nodes, labels
+  // -----------------------------------------------------------
+  const link = svg.selectAll(".link")
+    .data(graphData.links)
+    .enter()
+    .append("line")
+    .attr("class", "link");
+
+  const node = svg.selectAll(".node")
+    .data(graphData.nodes)
+    .enter()
+    .append("circle")
+    .attr("class", "node")
+    .attr("r", d => d.radius)
+    .style("fill", (d, i) => d3.schemeTableau10[i % 10])
+    .call(drag(simulation))
+    .on("click", (event, d) => {
+      if (d.link) window.open(d.link, "_blank");
+    });
+
+  const label = svg.selectAll(".label")
+    .data(graphData.nodes)
+    .enter()
+    .append("text")
+    .attr("class", "label")
+    .attr("text-anchor", "middle")
+    // Label offset => e.g. radius + 5px
+    .attr("dy", d => - d.radius - 5)
+    .text(d => d.text);
+
+  function ticked() {
+    link
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
+
+    node
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
+
+    label
+      .attr("x", d => d.x)
+      .attr("y", d => d.y);
+  }
+
+  // -----------------------------------------------------------
+  // 5) Drag behavior
+  // -----------------------------------------------------------
+  function drag(simulation) {
+    function dragStarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x; d.fy = d.y;
+    }
+    function dragged(event, d) {
+      d.fx = event.x; d.fy = event.y;
+    }
+    function dragEnded(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      // Keep pinned nodes fixed, release others
+      if (!d.pinned) {
+        d.fx = null; d.fy = null;
+      }
+    }
+    return d3.drag()
+      .on("start", dragStarted)
+      .on("drag", dragged)
+      .on("end", dragEnded);
+  }
+</script>
+</body>
+</html>

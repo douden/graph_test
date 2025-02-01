@@ -3,7 +3,9 @@
 | Variable  | Description  |
 |-------|--------|
 | $\boldsymbol{A}, \boldsymbol{B}, \boldsymbol{C}$ | matrices or vectors |
-| $\cdot$ | matrix multiplication |
+| $a, b, c$ | array entries |
+| $i, j, k$ | array dimensions |
+| $\cdot$ | dot product |
 ```
 
 # Matrix multiplication
