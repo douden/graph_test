@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <script src="https://unpkg.com/mathjs/lib/browser/math.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jstat/dist/jstat.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    
+    <style>
+      body{
+          margin: 0; overflow: hidden;
+          font-family: Helvetica, sans-serif;
+        }
+      .my_datavizdiv {
+          position: absolute;
+      }
+    </style>
+  </head>
+
+<!-- Create a div where the graph will take place -->
+<div id="my_datavisualization">
+  <svg id="click" xmlns="http://www.w3.org/2000/svg">
+  </svg>
+</div>
+
+
+
+  <body style='overflow:hidden'>
+  
+    
+    <script>
+    
+      // Get the viewport height and width
+      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+			var height  	= vh;
+      var width 		= vw;
+      
+      const aspect 	= 2;
+      
+      if (vw/aspect < vh) {
+      	// Viewport width is limiting
+        var width 	= vw;
+        var height 	= vw/aspect;
+      } else {
+      	// Viewport height is limiting
+      	var width 	= vh*aspect;
+        var height 	= vh;
+      }
+
+      var xrange 	= [0,1];
+      var yrange 	= [1,0];
+
+      x_limits = xrange
+      y_limits = yrange
+
+      window_x = [width*0.1/aspect,width*0.7/aspect];
+      window_y = [height*0.1,height*0.7];
+
+      // Create the canvas. We will use only part of it for the main plot
+      var svg = d3.select("#click") // This selects the div
+          .attr("width", width) // This defines the canvas' width
+          .attr("height", height) // This defines the canvas' height
+          
+      // Create variables for the row and column
+      var selected_row = "1", selected_col = "1"
+      
+      // Define the height of the blocks
+      const blockheight = height*0.125;
+          
+      // Create A matrix
+      const arow = 3;
+      const acol = 5;
+      var root = [height*0.2,height*0.3];
+      var locroot;
+      for (let row = 0; row < arow; row++) {
+        for (let col = 0; col < acol; col++) {
+        	locroot = [root[0] + col*blockheight, root[1] + row*blockheight]
+          
+          // Example: Adding LaTeX to an SVG text element
+          svg.append("foreignObject")
+            .attr("x", locroot[0] - blockheight*0.5)
+            .attr("y", locroot[1] - blockheight*0.55)
+            .attr("width", blockheight)
+            .attr("height", blockheight)
+            .append("xhtml:div")
+            .html("$$a_{"+(row+1).toString()+","+(col+1).toString()+"}$$")
+            .style("font-size", (height*0.05).toString()+"px")
+            .style("color", "black");
+          
+          svg.append("polygon")
+            .attr("points",array_to_string(
+            	[[locroot[0]-blockheight/2,locroot[1]-blockheight/2],
+              [locroot[0]-blockheight/2,locroot[1]+blockheight/2],
+              [locroot[0]+blockheight/2,locroot[1]+blockheight/2],
+              [locroot[0]+blockheight/2,locroot[1]-blockheight/2]]))
+            .style("fill", "rgba(1,1,1,0.01)") // ffffc2 #4794c1 047495 516572
+            .style("stroke", "black")
+            .attr("class","A row"+(row+1).toString()+" "+"col"+(col+1).toString())
+            .attr("row",row+1)
+            .attr("col",col+1)
+            .attr("matrix","A")
+            .attr("id","A"+(row+1).toString()+(col+1).toString())
+            .raise()
+            .on('mouseover', function (d, i, m) {
+              selector(
+              d3.select(this).attr("row"),
+              d3.select(this).attr("col"),
+              d3.select(this).attr("matrix")) } );
+        }
+      }
+      
+      svg.append("circle")
+      	.attr("cx",width*0.44)
+        .attr("cy",height*0.425)
+      	.attr("r",height*0.01)
+        .style("stroke","black")
+        .style("stroke-width",height*0.0075)
+      
+      // Create B matrix
+      const brow = 5;
+      const bcol = 2;
+      var root = [width*0.525,height*0.175];
+      for (let row = 0; row < brow; row++) {
+        for (let col = 0; col < bcol; col++) {
+        	locroot = [root[0] + col*blockheight, root[1] + row*blockheight]
+          
+          // Example: Adding LaTeX to an SVG text element
+          svg.append("foreignObject")
+            .attr("x", locroot[0] - blockheight*0.5)
+            .attr("y", locroot[1] - blockheight*0.6)
+            .attr("width", blockheight)
+            .attr("height", blockheight)
+            .append("xhtml:div")
+            .html("$$b_{"+(row+1).toString()+","+(col+1).toString()+"}$$")
+            .style("font-size", (height*0.05).toString()+"px")
+            .style("color", "black");
+          
+          svg.append("polygon")
+            .attr("points",array_to_string(
+            	[[locroot[0]-blockheight/2,locroot[1]-blockheight/2],
+              [locroot[0]-blockheight/2,locroot[1]+blockheight/2],
+              [locroot[0]+blockheight/2,locroot[1]+blockheight/2],
+              [locroot[0]+blockheight/2,locroot[1]-blockheight/2]]))
+            .style("fill", "rgba(1,1,1,0.01)") // ffffc2 #4794c1 047495 516572
+            .style("stroke", "black")
+            .attr("class","B row"+(row+1).toString()+" "+"col"+(col+1).toString())
+            .attr("row",row+1)
+            .attr("col",col+1)
+            .attr("matrix","B")
+            .attr("id","B"+row.toString()+col.toString())
+            .raise()
+            .on('mouseover', function (d, i, m) {
+              selector(
+              d3.select(this).attr("row"),
+              d3.select(this).attr("col"),
+              d3.select(this).attr("matrix")) } );
+        }
+      }
+      
+      // Example: Adding LaTeX to an SVG text element
+      svg.append("line")
+      	.attr("x1",width*0.69)
+        .attr("y1",height*0.4)
+      	.attr("x2",width*0.74)
+        .attr("y2",height*0.4)
+        .style("stroke","black")
+        .style("stroke-width",height*0.0075)
+      svg.append("line")
+      	.attr("x1",width*0.69)
+        .attr("y1",height*0.45)
+      	.attr("x2",width*0.74)
+        .attr("y2",height*0.45)
+        .style("stroke","black")
+        .style("stroke-width",height*0.0075)
+        
+      // Create C matrix
+      const crow = 3;
+      const ccol = 2;
+      var root = [width*0.85,height*0.3];
+      for (let row = 0; row < crow; row++) {
+        for (let col = 0; col < ccol; col++) {
+        	locroot = [root[0] + col*blockheight, root[1] + row*blockheight]
+          
+          // Example: Adding LaTeX to an SVG text element
+          svg.append("foreignObject")
+            .attr("x", locroot[0] - blockheight*0.5)
+            .attr("y", locroot[1] - blockheight*0.55)
+            .attr("width", blockheight)
+            .attr("height", blockheight)
+            .append("xhtml:div")
+            .html("$$c_{"+(row+1).toString()+","+(col+1).toString()+"}$$")
+            .style("font-size", (height*0.05).toString()+"px")
+            .style("color", "black");
+          
+          svg.append("polygon")
+            .attr("points",array_to_string(
+            	[[locroot[0]-blockheight/2,locroot[1]-blockheight/2],
+              [locroot[0]-blockheight/2,locroot[1]+blockheight/2],
+              [locroot[0]+blockheight/2,locroot[1]+blockheight/2],
+              [locroot[0]+blockheight/2,locroot[1]-blockheight/2]]))
+            .style("fill", "rgba(1,1,1,0.01)") // ffffc2 #4794c1 047495 516572
+            .style("stroke", "black")
+            .attr("class","C row"+(row+1).toString()+"  "+"col"+(col+1).toString())
+            .attr("row",row+1)
+            .attr("col",col+1)
+            .attr("matrix","C")
+            .attr("id","C"+row.toString()+col.toString())
+            .raise()
+            .on('mouseover', function (d, i, m) {
+              selector(
+              d3.select(this).attr("row"),
+              d3.select(this).attr("col"),
+              d3.select(this).attr("matrix")) } );
+        }
+      }
+      
+      
+      
+      // Example: Adding LaTeX to an SVG text element
+      svg.append("text")             
+        .attr("transform",
+              "translate("+(width*0.375).toString()+","+(height*0.9)+")")
+        .style("text-anchor", "center")
+        .text("matrix multiplication")
+        .style("font-family", "arial")
+        .style("font-size", (12*width/600).toString()+"px")
+        
+      equation_string = "$$"
+      for (let idx = 0; idx < acol; idx++) {
+      		equation_string += "a_{"+selected_row.toString()+","+(idx+1).toString()+"} \\; b_{"+(idx+1).toString()+","+selected_col.toString()+"} + "
+      }
+      equation_string = equation_string.slice(0, -3);
+      equation_string += " = "
+      equation_string += "c_{"+(selected_row+1).toString()+","+(selected_col+1).toString()+"}$$"
+      
+      // Example: Adding LaTeX to an SVG text element
+      svg.append("foreignObject")
+        .attr("x", width*0.01)
+        .attr("y", height*0.875)
+        .attr("width", width)
+        .attr("height", blockheight)
+        .attr("id","equation")
+        .append("xhtml:div")
+        .html(equation_string)
+        .style("font-size", (height*0.05).toString()+"px")
+        .style("color", "black");
+      
+      // Call the selector
+      selector("1", "1", "C");
+      
+      function selector(row, col, matrix) {
+      
+      	// Save the row and column
+      	if (matrix == "A") {
+        	selected_row = row;
+        } else if (matrix == "B") {
+        	selected_col = col;
+        } else {
+        	selected_row = row;
+          selected_col = col;
+        }
+        
+        // De-color all entries
+        d3.selectAll(".A").style("fill", "rgba(1,1,1,0.01)"); 
+        d3.selectAll(".B").style("fill", "rgba(1,1,1,0.01)"); 
+        d3.selectAll(".C").style("fill", "rgba(1,1,1,0.01)"); 
+        
+        // Color the A matrix
+        d3.selectAll(".A.row"+selected_row).style("fill", "rgba(0,0,0,0.25)");
+        
+        // Color the B matrix
+        d3.selectAll(".B.col"+selected_col).style("fill", "rgba(0,0,0,0.25)");
+        
+        // Color the C matrix
+        d3.selectAll(".C"+".row"+selected_row+".col"+selected_col).style("fill", "rgba(0,0,0,0.25)");
+      	
+        equation_string = "$$"
+        for (let idx = 0; idx < acol; idx++) {
+            equation_string += "a_{"+selected_row+","+(idx+1).toString()+"} \\; b_{"+(idx+1).toString()+","+selected_col+"} + "
+        }
+        equation_string = equation_string.slice(0, -3);
+        equation_string += " = "
+        equation_string += "c_{"+selected_row+","+selected_col+"}$$"
+        
+        // Example: Adding LaTeX to an SVG text element
+        d3.select("#equation").html(equation_string).style("font-size", (height*0.05).toString()+"px")
+
+        MathJax.typesetPromise();  // Re-render the new LaTeX
+        
+      }
+
+      // This function converts pixels to values
+      function pixels_to_values(coords,axis) {
+        axis = (typeof axis === 'undefined') ? 'xy' : axis;
+        if (axis == 'x') {
+          res = (coords-window_x[0])/(window_x[1]-window_x[0]) * (xrange[1]-xrange[0]) + xrange[0]
+        } else if (axis == 'y') {
+          res = (1.-(coords-window_y[0])/(window_y[1]-window_y[0])) * (yrange[1]-yrange[0]) + yrange[0]
+        } else {
+          res = [(coords[0]-window_x[0])/(window_x[1]-window_x[0]) * (xrange[1]-xrange[0]) + xrange[0],(1.-(coords[1]-window_y[0])/(window_y[1]-window_y[0])) * (yrange[1]-yrange[0]) + yrange[0]]
+        }
+        return res;
+      }
+
+      // This function converts values to pixels
+      function values_to_pixels(values,axis) {
+        axis = (typeof axis === 'undefined') ? 'xy' : axis;
+        if (axis == 'x') {
+          res = (values-xrange[0])/(xrange[1]-xrange[0])*(window_x[1]-window_x[0])+window_x[0];
+        } else if (axis == 'y') {
+          res = (1-(values-yrange[0])/(yrange[1]-yrange[0]))*(window_y[1]-window_y[0])+window_y[0];
+        } else {
+          res = [(values[0]-xrange[0])/(xrange[1]-xrange[0])*(window_x[1]-window_x[0])+window_x[0],(1-(values[1]-yrange[0])/(yrange[1]-yrange[0]))*(window_y[1]-window_y[0])+window_y[0]];
+        }
+        return res;
+      }
+
+      function array_to_string(array) {
+        var string = "";
+        for (let row = 0; row < array.length; row++) {
+          string += array[row][0].toString()+","+array[row][1].toString()+" ";
+        }
+        return string
+      }
+  
+  		MathJax.typesetPromise();
+  
+    </script>
+  </body>
+
+</html>
