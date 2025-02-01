@@ -1,6 +1,6 @@
 ```{div} sticky-variable-table
 ```{div} sticky-variable-title
-<center>**Nomenclature**<\center>
+**Nomenclature**
 | Name  | Value  |
 |-------|--------|
 | $y$ | dependent variable |
