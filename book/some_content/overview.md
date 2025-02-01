@@ -1,13 +1,3 @@
-<!-- Force MathJax to reprocess the table -->
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
-};
-document.addEventListener("DOMContentLoaded", function() {
-    MathJax.typesetPromise();
-});
-</script>
-
 <div class="sticky-variable-table">
     <h3>Nomenclature</h3>
     <table>
@@ -33,6 +23,16 @@ document.addEventListener("DOMContentLoaded", function() {
         </tbody>
     </table>
 </div>
+
+<!-- Force MathJax to reprocess the table -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+};
+document.addEventListener("DOMContentLoaded", function() {
+    MathJax.typesetPromise();
+});
+</script>
 
 
 # Linear regression
