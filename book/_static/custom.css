@@ -1,163 +1,161 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>D3.js Graph - Start Positions & Percent Distances</title>
-  <style>
-    body {
-      margin: 0; 
-      overflow: hidden;
-      font-family: Helvetica, sans-serif;
+/* ======================================== */
+/* Global font styling */
+/* ======================================== */
+
+/* Global Font Styles */
+body {
+    font-family: Arial, sans-serif !important; /* Apply Arial to all text */
+}
+
+/* Apply Roboto Slab to all titles */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto Slab', serif !important;
+    font-weight: bold;
+}
+
+/* ======================================== */
+/* Removing navigation elements */
+/* ======================================== */
+
+.sidebar {
+    display: none !important;
+}
+
+.content {
+    margin-left: 0 !important;
+}
+
+/* Hides the left sidebar navigation */
+div#sphinxsidebar, div.bd-sidebar {
+    display: none !important;
+}
+
+/* Move the ToC to the left and style it */
+.bd-toc {
+    position: fixed;
+    left: 2%;
+    top: 100px; /* Adjust as needed */
+    width: 200px; /* Set appropriate width */
+    padding: 10px;
+    background-color: #f8f9fa; /* Match nomenclature background */
+    border: 1px solid #ccc; /* Match nomenclature border */
+    border-radius: 8px; /* Rounded edges */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Dropdown shadow */
+}
+
+/* Adjust content to make space for ToC */
+div.bd-main {
+    margin-left: calc(2% - 220px) !important; /* Adjust to match ToC width + padding */
+    width: calc(100% - 220px) !important;
+}
+
+
+/* Adjusts the content area to take the full width */
+/*div.bd-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+}*/
+
+/* Hide the Previous and Next navigation links */
+div#sphinx-book-navigation {
+    display: none !important;
+}
+
+/* Hide the footer navigation controls */
+div.prev-next-area {
+    display: none !important;
+}
+
+/* Ensure content takes full width after removing navigation */
+div.bd-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+}
+
+/* ======================================== */
+/* Styling the variable table */
+/* ======================================== */
+
+/* Sticky Table Container */
+.sticky-variable-table {
+    position: fixed;
+    top: 100px;
+    right: 2%;
+    width: 15vw;
+    max-width: 300px;
+    min-width: 200px;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    z-index: 1000;
+}
+
+/* Style the sticky table heading */
+.sticky-variable-title {
+    text-align: center;          /* Center the title */
+    font-size: 1.5em;            /* Equivalent to ### Heading size */
+    font-weight: bold;           /* Bold text */
+    margin-bottom: 10px;         /* Space below the title */
+    font-family: 'Roboto Slab', serif;  /* Optional: Use Roboto Slab font */
+}
+
+/* Table Styling */
+.sticky-variable-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.sticky-variable-table h3 {
+    text-align: center;               /* Center the heading */
+    font-family: 'Roboto Slab', serif; /* Apply custom font */
+    font-weight: bold;                /* Make it bold */
+    font-size: 20px;                  /* Adjust font size */
+    margin: 5px 0 !important;         /* Adjust spacing */
+    padding: 0 !important;            /* Remove extra padding */
+    color: #333;                      /* Set heading color */
+}
+
+/* Table Header */
+.sticky-variable-table th {
+    background-color: #e0e0e0;
+    color: #333;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Table Cells */
+.sticky-variable-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    font-size: 16px;
+    background-color: white;
+}
+
+/* Ensure MathJax renders properly inside the table */
+.sticky-variable-table td .mjx-math {
+    font-size: 1.1em !important;
+}
+
+/* Hover Effect */
+.sticky-variable-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Hide on small screens */
+@media (max-width: 768px) {
+    .sticky-variable-table {
+        display: none;
     }
-    .my_datavizdiv {
-      position: absolute;
-      margin: 0; 
-      overflow: hidden;
-    }
-    svg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      margin: 0; 
-      overflow: hidden;
-    }
-    .link { stroke: #999; stroke-opacity: 0.6; stroke-width: 2px; }
-    .node { cursor: pointer; stroke: #fff; stroke-width: 1.5px; }
-    .label { font-size: 12px; pointer-events: none; }
-  </style>
-</head>
-<body>
+}
 
-<svg id="graph"></svg>
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<script>
-  // 1) Compute width & height
-  const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-  const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-  const aspect = 2;
-  let width, height;
-  if (vw / aspect < vh) {
-    width = vw;
-    height = vw / aspect;
-  } else {
-    width = vh * aspect;
-    height = vh;
-  }
 
-  const svg = d3.select("#graph")
-    .attr("width", width)
-    .attr("height", height);
-
-  // Create a container <g> that we'll pan/zoom
-  const gContainer = svg.append("g");
-
-  // 2) Graph data
-  const graphData = {
-    nodes: [
-      { id: "1", text: "Linear Algebra", xPct: 0.50, yPct: 0.50, radiusPct: 0.05, pinned: true, link: "../linear_algebra.html"},
-      { id: "2", text: "Matrix Multiplication", xPct: 0.25, yPct: 0.30, radiusPct: 0.03, link: "../matrix_multiplication.html" },
-      { id: "3", text: "Linear Regression", xPct: 0.80, yPct: 0.40, radiusPct: 0.03, link: "../linear_regression.html"}
-    ],
-    links: [
-      { source: "1", target: "2" },
-      { source: "1", target: "3" },
-    ]
-  };
-
-  // Convert percentages to actual pixels
-  graphData.nodes.forEach(d => {
-    d.x = d.xPct * width;
-    d.y = d.yPct * height;
-    d.radius = d.radiusPct * height;
-    if (d.pinned) {
-      d.fx = d.x;
-      d.fy = d.y;
-    }
-  });
-
-  // 3) Forces
-  const linkDistance = 0.15 * height;
-  const chargeStrength = -0.3 * height;
-
-  const simulation = d3.forceSimulation(graphData.nodes)
-    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(linkDistance))
-    .force("charge", d3.forceManyBody().strength(chargeStrength))
-    .force("collision", d3.forceCollide().radius(d => d.radius))
-    .force("center", d3.forceCenter(width / 2, height / 2))
-    .on("tick", ticked);
-
-  // 4) Draw links, nodes, labels inside gContainer
-  const link = gContainer.selectAll(".link")
-    .data(graphData.links)
-    .enter()
-    .append("line")
-    .attr("class", "link");
-
-  const node = gContainer.selectAll(".node")
-    .data(graphData.nodes)
-    .enter()
-    .append("circle")
-    .attr("class", "node")
-    .attr("r", d => d.radius)
-    .style("fill", (d, i) => d3.schemeTableau10[i % 10])
-    .call(drag(simulation)) 
-    .on("click", (event, d) => {
-      if (d.link) window.open(d.link, "_blank");
-    });
-
-  const label = gContainer.selectAll(".label")
-    .data(graphData.nodes)
-    .enter()
-    .append("text")
-    .attr("class", "label")
-    .attr("text-anchor", "middle")
-    .attr("dy", d => d.radius / 10)
-    .text(d => d.text);
-
-  function ticked() {
-    link
-      .attr("x1", d => d.source.x)
-      .attr("y1", d => d.source.y)
-      .attr("x2", d => d.target.x)
-      .attr("y2", d => d.target.y);
-
-    node
-      .attr("cx", d => d.x)
-      .attr("cy", d => d.y);
-
-    label
-      .attr("x", d => d.x)
-      .attr("y", d => d.y);
-  }
-
-  // 5) Drag behavior for nodes
-  function drag(simulation) {
-    function dragStarted(event, d) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x; d.fy = d.y;
-    }
-    function dragged(event, d) {
-      d.fx = event.x; d.fy = event.y;
-    }
-    function dragEnded(event, d) {
-      if (!event.active) simulation.alphaTarget(0);
-      if (!d.pinned) { d.fx = null; d.fy = null; }
-    }
-    return d3.drag()
-      .on("start", dragStarted)
-      .on("drag", dragged)
-      .on("end", dragEnded);
-  }
-
-  // 6) Zoom + pan on the whole graph
-  svg.call(d3.zoom()
-    .extent([[0, 0], [width, height]])
-    .scaleExtent([0.5, 5])      // Adjust as desired for zoom limits
-    .on("zoom", (event) => {
-      gContainer.attr("transform", event.transform);
-    })
-  );
-</script>
-</body>
-</html>
