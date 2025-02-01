@@ -33,7 +33,7 @@ div#sphinxsidebar, div.bd-sidebar {
 /* Move the ToC to the left and style it */
 .bd-toc {
     position: fixed;
-    left: right: 2%;
+    left: 2%;
     top: 100px; /* Adjust as needed */
     width: 200px; /* Set appropriate width */
     padding: 10px;
@@ -45,7 +45,7 @@ div#sphinxsidebar, div.bd-sidebar {
 
 /* Adjust content to make space for ToC */
 div.bd-main {
-    margin-left: calc(2% + 220px) !important; /* Adjust to match ToC width + padding */
+    margin-left: calc(2% - 220px) !important; /* Adjust to match ToC width + padding */
     width: calc(100% - 220px) !important;
 }
 

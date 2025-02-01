@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta name="2D Gaussian inference" content="a basic example for 2-D Gaussian inference">
+    <title>2D Gaussian inference</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+    
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/pca-js@1.0.0/pca.min.js"></script>
+    
+    <style>
+        #my_dataviz { position: relative; } 
+        #click { position: absolute; } 
+        #myCheckbox { position: absolute; top: 0; left: 0; }
+        
+        body{
+          margin: 0; overflow: hidden;
+          font-family: Helvetica, sans-serif;
+        }
+        .my_datavizdiv {
+            position: absolute;
+        }
+        svg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          background-color: None
+        }    
+    </style>
+    
+  </head>
+  
+  <!-- Create a div where the graph will take place -->
+<div id="my_dataviz">
+  <svg id="click" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+          <g id="pointer">
+              <circle cx="0" cy="0" r="20" id="dragcircle" />
+          </g>
+      </defs>
+  </svg>
+  
+  <input type="checkbox" onclick='check()' id='myCheckbox' top="0px"  left="0px" position="relative">
+  
+  <button id="regenerateButton">Regenerate</button>
+  
+</div>
+
+<!-- Create a div where the graph will take place -->
+
+  <body>
+    <script>
+    
+      // ===================================================
+      // Set up basic viewport options
+      // ===================================================
+      // Get the viewport height and width
+      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+      var height  	= vh;
+      var width 		= vw;
+
+      const aspect 	= 1;
+
+      if (vw/aspect < vh) {
+        // Viewport width is limiting
+        var width 	= vw;
+        var height 	= vw/aspect;
+      } else {
+        // Viewport height is limiting
+        var width 	= vh*aspect;
+        var height 	= vh;
+      }
+
+      // Create the canvas. We will use only part of it for the main plot
+      var svg = d3.select("#click") // This selects the div
+      .attr("width", width) // This defines the canvas' width
+      .attr("height", height) // This defines the canvas' height
+      
+      const handlespacing = width/20;
+      
+      var xrange 	= [-3,3];
+      var yrange 	= [-3,3];
+      
+      // Set a random correlation the correlation
+      var r = math.random(1) * 2 - 1
+
+      // Create some basic 2D random variables
+      var mu 				= [0,0];
+      var cov 			= [[1,r],[r,1]];
+      
+      x_limits = xrange
+      y_limits = yrange
+      
+      const N = 20;
+      
+      var slope = 0;
+      var intercept = 0;
+      
+      
+      // Get scaling functions for the x scale and the y_scale
+      const window_x 	= [width*0.1,width*0.95];
+      const window_y 	= [height*0.05,height*0.9];
+      const xScale = d3.scaleLinear()
+      .domain([x_limits[0],x_limits[1]])
+      .range(window_x)
+      const xScale_inverse = d3.scaleLinear()
+      .domain(window_x)
+      .range([x_limits[0],x_limits[1]])
+      const yScale = d3.scaleLinear()
+      .domain([y_limits[0],y_limits[1]])
+      .range([window_y[1],window_y[0]])
+      const yScale_inverse = d3.scaleLinear()
+      .domain([window_y[1],window_y[0]])
+      .range([y_limits[0],y_limits[1]])
+      
+      var samples = drawSamplesFromGaussian([0,0],cov,N);
+      
+      console.log(samples)
+      
+      samples.forEach(([x, y]) => {
+        svg.append("circle")
+          .attr("cx", xScale(x))
+          .attr("cy", yScale(y))
+          .attr("r", height*0.01)
+          .style("stroke","None")
+          .style("opacity",1)
+          .attr("class", "sampled");
+      });
+      
+     
+
+      // Draw the x axis
+      svg
+        .append("g")
+        .attr("transform", "translate(0,"+window_y[1].toString()+")")
+        .call(d3.axisBottom(xScale))
+        .style("font-size", (16*width/600).toString()+"px")
+      svg.append("text")             
+        .attr("transform",
+              "translate("+(math.mean(window_x)).toString()+","+(height*0.98).toString()+")")
+        .style("text-anchor", "middle")
+        .text("x coordinate")
+        .style("font-family", "arial")
+        .style("font-size", (16*width/600).toString()+"px")
+
+
+      // Draw the y axis
+      svg
+        .append("g")
+        .attr("transform", "translate("+(window_x[0]).toString()+",0)")
+        .attr("id","mainxaxis")
+        .call(d3.axisLeft(yScale))
+        .style("font-size", (16*width/600).toString()+"px");
+      //.call(d3.axisLeft(yScale).tickFormat(""));
+      svg.append("text")             
+        .attr("transform",
+              "translate("+(width*0.03).toString()+","+(math.mean(window_y)).toString()+") rotate(270)")
+        .style("text-anchor", "middle")
+        .text("y coordinate")
+        .style("font-family", "arial")
+        .style("font-size", (16*width/600).toString()+"px")
+
+
+		  document.getElementById('myCheckbox').style.left = (width*0.45).toString()+"px";
+      document.getElementById('myCheckbox').style.top = (height*0.025).toString()+"px";
+      document.getElementById('myCheckbox').style.width = (height*0.025).toString()+"px";
+      document.getElementById('myCheckbox').style.height = (height*0.025).toString()+"px";
+      
+      svg.append("text")             
+        .attr("transform",
+              "translate("+(width*0.5).toString()+","+(height*0.05)+")")
+        .style("text-anchor", "left")
+        .text("show best fit")
+        .style("font-family", "arial")
+        .style("font-size", (16*width/600).toString()+"px")
+
+      // Attach the click event listener using D3
+      d3.select("#regenerateButton").on("click", regenerate);
+
+      // Style dropdown for consistency
+      document.getElementById('regenerateButton').style.position = "absolute";
+      document.getElementById('regenerateButton').style.fontFamily = "arial";
+      document.getElementById('regenerateButton').style.fontSize = (16*width/600).toString()+"px";
+      document.getElementById('regenerateButton').style.top = (height*0.075).toString()+"px";
+      document.getElementById('regenerateButton').style.left = (width*0.45).toString()+"px";
+      document.getElementById('regenerateButton').style.height = (height*0.05).toString()+"px";
+      document.getElementById('regenerateButton').style.width = (height*0.21).toString()+"px";
+         
+
+			
+
+
+
+
+			var linreg = linearRegression(samples);
+			var opt_distances = [];
+      for (n = 0; n < N; n++) {
+         	cp = PointOnLine(linreg.slope, linreg.intercept, samples[n]);
+          
+          opt_distances.push(math.sqrt((cp[0]-samples[n][0])**2 + (cp[1]-samples[n][1])**2))
+      }
+
+			svg.append("line")
+      	.attr("x1",xScale(xrange[0]))
+        .attr("y1",yScale(linreg.slope*xrange[0] + linreg.intercept))
+      	.attr("x2",xScale(xrange[1]))
+        .attr("y2",yScale(linreg.slope*xrange[1] + linreg.intercept))
+        .style("stroke","black")
+        .style("stroke-width",height*0.0075)
+        .style("stroke-dasharray", (height*0.04).toString()+","+(height*0.02).toString()) // Creates the dash pattern
+        .style("opacity",0.0)
+        .attr("id","optimal_regression")
+
+
+			var handles = [[-2,-2],[2,2]];
+
+      for (j = 0; j < 2; j++) {
+        svg.append('circle')
+          .attr("cx", xScale(handles[j][0]))
+          .attr("cy", yScale(handles[j][1]))
+          .attr("r", 9*height/750)
+          .attr("opacity",0.25)
+          .attr("fill","#000000")
+          .attr("id","handle_"+j.toString()+"_center");
+          
+        svg.append("use")
+          .attr("href", "#pointer")
+          .attr("x", xScale(handles[j][0]))
+          .attr("y", yScale(handles[j][1]))
+          .attr("r", 5*height/750)
+          .attr("stroke-width", height/100)
+          .attr("fill", "#000000")
+          .attr("opacity",0.25)
+          .attr("stroke","#000000")
+          .attr("numeric_id", j)
+          .attr("id","handle_"+j.toString());
+      
+      }
+      
+      var line = computeSlopeAndIntercept(handles[0],handles[1]);
+
+
+
+
+
+
+
+
+
+
+			svg.append("line")
+      	.attr("x1",xScale(xrange[0]))
+        .attr("y1",yScale(line.slope*xrange[0] + line.intercept))
+      	.attr("x2",xScale(xrange[1]))
+        .attr("y2",yScale(line.slope*xrange[1] + line.intercept))
+        .style("stroke","#666")
+        .style("stroke-width",height*0.0075)
+        .style("opacity",1)
+        .attr("id","line")
+        
+      var cp, above, lc
+      var distances = [];
+			var distances_above = 0;
+
+      for (n = 0; n < N; n++) {
+      
+         	cp = PointOnLine(line.slope, line.intercept, samples[n]);
+          
+          distances.push(math.sqrt((cp[0]-samples[n][0])**2 + (cp[1]-samples[n][1])**2))
+          
+          above = pointAboveLine(line.slope, line.intercept, samples[n]);
+          if (above) {
+          	lc = "blue"
+            distances_above += distances[n];
+          } else {
+          	lc = "red"
+          }
+          
+          
+          svg.append("line")
+            .attr("x1",xScale(samples[n][0]))
+            .attr("y1",yScale(samples[n][1]))
+            .attr("x2",xScale(cp[0]))
+            .attr("y2",yScale(cp[1]))
+            .style("stroke",lc)
+            .style("stroke-width",height*0.0025)
+            .style("opacity",1)
+            .attr("id","shortest_path_"+(n).toString())
+          
+      }
+      
+      svg.append("text")         
+        .attr("transform",
+              "translate("+(width*0.265).toString()+","+(height*0.05).toString()+")")
+        .style("text-anchor", "middle")
+        .text("avg. residual")
+        .style("font-family", "arial")
+        .style("font-size", (16*width/600).toString()+"px")
+      
+      svg.append("text")         
+        .attr("transform",
+              "translate("+(width*0.175).toString()+","+(height*0.085).toString()+")")
+        .style("text-anchor", "left")
+        .text("current: "+math.format(math.mean(distances), { notation: 'fixed', precision: 4 }))
+        .style("font-family", "arial")
+        .style("font-size", (16*width/600).toString()+"px")
+        .attr("id","avg_distance")
+        
+      svg.append("text")         
+        .attr("transform",
+              "translate("+(width*0.16).toString()+","+(height*0.12).toString()+")")
+        .style("text-anchor", "left")
+        .text("optimum: "+math.format(math.mean(opt_distances), { notation: 'fixed', precision: 4 }))
+        .style("font-family", "arial")
+        .style("font-size", (16*width/600).toString()+"px")
+        .attr("id","opt_distance")
+
+      svg.append("text")         
+        .attr("transform",
+              "translate("+(width*0.85).toString()+","+(height*0.05).toString()+")")
+        .style("text-anchor", "middle")
+        .text("residual ratio")
+        .style("font-family", "arial")
+        .style("font-size", (16*width/600).toString()+"px")
+        
+      svg.append("line")
+        .attr("x1",width*0.75)
+        .attr("y1",height*0.065)
+        .attr("x2",width*0.75 + width*0.2*distances_above/math.sum(distances))
+        .attr("y2",height*0.065)
+        .style("stroke","blue")
+        .style("stroke-width",height*0.005)
+        .attr("id","portion_above")
+      svg.append("line")
+        .attr("x1",width*0.95)
+        .attr("y1",height*0.065)
+        .attr("x2",width*0.95 - width*0.2*(1-distances_above/math.sum(distances)))
+        .attr("y2",height*0.065)
+        .style("stroke","red")
+        .style("stroke-width",height*0.005)
+        .attr("id","portion_below")
+
+      svg.append("text")         
+        .attr("transform",
+              "translate("+(width*0.75 + width*0.1*distances_above/math.sum(distances)).toString()+","+(height*0.1).toString()+")")
+        .style("text-anchor", "middle")
+        .text(math.format(math.mean(distances_above/math.sum(distances)*100), { notation: 'fixed', precision: 0 })+"%")
+        .style("font-family", "arial")
+        .style("fill","blue")
+        .style("font-size", (16*width/600).toString()+"px")
+        .attr("id","portion_below_percent")
+        
+      svg.append("text")         
+        .attr("transform",
+              "translate("+(width*0.95 - width*0.1*(1-distances_above/math.sum(distances))).toString()+","+(height*0.1).toString()+")")
+        .style("text-anchor", "middle")
+        .text(math.format(100 - math.mean(distances_above/math.sum(distances)*100), { notation: 'fixed', precision: 0 })+"%")
+        .style("font-family", "arial")
+        .style("fill","red")
+        .style("font-size", (16*width/600).toString()+"px")
+        .attr("id","portion_above_percent")
+
+      // ======================================================
+      // Define functions
+      // ======================================================
+
+			function regenerate() {
+      
+      	d3.selectAll('.sampled').remove();
+      
+        // Set a random correlation the correlation
+        r = math.random(1) * 2 - 1
+
+        // Create some basic 2D random variables
+        mu 				= [0,0];
+        cov 			= [[1,r],[r,1]];
+      
+        samples = drawSamplesFromGaussian([0,0],cov,N);
+
+        console.log(samples)
+
+        samples.forEach(([x, y]) => {
+          svg.append("circle")
+            .attr("cx", xScale(x))
+            .attr("cy", yScale(y))
+            .attr("r", height*0.01)
+            .style("stroke","None")
+            .style("opacity",1)
+            .attr("class", "sampled");
+        });
+        
+        linreg = linearRegression(samples);
+        opt_distances = [];
+        for (n = 0; n < N; n++) {
+            cp = PointOnLine(linreg.slope, linreg.intercept, samples[n]);
+
+            opt_distances.push(math.sqrt((cp[0]-samples[n][0])**2 + (cp[1]-samples[n][1])**2))
+        }
+        
+        d3.select("#opt_distance")         
+          .text("optimum: "+math.format(math.mean(opt_distances), { notation: 'fixed', precision: 4 }));
+          
+			d3.select("#optimal_regression")
+      	.attr("x1",xScale(xrange[0]))
+        .attr("y1",yScale(linreg.slope*xrange[0] + linreg.intercept))
+      	.attr("x2",xScale(xrange[1]))
+        .attr("y2",yScale(linreg.slope*xrange[1] + linreg.intercept))
+        
+        update();
+      
+      }
+
+
+      // helper function to output formatted results.
+      function print(value) {
+        var precision = 14;
+        document.write(math.format(value, precision) + '<br>');
+      }
+
+
+      function pixels_to_values(coords,axis) {
+        axis = (typeof axis === 'undefined') ? 'xy' : axis;
+        if (axis == 'x') {
+          res = (coords-window_x[0])/(window_x[1]-window_x[0]) * (xrange[1]-xrange[0]) + xrange[0]
+        } else if (axis == 'y') {
+          res = (1.-(coords-window_y[0])/(window_y[1]-window_y[0])) * (yrange[1]-yrange[0]) + yrange[0]
+        } else {
+          res = [(coords[0]-window_x[0])/(window_x[1]-window_x[0]) * (xrange[1]-xrange[0]) + xrange[0],(1.-(coords[1]-window_y[0])/(window_y[1]-window_y[0])) * (yrange[1]-yrange[0]) + yrange[0]]
+        }
+        return res;
+      }
+
+      function values_to_pixels(values,axis) {
+        axis = (typeof axis === 'undefined') ? 'xy' : axis;
+        if (axis == 'x') {
+          res = (values-xrange[0])/(xrange[1]-xrange[0])*(window_x[1]-window_x[0])+window_x[0];
+        } else if (axis == 'y') {
+          res = (1-(values-yrange[0])/(yrange[1]-yrange[0]))*(window_y[1]-window_y[0])+window_y[0];
+        } else {
+          res = [(values[0]-xrange[0])/(xrange[1]-xrange[0])*(window_x[1]-window_x[0])+window_x[0],(1-(values[1]-yrange[0])/(yrange[1]-yrange[0]))*(window_y[1]-window_y[0])+window_y[0]];
+        }
+        return res;
+      }
+
+
+      function construct_cov() {
+
+        var cov = [[math.pow(prior_sd,2)+math.pow(obs_sd,2),math.pow(prior_sd,2)],[math.pow(prior_sd,2),math.pow(prior_sd,2)]];
+
+        return cov;
+
+      }
+
+
+
+		var deltaX, deltaY
+
+    
+    function choleskyDecomposition(matrix) {
+        const [[a, b], [c, d]] = matrix;
+
+        if (b !== c) {
+            throw new Error("Matrix is not symmetric.");
+        }
+
+        const l11 = Math.sqrt(a);
+        const l21 = b / l11;
+        const l22 = Math.sqrt(d - l21 * l21);
+
+        return [
+            [l11, 0],
+            [l21, l22]
+        ];
+    }
+    
+    function drawSamplesFromGaussian(mean, covariance, numSamples) {
+
+        if (mean.length !== 2 || covariance.length !== 2 || covariance[0].length !== 2) {
+            throw new Error("Mean must be a 2-element array and covariance must be a 2x2 matrix.");
+        }
+
+        // Compute the Cholesky decomposition of the covariance matrix
+        const choleskyDecomp = choleskyDecomposition(covariance);
+
+        // Generate standard normal samples using Box-Muller transform
+        const standardSamples = Array.from({ length: numSamples }, () => {
+            const u1 = Math.random();
+            const u2 = Math.random();
+            const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+            const z1 = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
+            return [z0, z1];
+        });
+
+        // Transform the samples using the mean and covariance
+        const samples = standardSamples.map(sample => {
+            const transformedSample = math.add(
+                math.multiply(choleskyDecomp, sample),
+                mean
+            );
+            return Array.from(transformedSample);
+        });
+
+        return samples;
+      }
+
+      function linearRegression(points) {
+        // Ensure math.js is available
+        // Validate input
+        if (!Array.isArray(points) || points.length < 2) {
+            throw new Error("Input must be a 2D array with at least two points.");
+        }
+
+        // Separate x and y values
+        const x = points.map(point => point[0]);
+        const y = points.map(point => point[1]);
+
+        // Number of points
+        const n = points.length;
+
+        // Compute necessary sums
+        const sumX = math.sum(x);
+        const sumY = math.sum(y);
+        const sumXY = math.sum(math.dotMultiply(x, y));
+        const sumX2 = math.sum(math.dotPow(x, 2));
+
+        // Compute slope (m) and intercept (b)
+        const numerator = n * sumXY - sumX * sumY;
+        const denominator = n * sumX2 - math.pow(sumX, 2);
+
+        if (denominator === 0) {
+            throw new Error("Cannot compute linear regression; x values may be identical.");
+        }
+
+        const slope = numerator / denominator;
+        const intercept = (sumY - slope * sumX) / n;
+
+        return { slope, intercept };
+    	}
+
+
+      // Function to compute slope and intercept
+      function computeSlopeAndIntercept(point1, point2) {
+        // Ensure the points are valid
+        if (!point1 || !point2 || point1.length !== 2 || point2.length !== 2) {
+          throw new Error("Each point must be an array with x and y coordinates.");
+        }
+
+        const [x1, y1] = point1;
+        const [x2, y2] = point2;
+
+        // Check for vertical line (undefined slope)
+        if (x1 === x2) {
+          throw new Error("The points have the same x-coordinate, so the line is vertical.");
+        }
+
+        // Calculate slope (m) and intercept (b)
+        const slope = (y2 - y1) / (x2 - x1);
+        const intercept = y1 - slope * x1;
+
+        return { slope, intercept };
+      }
+    
+      function PointOnLine(slope, intercept, point) {
+        const [x1, y1] = point;
+
+        return [x1, x1*slope + intercept];
+      }
+    
+      function closestPointOnLine(slope, intercept, point) {
+        const [x1, y1] = point;
+
+        // Calculate x and y of the closest point on the line
+        const xClosest = (x1 + slope * (y1 - intercept)) / (Math.pow(slope, 2) + 1);
+        const yClosest = slope * xClosest + intercept;
+
+        return [xClosest, yClosest];
+      }
+      
+      // Function to determine if the point is above or below the line
+      function pointAboveLine(slope, intercept, point) {
+        const [x1, y1] = point;
+
+        // Get the closest point on the line
+        const [xClosest, yClosest] = PointOnLine(slope, intercept, point);
+
+        // Determine if the point is above or below the line
+        if (y1 >= yClosest) {
+          return true;
+        } else if (y1 < yClosest) {
+          return false;
+        } 
+      }
+      
+      
+    
+      var dragHandler = d3.drag()
+        .on("start", function () {
+
+          dragging = true;
+          var current = d3.select(this);
+          deltaX = current.attr("x") - d3.event.x;
+          deltaY = current.attr("y") - d3.event.y;
+
+          d3.select("#"+current.attr("id")+"_center").cx += deltaX
+          d3.select("#"+current.attr("id")+"_center").cy += deltaY
+
+        })
+        .on("drag", function () {
+
+          var movex = d3.event.x + deltaX;
+          var movey = d3.event.y + deltaY;
+          var current = d3.select(this);
+          
+          // Limit movex, if necessary
+          if (movex < window_x[0]) {
+            movex = window_x[0]
+          } else if (movex > window_x[1]) {
+            movex = window_x[1]
+          }
+
+          // Limit movey, if necessary
+          if (movey < window_y[0]) {
+            movey = window_y[0]
+          } else if (movey > window_y[1]) {
+            movey = window_y[1]
+          }
+          
+
+          // Update the xs and ys
+          handles[current.attr("numeric_id")][0] = xScale_inverse(movex);
+          handles[current.attr("numeric_id")][1] = yScale_inverse(movex);
+
+          current
+            .attr("x", movex)
+            .attr("y", movey);
+
+          d3.select("#"+current.attr("id")+"_center")
+            .attr("cx", movex)
+            .attr("cy", movey);
+
+
+          update();
+
+
+        })
+        .on("end", function () {
+          // update();
+          dragging = false;
+        });
+
+
+        dragHandler(svg.selectAll("use"));
+        
+        var pt1,pt2
+        
+        function update() {
+        
+        	pt1 = [xScale_inverse(parseFloat(d3.select("#handle_0").attr("x"))),yScale_inverse(parseFloat(d3.select("#handle_0").attr("y")))];
+        	pt2 = [xScale_inverse(parseFloat(d3.select("#handle_1").attr("x"))),yScale_inverse(parseFloat(d3.select("#handle_1").attr("y")))];
+          
+        	line = computeSlopeAndIntercept(pt1,pt2);
+          
+        	d3.select("#line")
+            .attr("y1",yScale(line.slope*xrange[0] + line.intercept))
+            .attr("y2",yScale(line.slope*xrange[1] + line.intercept))
+            
+          distances_above = 0;
+            
+          for (n = 0; n < N; n++) {
+
+              cp = PointOnLine(line.slope, line.intercept, samples[n]);
+
+              above = pointAboveLine(line.slope, line.intercept, samples[n]);
+              if (above) {
+                lc = "blue"
+                distances_above += distances[n];
+              } else {
+                lc = "red"
+              }
+
+              d3.select("#shortest_path_"+(n).toString())
+                .attr("x1",xScale(samples[n][0]))
+                .attr("y1",yScale(samples[n][1]))
+                .attr("x2",xScale(cp[0]))
+                .attr("y2",yScale(cp[1]))
+                .style("stroke", lc)
+                .lower()
+                
+              distances[n] = math.sqrt((cp[0]-samples[n][0])**2 + (cp[1]-samples[n][1])**2);
+             
+
+          }
+          
+          console.log(distances)
+          
+          d3.select("#avg_distance")         
+            .text("current: "+math.format(math.mean(distances), { notation: 'fixed', precision: 4 }))
+            
+          d3.select("#portion_above")  
+            .attr("x2",width*0.75 + width*0.2*distances_above/math.sum(distances))
+          d3.select("#portion_below")  
+            .attr("x2",width*0.95 - width*0.2*(1-distances_above/math.sum(distances)))
+            
+            
+          d3.select("#portion_below_percent")        
+            .attr("transform",
+                  "translate("+(width*0.75 + width*0.1*distances_above/math.sum(distances)).toString()+","+(height*0.1).toString()+")")
+            .text(math.format(math.mean(distances_above/math.sum(distances)*100), { notation: 'fixed', precision: 0 })+"%")
+
+
+          d3.select("#portion_above_percent")          
+            .attr("transform",
+                  "translate("+(width*0.95 - width*0.1*(1-distances_above/math.sum(distances))).toString()+","+(height*0.1).toString()+")")
+            .text(math.format(100 - math.mean(distances_above/math.sum(distances)*100), { notation: 'fixed', precision: 0 })+"%")
+            
+            
+        }
+
+        // Checkbox function
+        function check() {
+
+          // If the box is ticked, show solution
+          if (d3.select("#myCheckbox").property("checked")) {
+
+            d3.select("#optimal_regression")
+            	.transition()
+              	.duration(250)
+            		.style("opacity",0.25)
+
+          // If the box is not ticked, do not show solution
+          } else {
+
+            d3.select("#optimal_regression")
+            	.transition()
+              	.duration(250)
+            		.style("opacity",0.0)
+
+          }
+        }
+
+
+
+    </script>
+  </body>
+
+</html>
