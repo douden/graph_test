@@ -22,8 +22,7 @@ $$
 y_{n} = y_{n}^{\text{lf}} + \epsilon_{n} = \underbrace{c_{0} + c_{1}x_{n,1} + c_{2}x_{n,2} + \dots + c_{D}x_{n,D}}_{\text{linear fit }y_{n}^{\text{lf}}} + \epsilon_{n},
 $$
 
-where the coefficients ${c_{0},\dots,c_{D}}$ define the linear function. Since most such relationships are not perfectly linear, we also require a residual term $\epsilon_{n}$ that accounts for the deviation between the linear fit $y_{n}^{\text{lf}}$ and the true value of the dependent variable $y_{n}$. Specifically, a linear regression seeks the set of coefficients $\{c_{0},\dots,c_{D}\}$ that minimizes the square of the samples' residuals $\{\epsilon_{n}\}_{n=1}^{N}$.
-
+where the coefficients ${c_{0},\dots,c_{D}}$ define the linear function. Since most such relationships are not perfectly linear, we also require a residual term $\epsilon_{n}$ that accounts for the deviation between the linear fit $y_{n}^{\text{lf}}$ and the true value of the dependent variable $y_{n}$. Specifically, a linear regression seeks the set of coefficients $\{c_{0},\dots,c_{D}\}$ that minimizes the square of the samples' residuals $\{\epsilon_{n}\}_{n=1}^{N}$. The optimal coefficients can be found with a variety of different methods such as least squares estimation.
 
 ## Intuition
 
@@ -34,21 +33,4 @@ where the coefficients ${c_{0},\dots,c_{D}}$ define the linear function. Since m
     </div>
 </div>
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+A useful way of thinking about a linear regression is that we are seeking a *line* (in 2-D), a *plane* (in 3-D), or a *hyper-plane* (in higher dimensions) that is as close as possible to all samples. If we use least squares estimation to find the optimal linear function, the objective function penalizes the sum of squared residuals of all samples. This has the consequence that samples, which deviate the farthest from the linear function, excert the strongest "pull" on the linear regression. The consequence is a linear function that pierces the cloud of points along its longest axis, and balances the residuals above and below the linear function.
