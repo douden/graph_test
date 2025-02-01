@@ -30,10 +30,21 @@ div#sphinxsidebar, div.bd-sidebar {
     display: none !important;
 }
 
-/* Adjusts the content area to take the full width */
+/* Move the ToC to the left */
+.bd-toc {
+    position: fixed;
+    left: 0;
+    top: 100px; /* Adjust as needed */
+    width: 200px; /* Set appropriate width */
+    padding: 10px;
+    background-color: #f8f9fa; /* Optional for better visibility */
+    border-right: 1px solid #ddd;
+}
+
+/* Adjust content to make space for ToC */
 div.bd-main {
-    margin-left: 0 !important;
-    width: 100% !important;
+    margin-left: 220px !important; /* Adjust to match ToC width + padding */
+    width: calc(100% - 220px) !important;
 }
 
 /* Hide the Previous and Next navigation links */
@@ -46,12 +57,6 @@ div.prev-next-area {
     display: none !important;
 }
 
-/* Ensure content takes full width after removing navigation */
-div.bd-main {
-    margin-left: 0 !important;
-    width: 100% !important;
-}
-
 /* ======================================== */
 /* Styling the variable table */
 /* ======================================== */
@@ -61,6 +66,7 @@ div.bd-main {
     position: fixed;
     top: 100px;
     right: 2%;
+    left: auto;
     width: 15vw;
     max-width: 300px;
     min-width: 200px;
@@ -75,11 +81,11 @@ div.bd-main {
 
 /* Style the sticky table heading */
 .sticky-variable-title {
-    text-align: center;          /* Center the title */
-    font-size: 1.5em;            /* Equivalent to ### Heading size */
-    font-weight: bold;           /* Bold text */
-    margin-bottom: 10px;         /* Space below the title */
-    font-family: 'Roboto Slab', serif;  /* Optional: Use Roboto Slab font */
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-family: 'Roboto Slab', serif;
 }
 
 /* Table Styling */
@@ -89,16 +95,6 @@ div.bd-main {
     background-color: white;
     border-radius: 5px;
     overflow: hidden;
-}
-
-.sticky-variable-table h3 {
-    text-align: center;               /* Center the heading */
-    font-family: 'Roboto Slab', serif; /* Apply custom font */
-    font-weight: bold;                /* Make it bold */
-    font-size: 20px;                  /* Adjust font size */
-    margin: 5px 0 !important;         /* Adjust spacing */
-    padding: 0 !important;            /* Remove extra padding */
-    color: #333;                      /* Set heading color */
 }
 
 /* Table Header */
@@ -136,6 +132,3 @@ div.bd-main {
         display: none;
     }
 }
-
-
-
