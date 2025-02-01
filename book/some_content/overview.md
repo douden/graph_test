@@ -30,6 +30,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 <div style="float: right; width: 50%; margin: 10px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
     <iframe src="https://maxramgraber.github.io/MASTER/main/_static/elements/linear_regression.html" style="width: 100%; aspect-ratio: 1 / 1; border: none; border-radius: 8px;"></iframe>
+    <div style="text-align: center; padding: 5px; font-size: 14px; font-family: Arial, sans-serif; color: #555;">
+        <strong>Interactive element 👆:</strong> Drag the handles to adjust the linear regression. Try to find the optimal regression.
+    </div>
 </div>
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
