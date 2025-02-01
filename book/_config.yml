@@ -40,15 +40,11 @@ sphinx:
       - _static   # Include the _static folder where custom.css is stored
     mathjax3_config:
       tex:
-        inlineMath: [["$", "$"], ["\\(", "\\)"]]   # Inline math delimiters
-        displayMath: [["$$", "$$"], ["\\[", "\\]"]]  # Display math delimiters
-      chtml:
-        mtextInheritFont: true   # Make math text inherit surrounding font
-      startup:
-        ready: function () {
-          MathJax.startup.defaultReady();  // Let MathJax complete its default startup
-          MathJax.typesetPromise();        // Trigger typesetting after the page is fully loaded
-        }
+        inlineMath: [["$", "$"], ["\\(", "\\)"]]
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+      chtml: {
+        mtextInheritFont: true
+      }
   extra_extensions:
     - sphinx.ext.imgconverter
     - jupyterbook_patches
