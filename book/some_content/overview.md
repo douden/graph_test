@@ -3,8 +3,8 @@
 <center><h3>**Nomenclature**<\h3><\center>
 | Name  | Value  |
 |-------|--------|
-| $\alpha$ | $0.05$ |
-| $\beta$ | $0.20$ |
+| $y$ | dependent variable |
+| $x$ | $explanatory variable$ |
 | $\gamma$ | $\pi$ |
 ```
 
