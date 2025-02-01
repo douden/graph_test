@@ -30,15 +30,17 @@ div#sphinxsidebar, div.bd-sidebar {
     display: none !important;
 }
 
-/* Move the ToC to the left */
+/* Move the ToC to the left and style it */
 .bd-toc {
     position: fixed;
     left: 0;
     top: 100px; /* Adjust as needed */
     width: 200px; /* Set appropriate width */
     padding: 10px;
-    background-color: #f8f9fa; /* Optional for better visibility */
-    border-right: 1px solid #ddd;
+    background-color: #f8f9fa; /* Match nomenclature background */
+    border: 1px solid #ccc; /* Match nomenclature border */
+    border-radius: 8px; /* Rounded edges */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Dropdown shadow */
 }
 
 /* Adjust content to make space for ToC */
@@ -46,6 +48,13 @@ div.bd-main {
     margin-left: 220px !important; /* Adjust to match ToC width + padding */
     width: calc(100% - 220px) !important;
 }
+
+
+/* Adjusts the content area to take the full width */
+/*div.bd-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+}*/
 
 /* Hide the Previous and Next navigation links */
 div#sphinx-book-navigation {
@@ -57,6 +66,12 @@ div.prev-next-area {
     display: none !important;
 }
 
+/* Ensure content takes full width after removing navigation */
+div.bd-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+}
+
 /* ======================================== */
 /* Styling the variable table */
 /* ======================================== */
@@ -66,7 +81,6 @@ div.prev-next-area {
     position: fixed;
     top: 100px;
     right: 2%;
-    left: auto;
     width: 15vw;
     max-width: 300px;
     min-width: 200px;
@@ -81,11 +95,11 @@ div.prev-next-area {
 
 /* Style the sticky table heading */
 .sticky-variable-title {
-    text-align: center;
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-family: 'Roboto Slab', serif;
+    text-align: center;          /* Center the title */
+    font-size: 1.5em;            /* Equivalent to ### Heading size */
+    font-weight: bold;           /* Bold text */
+    margin-bottom: 10px;         /* Space below the title */
+    font-family: 'Roboto Slab', serif;  /* Optional: Use Roboto Slab font */
 }
 
 /* Table Styling */
@@ -95,6 +109,16 @@ div.prev-next-area {
     background-color: white;
     border-radius: 5px;
     overflow: hidden;
+}
+
+.sticky-variable-table h3 {
+    text-align: center;               /* Center the heading */
+    font-family: 'Roboto Slab', serif; /* Apply custom font */
+    font-weight: bold;                /* Make it bold */
+    font-size: 20px;                  /* Adjust font size */
+    margin: 5px 0 !important;         /* Adjust spacing */
+    padding: 0 !important;            /* Remove extra padding */
+    color: #333;                      /* Set heading color */
 }
 
 /* Table Header */
@@ -132,3 +156,6 @@ div.prev-next-area {
         display: none;
     }
 }
+
+
+
