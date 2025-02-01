@@ -1,28 +1,3 @@
-<div class="sticky-variable-table">
-    <h3>Nomenclature</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>\\( y \\)</td>  <!-- Use double backslashes to ensure MathJax processes inside HTML -->
-                <td>dependent variable</td>
-            </tr>
-            <tr>
-                <td>\\( x \\)</td>
-                <td>explanatory variable</td>
-            </tr>
-            <tr>
-                <td>\\( \gamma \\)</td>
-                <td>worblegorble arglblorb</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
 <!-- Force MathJax to reprocess the table correctly -->
 <script>
