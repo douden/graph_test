@@ -103,7 +103,7 @@
     .style("fill", (d, i) => d3.schemeTableau10[i % 10])
     .call(drag(simulation)) 
     .on("click", (event, d) => {
-      if (d.link) window.open(d.link, "_blank");
+      if (d.link) window.open(d.link, "_self");
     });
 
   const label = gContainer.selectAll(".label")
