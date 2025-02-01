@@ -1,10 +1,9 @@
 ```{div} sticky-variable-table
 ### Nomenclature
-| Name  | Value  |
+| Variable  | Description  |
 |-------|--------|
 | $y$ | dependent variable |
-| $x$ | $explanatory variable$ |
-| $\gamma$ | $\pi$ |
+| $x$ | explanatory variable |
 ```
 
 # Linear regression
@@ -14,6 +13,10 @@
 ```{math}
 E = mc^2
 ```
+
+$$
+E = mc^2
+$$
 
 This is inline math: $E = mc^2$.
 
