@@ -1,11 +1,12 @@
 ```{div} sticky-variable-table
-```{div} sticky-variable-title
-**Nomenclature**
-| Name  | Value  |
-|-------|--------|
-| $y$ | dependent variable |
-| $x$ | $explanatory variable$ |
-| $\gamma$ | $\pi$ |
+    ```{div} sticky-variable-title
+    **Nomenclature**
+    ```
+    | Name  | Value  |
+    |-------|--------|
+    | $y$ | dependent variable |
+    | $x$ | $explanatory variable$ |
+    | $\gamma$ | $\pi$ |
 ```
 
 # Linear regression
