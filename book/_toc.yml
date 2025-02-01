@@ -4,9 +4,9 @@ root: intro.md
 parts:
   - caption: Contents
     chapters:
-    - file: some_content/overview.md
+    - file: pages/linear algebra.md
       sections:
-      - file: some_content/text_and_code.ipynb
+      - file: pages/linear_regression.md
     - file: exercises
       sections:
       - file: exercises/001.md
