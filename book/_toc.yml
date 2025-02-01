@@ -4,7 +4,7 @@ root: intro.md
 parts:
   - caption: Contents
     chapters:
-    - file: pages/linear algebra.md
+    - file: pages/linear_algebra.md
       sections:
       - file: pages/linear_regression.md
       - file: pages/matrix_multiplication.md
