@@ -45,16 +45,9 @@ div#sphinxsidebar, div.bd-sidebar {
 
 /* Adjust content to make space for ToC */
 div.bd-main {
-    margin-left: 220px !important; /* Adjust to match ToC width + padding */
-    width: calc(100% - 220px) !important;
+    margin-left: calc(4% + 200px) !important; /* Adjust to match ToC width + padding */
+    width: calc(80% - 200px) !important;
 }
-
-
-/* Adjusts the content area to take the full width */
-/*div.bd-main {
-    margin-left: 0 !important;
-    width: 100% !important;
-}*/
 
 /* Hide the Previous and Next navigation links */
 div#sphinx-book-navigation {
