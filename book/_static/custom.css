@@ -91,6 +91,16 @@ div.bd-main {
     overflow: hidden;
 }
 
+.sticky-variable-table h3 {
+    text-align: center;               /* Center the heading */
+    font-family: 'Roboto Slab', serif; /* Apply custom font */
+    font-weight: bold;                /* Make it bold */
+    font-size: 20px;                  /* Adjust font size */
+    margin: 5px 0 !important;         /* Adjust spacing */
+    padding: 0 !important;            /* Remove extra padding */
+    color: #333;                      /* Set heading color */
+}
+
 /* Table Header */
 .sticky-variable-table th {
     background-color: #e0e0e0;
