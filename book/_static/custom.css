@@ -56,6 +56,23 @@ div.bd-main {
 /* Styling the variable table */
 /* ======================================== */
 
+/* Sticky Table Container */
+.sticky-variable-table {
+    position: fixed;
+    top: 100px;
+    right: 2%;
+    width: 15vw;
+    max-width: 300px;
+    min-width: 200px;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    z-index: 1000;
+}
+
 /* Style the sticky table heading */
 .sticky-variable-title {
     text-align: center;          /* Center the title */
@@ -65,14 +82,43 @@ div.bd-main {
     font-family: 'Roboto Slab', serif;  /* Optional: Use Roboto Slab font */
 }
 
-/* Ensure the table inside sticky-variable-table is styled properly */
+/* Table Styling */
 .sticky-variable-table table {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
-.sticky-variable-table th, .sticky
+/* Table Header */
+.sticky-variable-table th {
+    background-color: #e0e0e0;
+    color: #333;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Table Cells */
+.sticky-variable-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    font-size: 16px;
+    background-color: white;
+}
+
+/* Ensure MathJax renders properly inside the table */
+.sticky-variable-table td .mjx-math {
+    font-size: 1.1em !important;
+}
+
+/* Hover Effect */
+.sticky-variable-table tr:hover {
+    background-color: #f1f1f1;
+}
 
 /* Hide on small screens */
 @media (max-width: 768px) {
