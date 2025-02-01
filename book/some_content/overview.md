@@ -1,7 +1,5 @@
 ```{div} sticky-variable-table
-```{div} sticky-variable-title
-**Nomenclature**
-```
+### Nomenclature
 | Name  | Value  |
 |-------|--------|
 | $y$ | dependent variable |
