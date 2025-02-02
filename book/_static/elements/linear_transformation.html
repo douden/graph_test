@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <script src="https://unpkg.com/mathjs/lib/browser/math.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-contour@4"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jstat/dist/jstat.min.js"></script>
+    
+    <style>
+      body{
+          margin: 0; overflow: hidden;
+          font-family: Helvetica, sans-serif;
+        }
+      .my_datavizdiv {
+          position: absolute;
+      }
+      #myCheckbox { position: absolute; top: 0; left: 0; }
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: None
+      }
+    </style>
+  </head>
+
+<!-- Create a div where the graph will take place -->
+<div id="my_datavisualization">
+  <svg id="click" xmlns="http://www.w3.org/2000/svg">
+  </svg>
+  <input type="checkbox" onclick='check()' id='myCheckbox' top="0px"  left="0px" position="absolute" checked="true">
+
+</div>
+
+
+
+  <body style='overflow:hidden'>
+  
+    
+    <script>
+    
+      // Get the viewport height and width
+      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+			var height  	= vh;
+      var width 		= vw;
+      
+      const aspect 	= 2;
+      
+      if (vw/aspect < vh) {
+      	// Viewport width is limiting
+        var width 	= vw;
+        var height 	= vw/aspect;
+      } else {
+      	// Viewport height is limiting
+      	var width 	= vh*aspect;
+        var height 	= vh;
+      }
+
+      // Create the canvas. We will use only part of it for the main plot
+      var svg = d3.select("#click") // This selects the div
+          .attr("width", width) // This defines the canvas' width
+          .attr("height", height) // This defines the canvas' height
+          
+          
+      // Define the starting values
+      var index = [0,0];
+      var A = [[1,0],[0,1]];
+      const N = 100;
+
+      const grid = linspace(-3,3,10);
+      
+			// ===========================================================================
+          
+      var x_limits = [-3.5,3.5];
+      var y_limits = [-3.5,3.5];
+
+      const window_x = [width * 0.075, width * 0.47];
+      const window_y = [height * 0.1, height * 0.89];
+
+      // Get scaling functions for the x scale and the y_scale
+      const xScale = d3.scaleLinear()
+          .domain([x_limits[0], x_limits[1]])
+          .range(window_x)
+      const xScale_inverse = d3.scaleLinear()
+          .domain(window_x)
+          .range([x_limits[0], x_limits[1]])
+      const yScale = d3.scaleLinear()
+          .domain([y_limits[0], y_limits[1]])
+          .range([window_y[1], window_y[0]])
+          
+		  document.getElementById('myCheckbox').style.left = (width*0.65).toString()+"px";
+      document.getElementById('myCheckbox').style.top = (height*0.85).toString()+"px";
+      document.getElementById('myCheckbox').style.width = (height*0.04).toString()+"px";
+      document.getElementById('myCheckbox').style.height = (height*0.04).toString()+"px";
+      svg.append("text")             
+        .attr("transform",
+              "translate("+(width*0.69).toString()+","+(height*0.89)+")")
+        .style("text-anchor", "left")
+        .text("show originals")
+        .style("font-family", "arial")
+        .style("font-size", (12*width/600).toString()+"px")
+          
+      // Draw the x axis
+      svg
+          .append("g")
+          .attr("transform", "translate(0," + (window_y[1] - (window_y[1]-window_y[0])/2).toString() + ")")
+          .call(d3.axisBottom(xScale).ticks(5))
+          .style("font-size", (10 * width / 600).toString() + "px")
+      svg.append("text")
+          .attr("transform",
+              "translate(" + (math.mean(window_x)).toString() + "," + (height * 0.95).toString() + ")")
+          .style("text-anchor", "middle")
+          .text("x1")
+          .style("font-size", (10 * width / 600).toString() + "px")
+
+      // Draw the y axis
+      svg
+          .append("g")
+          .attr("transform", "translate(" + (window_x[0] + (window_x[1]-window_x[0])/2).toString() + ",0)")
+          .attr("id", "mainxaxis")
+          .call(d3.axisLeft(yScale).ticks(5))
+          .style("font-size", (10 * width / 600).toString() + "px");
+      //.call(d3.axisLeft(yScale).tickFormat(""));
+      svg.append("text")
+          .attr("transform",
+              "translate(" + (width * 0.05).toString() + "," + (math.mean(window_y)).toString() + ") rotate(270)")
+          .style("text-anchor", "middle")
+          .text("x2")
+          .style("font-size", (10 * width / 600).toString() + "px")
+
+
+			// Draw Gaussian samples
+      samples = [];
+      samples_transformed = [];
+      i = -1;
+      for (row = 0; row < 10; row++) {
+      	for (col = 0; col < 10; col++) {
+        	i++;
+          samples.push([grid[col],grid[row]])
+          samples_transformed.push(samples[i]);
+          svg.append("circle")
+            .attr("cx",xScale(samples[i][0]))
+            .attr("cy",yScale(samples[i][1]))
+            .attr("r",height*0.01)
+            .style("fill","#999")
+            .style("stroke","None")
+            .attr("id","scatter_original"+i.toString())
+            .attr("class","scatter_original")
+            .lower()
+          svg.append("circle")
+            .attr("cx",xScale(samples_transformed[i][0]))
+            .attr("cy",yScale(samples_transformed[i][1]))
+            .attr("r",height*0.01)
+            .style("fill","#ff5000")
+            .style("stroke","None")
+            .attr("id","scatter_transformed"+i.toString())
+            .attr("class","scatter_transformed")
+            .lower()
+          svg.append("line")
+            .attr("x1",xScale(samples[i][0]))
+            .attr("y1",yScale(samples[i][1]))
+            .attr("x2",xScale(samples_transformed[i][0]))
+            .attr("y2",yScale(samples_transformed[i][1]))
+            .style("line-width",height*0.005)
+            .style("stroke","#999")
+            .attr("id","line"+i.toString())
+         }
+      }
+      
+      function check() {
+      
+        // If the box is ticked, show original
+        if (d3.select("#myCheckbox").property("checked")) {
+
+          i = -1;
+          for (row = 0; row < 10; row++) {
+            for (col = 0; col < 10; col++) {
+              i++;
+              d3.select("#scatter_original"+i.toString())
+                .transition()
+                .duration(250)
+                .style("opacity",1)
+
+              d3.select("#line"+i.toString())
+                .transition()
+                .duration(250)
+                .style("opacity",1)
+            }
+          }
+
+          // If the box is not ticked, do not show solution
+        } else {
+
+          i = -1;
+          for (row = 0; row < 10; row++) {
+            for (col = 0; col < 10; col++) {
+              i++;
+              d3.select("#scatter_original"+i.toString())
+                .transition()
+                .duration(250)
+                .style("opacity",0.)
+
+              d3.select("#line"+i.toString())
+                .transition()
+                .duration(250)
+                .style("opacity",0.)
+            }
+          }
+
+        }
+      
+
+      
+      }
+      
+      // =============================================================================
+
+			// Draw the matrix
+      svg.append("text")
+          .attr("transform",
+              "translate(" + (width * 0.55).toString() + "," + 
+              (height*0.315).toString() + ")")
+          .style("text-anchor", "middle")
+          .style("font-size", (14 * width / 600).toString() + "px")
+          .attr("font-weight", 600)
+          .text("A")
+
+			// Draw the matrix
+      svg.append("text")
+          .attr("transform",
+              "translate(" + (width * 0.59).toString() + "," + 
+              (height*0.315).toString() + ")")
+          .style("text-anchor", "middle")
+          .style("font-size", (14 * width / 600).toString() + "px")
+
+          .attr("font-weight", 300)
+          .text("=")
+          
+      // =============================================================================
+      
+      function draw_slider() {
+      
+      	// Remove any pre-existing sliders
+        svg.selectAll(".valslider")
+          .remove()
+      
+        // Label the slider for the correlation
+        svg.append("text")             
+          .attr("transform",
+                "translate("+(width*0.75).toString()+","+(height*0.65).toString()+")")
+          .style("text-anchor", "middle")
+          .text("selected matrix entry")
+          .style("font-family", "arial")
+          .style("font-size", (12*width/600).toString()+"px")
+          .attr("class","valslider");
+
+        var sliderSimple = d3
+          .sliderBottom()
+          .min(-1)
+          .max(1)
+          .width(width*0.4)
+          .height(height*0.1)
+          .step(0.01)
+          .ticks(5)
+          .tickPadding(0)
+          .displayValue(false)
+          .default(A[index[0]][index[1]])
+          .handle(
+              d3
+              .symbol()
+              .type(d3.symbolCircle)
+              .size(width/5)()
+            )
+          .tickFormat(d3.format(',.1f'))
+          .fill('#ff5000')
+          .on('onchange', val => {
+            A[index[0]][index[1]] = val;
+            d3.select("#text_"+index[0].toString()+index[1].toString())
+              .text(d3.format(".2f")(val))
+            samples_transformed = math.multiply(samples,A)
+            for (i = 0; i< N; i++) {
+              d3.select("#scatter_transformed"+i.toString())
+                .attr("cx",xScale(samples_transformed[i][0]))
+                .attr("cy",yScale(samples_transformed[i][1]))
+              d3.select("#line"+i.toString())
+                .attr("x2",xScale(samples_transformed[i][0]))
+                .attr("y2",yScale(samples_transformed[i][1]))
+                .lower()
+
+            }
+        		analyse_transformation(A);
+      
+
+          });
+
+        var gSimple = d3
+        .select('svg')
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr("id","slider_var")
+        .attr('transform', 'translate('+width*0.55+','+height*0.675+')')
+        .attr("class","valslider");
+
+        gSimple.call(sliderSimple);
+      	
+
+      
+      }
+      
+          
+      // Draw the slider
+      draw_slider();
+
+
+			// Draw the matrix
+      svg.append("text")
+          .attr("transform",
+              "translate(" + (width * 0.675).toString() + "," + 
+              (height*0.215).toString() + ")")
+          .style("text-anchor", "middle")
+          .style("font-size", (14 * width / 600).toString() + "px")
+          .text("1.00")
+          .attr("id","text_00")
+      svg.append("rect")
+          .attr("x",(width * 0.625).toString())
+      		.attr("y",(height*0.1).toString())
+          .attr("width",(width*0.1).toString())
+          .attr("height",(height*0.2).toString())
+          .style("stroke","black")
+          .style("stroke-width",height*0.005)
+          .style("fill","rgba(0,0,0,0)")
+          .attr("id","rect_00")
+          .on("click", function () {
+          	index = [0,0];
+            d3.select("#rect_00").style("stroke","#ff5000").raise()
+            d3.select("#rect_01").style("stroke","black")
+            d3.select("#rect_10").style("stroke","black")
+            d3.select("#rect_11").style("stroke","black")
+            draw_slider();
+          })
+      svg.append("text")
+          .attr("transform",
+              "translate(" + (width * 0.775).toString() + "," + 
+              (height*0.215).toString() + ")")
+          .style("text-anchor", "middle")
+          .style("font-size", (14 * width / 600).toString() + "px")
+          .text("0.00")
+          .attr("id","text_01")
+      svg.append("rect")
+          .attr("x",(width * 0.725).toString())
+      		.attr("y",(height*0.1).toString())
+          .attr("width",(width*0.1).toString())
+          .attr("height",(height*0.2).toString())
+          .style("stroke","black")
+          .style("stroke-width",height*0.005)
+          .style("fill","rgba(0,0,0,0)")
+          .attr("id","rect_01")
+          .on("click", function () {
+          	index = [0,1];
+            d3.select("#rect_00").style("stroke","black")
+            d3.select("#rect_01").style("stroke","#ff5000").raise()
+            d3.select("#rect_10").style("stroke","black")
+            d3.select("#rect_11").style("stroke","black")
+            draw_slider();
+          })
+      svg.append("text")
+          .attr("transform",
+              "translate(" + (width * 0.675).toString() + "," + 
+              (height*0.415).toString() + ")")
+          .style("text-anchor", "middle")
+          .style("font-size", (14 * width / 600).toString() + "px")
+          .text("0.00")
+          .attr("id","text_10")
+      svg.append("rect")
+          .attr("x",(width * 0.625).toString())
+      		.attr("y",(height*0.3).toString())
+          .attr("width",(width*0.1).toString())
+          .attr("height",(height*0.2).toString())
+          .style("stroke","black")
+          .style("stroke-width",height*0.005)
+          .style("fill","rgba(0,0,0,0)")
+          .attr("id","rect_10")
+          .on("click", function () {
+          	index = [1,0];
+            d3.select("#rect_00").style("stroke","black")
+            d3.select("#rect_01").style("stroke","black")
+            d3.select("#rect_10").style("stroke","#ff5000").raise()
+            d3.select("#rect_11").style("stroke","black")
+            draw_slider();
+          })
+      svg.append("text")
+          .attr("transform",
+              "translate(" + (width * 0.775).toString() + "," + 
+              (height*0.415).toString() + ")")
+          .style("text-anchor", "middle")
+          .style("font-size", (14 * width / 600).toString() + "px")
+          .text("1.00")
+          .attr("id","text_11")
+      svg.append("rect")
+          .attr("x",(width * 0.725).toString())
+      		.attr("y",(height*0.3).toString())
+          .attr("width",(width*0.1).toString())
+          .attr("height",(height*0.2).toString())
+          .style("stroke","black")
+          .style("stroke-width",height*0.005)
+          .style("fill","rgba(0,0,0,0)")
+          .attr("id","rect_11")
+          .on("click", function () {
+          	index = [1,1];
+            d3.select("#rect_00").style("stroke","black")
+            d3.select("#rect_01").style("stroke","black")
+            d3.select("#rect_10").style("stroke","black")
+            d3.select("#rect_11").style("stroke","#ff5000").raise()
+            draw_slider();
+          })
+          
+      d3.select("#rect_00")
+      		.style("stroke","#ff5000")
+          .raise()
+     
+     
+      // Linspace
+      function linspace(start, end, resolution) {
+          var spacing = [];
+          // Go through a for-loop
+          var i;
+          for (i = 0; i < resolution; i++) {
+              spacing.push(start + (end - start) * i / (resolution - 1))
+          }
+          return spacing; // The function returns the linspace between p1 and p2
+      }
+
+  
+    </script>
+  </body>
+
+</html>
