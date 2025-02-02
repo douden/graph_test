@@ -67,12 +67,12 @@
       });
 
       const nodes = Array.from(nodesMap.values());
-      const minRadius = height*0.1, maxRadius = height*0.3;
-      const maxReferences = Math.max(...referenceCounts.values());
+      const minRadius = height*0.025, maxRadius = height*0.1;
+      const maxReferences = 10; // Math.max(...referenceCounts.values());
 
       nodes.forEach(node => {
         const count = referenceCounts.get(node.id) || 0;
-        node.radius = minRadius + (maxRadius - minRadius) * (count / maxReferences);
+        node.radius = minRadius + (maxRadius - minRadius) * (Math.min(count,maxReferences) / maxReferences);
       });
 
       const simulation = d3.forceSimulation(nodes)
