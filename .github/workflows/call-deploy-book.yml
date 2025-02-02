@@ -28,6 +28,10 @@ jobs:
           # pip install any needed libs, e.g. re, etc.
           # or none if no extra libs are required
 
+      - name: List repository structure
+        run: |
+          ls -R
+
       - name: Parse references
         run: |
           python book/parse_references.py
