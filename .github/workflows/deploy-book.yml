@@ -290,6 +290,12 @@ jobs:
         name: _buildstatus-${{ env.MATRIX_BRANCH_NAME_CLEAN }}
         path: "buildstatus.txt"
 
+    - name: Download references artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: references
+        path: book/
+
     - name: Debug - List all files in workspace
       run: |
         echo "Listing all files in the current workspace:"
