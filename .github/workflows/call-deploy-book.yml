@@ -1,4 +1,4 @@
-name: Build and Deploy Book
+name: call-deploy-book
 
 on:
   push:
@@ -17,31 +17,30 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: List repository structure
-        run: |
-          ls -R
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
-      - name: Install dependencies
+      - name: Install dependencies (if needed)
         run: |
           pip install -U pip
-          # If you need other libs, install them here
+          # pip install any needed libs, e.g. re, etc.
+          # or none if no extra libs are required
+
+      - name: List repository structure
+        run: |
+          ls -R
 
       - name: Parse references
         run: |
           python book/parse_references.py
 
-      - name: Copy references into build folder
-        run: |
-          cp references.txt book/_build/html/references.txt || true
-
-      - name: Build Jupyter Book
-        run: |
-          jupyter-book build book/
+      - name: Upload references artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: references
+          path: references.txt
 
   call-workflow:
     name: Deploy Book
