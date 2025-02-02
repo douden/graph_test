@@ -1,15 +1,3 @@
-```{div} sticky-variable-table
-### Nomenclature
-| Variable  | Description  |
-|-------|--------|
-| $y$ | dependent variable |
-| $x$ | explanatory variable |
-| $N$ | number of samples |
-| $D$ | number of explanatory variables |
-| $c$ | coefficients |
-| $\epsilon$ | residual |
-```
-
 # Linear regression
 
 **Summary.** A linear regression fits a linear function that predicts a dependent variable {math}`y` based on one or more explanatory variables {math}`x`. 
@@ -36,3 +24,15 @@ where the coefficients ${c_{0},\dots,c_{D}}$ define the linear function. Since m
 </div>
 
 A useful way of thinking about a linear regression is that we are seeking a *line* (in 2-D), a *plane* (in 3-D), or a *hyper-plane* (in higher dimensions) that is as close as possible to all samples. If we use least squares estimation to find the optimal linear function, the objective function penalizes the sum of squared residuals of all samples. This has the consequence that samples, which deviate the farthest from the linear function, excert the strongest "pull" on the linear regression. The consequence is a linear function that pierces the cloud of points along its longest axis, and balances the residuals above and below the linear function.
+
+```{div} sticky-variable-table
+### Nomenclature
+| Variable  | Description  |
+|-------|--------|
+| $y$ | dependent variable |
+| $x$ | explanatory variable |
+| $N$ | number of samples |
+| $D$ | number of explanatory variables |
+| $c$ | coefficients |
+| $\epsilon$ | residual |
+```
