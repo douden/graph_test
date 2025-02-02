@@ -290,6 +290,11 @@ jobs:
         name: _buildstatus-${{ env.MATRIX_BRANCH_NAME_CLEAN }}
         path: "buildstatus.txt"
 
+    - name: Debug - List all files in workspace
+      run: |
+        echo "Listing all files in the current workspace:"
+        find . -type f
+
     - if: always()
       name: Copy references.txt to final build output
       run: |
