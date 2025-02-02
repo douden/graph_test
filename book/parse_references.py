@@ -33,6 +33,6 @@ if __name__ == "__main__":
     # Adjust as needed if your .md files are in "pages"
 
     print("Looking for article files...")
-    print(os.walk(folder_path))
+    print(os.walk("pages"))
 
     find_references("pages", "references.txt")
