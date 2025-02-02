@@ -30,7 +30,7 @@ jobs:
 
       - name: Parse references
         run: |
-          python parse_references.py
+          python book/parse_references.py
 
       - name: Upload references artifact
         uses: actions/upload-artifact@v4
