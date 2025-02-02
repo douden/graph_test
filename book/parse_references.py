@@ -4,7 +4,7 @@ import re
 # Regex: capture the display text and the target inside {doc}`Display <target>`
 REFERENCE_REGEX = re.compile(r"\{doc\}`([^<]+)<([^>]+)>`")
 
-print("Looking for article files...")
+
 
 def find_references(folder_path, output_file):
     all_refs = []
@@ -31,4 +31,8 @@ def find_references(folder_path, output_file):
 
 if __name__ == "__main__":
     # Adjust as needed if your .md files are in "pages"
+
+    print("Looking for article files...")
+    print(os.walk(folder_path))
+
     find_references("pages", "references.txt")
