@@ -73,6 +73,25 @@ div.bd-main {
 }
 
 /* ======================================== */
+/* Styling for the tags */
+/* ======================================== */
+
+.tags-box {
+    border: 1px solid #ccc;
+    padding: 0.5em;
+    margin: 1em 0;
+  }
+  
+  .tag-pill {
+    display: inline-block;
+    background: #eee;
+    border-radius: 5px;
+    padding: 0.25em 0.5em;
+    margin: 0 0.25em;
+    font-size: 0.9em;
+  }
+
+/* ======================================== */
 /* Styling the variable table */
 /* ======================================== */
 
