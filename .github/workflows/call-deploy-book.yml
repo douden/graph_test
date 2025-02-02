@@ -46,6 +46,17 @@ jobs:
         with:
           name: references
           path: references.txt
+
+      - name: Configure git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Commit references
+        run: |
+          git add book/references.txt
+          git commit -m "Add references.txt"
+          git push
           
 
   call-workflow:
