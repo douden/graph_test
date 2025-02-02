@@ -62,9 +62,10 @@ jobs:
   call-workflow:
     name: Deploy Book
     needs: parse-references
-    uses: TeachBooks/deploy-book-workflow/.github/workflows/deploy-book.yml@main
+    uses: ./.github/workflows/deploy-book.yml
     secrets: inherit
     permissions:
       contents: read
       pages: write
       id-token: write
+
