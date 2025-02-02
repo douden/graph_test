@@ -4,7 +4,7 @@ import re
 # Regex: capture the display text and the target inside {doc}`Display <target>`
 REFERENCE_REGEX = re.compile(r"\{doc\}`([^<]+)<([^>]+)>`")
 
-
+print("Starting reference parsing.")
 
 def find_references(folder_path, output_file):
     all_refs = []
