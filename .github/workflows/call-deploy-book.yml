@@ -46,12 +46,6 @@ jobs:
         with:
           name: references
           path: references.txt
-
-      - name: Commit references
-        run: |
-          git add book/references.txt
-          git commit -m "Add references.txt"
-          git push
           
 
   call-workflow:
