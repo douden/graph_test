@@ -38,7 +38,6 @@ jobs:
 
       - name: Copy references file into book/
         run: |
-          # This places references.txt inside book/ so the external workflow can pick it up
           cp references.txt book/references.txt || true
 
       - name: Upload references artifact
