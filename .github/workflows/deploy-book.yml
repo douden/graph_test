@@ -219,9 +219,16 @@ jobs:
         set +o pipefail
 
     - if: ${{ steps.cache-html.outputs.cache-hit != 'true' }}
+      name: List build output
+      run: |
+        echo "Listing contents of the book directory:"
+        ls -R book/
+
+    - if: ${{ steps.cache-html.outputs.cache-hit != 'true' }}
       name: Copy references.txt to final build output
       run: |
         cp book/references.txt book/_build/html/references.txt || true
+
 
     - name: If failed, restore a book for this branch from cache
       if: failure()
