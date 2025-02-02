@@ -13,16 +13,26 @@ def find_references(folder_path, output_file):
         for fname in files:
             if fname.endswith(".md"):
                 path = os.path.join(root, fname)
-                with open(path, "r", encoding="utf-8") as f:
-                    content = f.read()
+                try:
+                    with open(path, "r", encoding="utf-8") as f:
+                        content = f.read()
+                except Exception as e:
+                    print(f"Failed to read {path}: {e}")
+                    continue
+
                 # Debug info
                 print(f"Checking: {path}")
                 matches = REFERENCE_REGEX.findall(content)
                 print(f"Matches found: {matches}")
 
-                # Each match is (display_text, target)
+                # Store unique references per file
+                unique_refs = set()
+
                 for display_text, target in matches:
-                    all_refs.append((fname, display_text.strip(), target.strip()))
+                    ref = (display_text.strip(), target.strip())
+                    if ref not in unique_refs:
+                        unique_refs.add(ref)
+                        all_refs.append((fname, *ref))  # Append only if unique
 
     # Write references to a text file
     with open(output_file, "w", encoding="utf-8") as out:
@@ -30,8 +40,6 @@ def find_references(folder_path, output_file):
             out.write(f"{md_file} -> [text: '{text}'] [target: '{target}']\n")
 
 if __name__ == "__main__":
-    # Adjust as needed if your .md files are in "pages"
-
     print("Looking for article files...")
     for root, dirs, files in os.walk("book/pages"):
         for fname in files:

@@ -296,11 +296,6 @@ jobs:
         name: references
         path: book/
 
-    - name: Debug - List all files in workspace
-      run: |
-        echo "Listing all files in the current workspace:"
-        find . -type f
-
     - if: always()
       name: Copy references.txt to final build output
       run: |
