@@ -33,7 +33,7 @@ jobs:
           python parse_references.py
 
       - name: Upload references artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: references
           path: references.txt
