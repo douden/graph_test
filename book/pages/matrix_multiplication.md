@@ -4,6 +4,14 @@
 
 **Summary.** A matrix multiplication combines a $i \times j$ matrix $\boldsymbol{A}\in\mathbb{R}^{i \times j}$ and a $j \times k$ matrix $\boldsymbol{B}\in\mathbb{R}^{j \times k}$ into a $i \times k$ matrix $\boldsymbol{C}\in\mathbb{R}^{i \times k}$.
 
+:::{div}
+:class: tags-box
+
+**Tags:**
+<span class="tag-pill">{doc}`Linear Algebra <linear_algebra>`</span>
+
+:::
+
 ## Definition
 
 A matrix multiplication, also known as a *dot product*, recombines the entries of two matrices $\boldsymbol{A}\in\mathbb{R}^{i \times j}$ and $\boldsymbol{B}\in\mathbb{R}^{j \times k}$ into a new matrix $\boldsymbol{C}\in\mathbb{R}^{i \times k}$, whose entries are derived as an *inner product* between the entries along the rows of $\boldsymbol{A}$ and columns of $\boldsymbol{B}$. Assume that each matrix $\mathbf{A}$ and $\mathbf{B}$ comprises of entries with subscripts denoting their row and column
