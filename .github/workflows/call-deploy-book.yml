@@ -17,20 +17,19 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
+      - name: List repository structure
+        run: |
+          ls -R
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
-      - name: Install dependencies (if needed)
+      - name: Install dependencies
         run: |
           pip install -U pip
-          # pip install any needed libs, e.g. re, etc.
-          # or none if no extra libs are required
-
-      - name: List repository structure
-        run: |
-          ls -R
+          # If you need additional libraries, install them here.
 
       - name: Parse references
         run: |
@@ -41,6 +40,7 @@ jobs:
         with:
           name: references
           path: references.txt
+
 
   call-workflow:
     name: Deploy Book
