@@ -10,15 +10,24 @@ on:
       - .github/workflows/call-deploy-book.yml
   workflow_dispatch:
 
+name: Build and Parse Jupyter Book
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
 jobs:
   parse-references:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out
+      - name: Check out repository
         uses: actions/checkout@v3
 
       - name: List repository structure
-        run: ls -R
+        run: |
+          ls -R
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -34,21 +43,19 @@ jobs:
         run: |
           python book/parse_references.py
 
-      # Now references.txt sits in the repo root if parse_references.py wrote it there,
-      # or in 'book/' if that's how your script is set up.
-      - name: Copy references.txt into the _build/html folder
+      - name: Copy references into build folder
         run: |
-          cp references.txt book/_build/html/references.txt
-          # or if your script wrote it to book/, do:
-          # cp book/references.txt book/_build/html/references.txt
+          # Adjust this if references.txt is generated in book/ vs. root
+          cp references.txt book/_build/html/references.txt || true
 
-      # Now build the book, which includes references.txt
       - name: Build Jupyter Book
         run: |
           jupyter-book build book/
 
-      - name: Deploy
-        # your usual deploy or call-workflow step
+      - name: Deploy Book (example placeholder)
+        run: |
+          # Insert your actual deploy command or call-workflow step here
+          echo "Deploying..."
 
   call-workflow:
     name: Deploy Book
