@@ -34,6 +34,11 @@
   const svg = d3.select("#graph").attr("width", width).attr("height", height);
   const gContainer = svg.append("g");
 
+  // Capitalize the first letter of each word
+  function capitalizeWords(str) {
+    return str.replace(/\b\w/g, char => char.toUpperCase());
+  }
+
   // Fetch and parse references.txt
   fetch('https://maxramgraber.github.io/MASTER/main/references.txt')
     .then(response => response.text())
@@ -47,10 +52,10 @@
 
         // Create nodes if they don't exist
         if (!nodesMap.has(sourceFile)) {
-          nodesMap.set(sourceFile, { id: sourceFile, text: sourceFile.replace('.md', '').replace(/_/g, ' '), link: `https://maxramgraber.github.io/MASTER/main/pages/${sourceFile.replace('.md', '.html')}` });
+          nodesMap.set(sourceFile, { id: sourceFile, text: capitalizeWords(sourceFile.replace('.md', '').replace(/_/g, ' ')), link: `https://maxramgraber.github.io/MASTER/main/pages/${sourceFile.replace('.md', '.html')}` });
         }
         if (!nodesMap.has(targetPart + '.md')) {
-          nodesMap.set(targetPart + '.md', { id: targetPart + '.md', text: textPart, link: `https://maxramgraber.github.io/MASTER/main/pages/${targetPart}.html` });
+          nodesMap.set(targetPart + '.md', { id: targetPart + '.md', text: capitalizeWords(textPart), link: `https://maxramgraber.github.io/MASTER/main/pages/${targetPart}.html` });
         }
 
         // Add link
