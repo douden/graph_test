@@ -4,8 +4,6 @@
 
 **Summary.** A linear regression fits a linear function that predicts a dependent variable {math}`y` based on one or more explanatory variables {math}`x`. 
 
-Tags: {doc}`Linear Algebra <linear_algebra>`, {doc}`Matrix multiplication <matrix_multiplication>`
-
 :::{div}
 :class: tags-box
 
