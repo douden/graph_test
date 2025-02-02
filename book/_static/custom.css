@@ -184,44 +184,42 @@ div.bd-main {
 /* Dark Mode Styling */
 /* ======================================== */
 
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #121212; /* Dark background */
-        color: #e0e0e0;            /* Light text */
-    }
-
-    .bd-toc, 
-    .tags-box, 
-    .sticky-variable-table {
-        background-color: #1e1e1e; /* Darker background for elements */
-        border: 1px solid #444;    /* Softer borders */
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); /* Darker shadow */
-    }
-
-    .tag-pill {
-        background: #333;          /* Darker tag background */
-        color: #ddd;               /* Lighter tag text */
-    }
-
-    .sticky-variable-table table {
-        background-color: #1e1e1e; /* Dark table background */
-        color: #e0e0e0;            /* Light text */
-    }
-
-    .sticky-variable-table th {
-        background-color: #333;    /* Darker header background */
-        color: #ddd;               /* Light header text */
-        border-bottom: 2px solid #555;
-    }
-
-    .sticky-variable-table td {
-        background-color: #1e1e1e; /* Match table body with dark mode */
-        color: #ccc;               /* Light text */
-        border: 1px solid #444;    /* Subtle borders */
-    }
-
-    .sticky-variable-table tr:hover {
-        background-color: #2a2a2a; /* Dark hover effect */
-    }
+/* Jupyter Book dark mode styling */
+body.theme-dark {
+    background-color: #121212;
+    color: #e0e0e0;
 }
 
+body.theme-dark .bd-toc,
+body.theme-dark .tags-box,
+body.theme-dark .sticky-variable-table {
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+body.theme-dark .tag-pill {
+    background: #333;
+    color: #ddd;
+}
+
+body.theme-dark .sticky-variable-table table {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+body.theme-dark .sticky-variable-table th {
+    background-color: #333;
+    color: #ddd;
+    border-bottom: 2px solid #555;
+}
+
+body.theme-dark .sticky-variable-table td {
+    background-color: #1e1e1e;
+    color: #ccc;
+    border: 1px solid #444;
+}
+
+body.theme-dark .sticky-variable-table tr:hover {
+    background-color: #2a2a2a;
+}
