@@ -1,5 +1,7 @@
 # Linear algebra
 
+(paragraph-label)=summary
+
 Linear algebra is a branch of mathematics that concerns itself with linear functions, vector space, and matrices.
 
 <div style="float: right; width: 100%; margin: 10px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
