@@ -1,4 +1,4 @@
-name: call-deploy-book
+name: Build and Deploy Book
 
 on:
   push:
@@ -8,14 +8,6 @@ on:
       - book/**
       - requirements.txt
       - .github/workflows/call-deploy-book.yml
-  workflow_dispatch:
-
-name: Build and Parse Jupyter Book
-
-on:
-  push:
-    branches:
-      - '**'
   workflow_dispatch:
 
 jobs:
@@ -45,17 +37,11 @@ jobs:
 
       - name: Copy references into build folder
         run: |
-          # Adjust this if references.txt is generated in book/ vs. root
           cp references.txt book/_build/html/references.txt || true
 
       - name: Build Jupyter Book
         run: |
           jupyter-book build book/
-
-      - name: Deploy Book (example placeholder)
-        run: |
-          # Insert your actual deploy command or call-workflow step here
-          echo "Deploying..."
 
   call-workflow:
     name: Deploy Book
