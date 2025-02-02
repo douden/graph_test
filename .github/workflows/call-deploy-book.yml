@@ -36,11 +36,17 @@ jobs:
         run: |
           python book/parse_references.py
 
+      - name: Copy references file into book/
+        run: |
+          # This places references.txt inside book/ so the external workflow can pick it up
+          cp references.txt book/references.txt || true
+
       - name: Upload references artifact
         uses: actions/upload-artifact@v4
         with:
           name: references
           path: references.txt
+          
 
   call-workflow:
     name: Deploy Book
