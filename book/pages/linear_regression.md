@@ -6,12 +6,12 @@
 
 Tags: {doc}`Linear Algebra <linear_algebra>`, {doc}`Matrix multiplication <matrix_multiplication>`
 
-:::{div} tags-container
+:::{div}
 :class: tags-box
 
-**Tags:** 
-<span class="tag-pill">{doc}`Linear regression <linear_regression>`</span>
-<span class="tag-pill">{doc}`Matrix multiplication <matrix_multiplication>`</span>
+**Tags:**
+<span class="tag-pill">{doc}`Linear Regression <linear_regression>`</span>
+<span class="tag-pill">{doc}`Matrix Multiplication <matrix_multiplication>`</span>
 
 :::
 
