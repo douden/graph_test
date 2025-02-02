@@ -1,4 +1,4 @@
-(paragraph-label)=summary
+(summary)=
 # Linear regression
 
 **Summary.** A linear regression fits a linear function that predicts a dependent variable {math}`y` based on one or more explanatory variables {math}`x`. 
