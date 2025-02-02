@@ -11,6 +11,7 @@ Linear algebra is a branch of mathematics that concerns itself with linear funct
 **Tags:**
 <span class="tag-pill">{doc}`Linear Regression <linear_regression>`</span>
 <span class="tag-pill">{doc}`Matrix Multiplication <matrix_multiplication>`</span>
+<span class="tag-pill">{doc}`Linear Transformation <linear_transformation>`</span>
 
 :::
 
