@@ -1,13 +1,3 @@
-```{div} sticky-variable-table
-### Nomenclature
-| Variable  | Description  |
-|-------|--------|
-| $\boldsymbol{A}, \boldsymbol{B}, \boldsymbol{C}$ | matrices or vectors |
-| $a, b, c$ | array entries |
-| $i, j, k$ | array dimensions |
-| $\cdot$ | dot product |
-```
-
 # Matrix multiplication
 
 **Summary.** A matrix multiplication combines a $i \times j$ matrix $\boldsymbol{A}\in\mathbb{R}^{i \times j}$ and a $j \times k$ matrix $\boldsymbol{B}\in\mathbb{R}^{j \times k}$ into a $i \times k$ matrix $\boldsymbol{C}\in\mathbb{R}^{i \times k}$.
@@ -51,3 +41,12 @@ The element below illustrates matrix multiplication in practice. Here, we combin
     </div>
 </div>
 
+```{div} sticky-variable-table
+### Nomenclature
+| Variable  | Description  |
+|-------|--------|
+| $\boldsymbol{A}, \boldsymbol{B}, \boldsymbol{C}$ | matrices or vectors |
+| $a, b, c$ | array entries |
+| $i, j, k$ | array dimensions |
+| $\cdot$ | dot product |
+```
