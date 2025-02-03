@@ -76,6 +76,13 @@
       });
 
       const savedNodePositions = JSON.parse(localStorage.getItem('graphNodePositions'));
+
+      const simulation = d3.forceSimulation(nodes)
+        .force("link", d3.forceLink(links).id(d => d.id).distance(50))
+        .force("charge", d3.forceManyBody().strength(-3000))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .on("tick", ticked);
+
       if (savedNodePositions) {
         nodes.forEach(node => {
           if (savedNodePositions[node.id]) {
@@ -83,20 +90,8 @@
             node.y = savedNodePositions[node.id].y;
           }
         });
+        simulation.stop(); // Stop simulation if loaded from memory
       }
-
-      const simulation = d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => d.id).distance(50))
-        .force("charge", d3.forceManyBody().strength(-3000))
-        .force("center", d3.forceCenter(width / 2, height / 2))
-        .on("tick", ticked)
-        .on("end", () => {
-          const currentPositions = {};
-          nodes.forEach(node => {
-            currentPositions[node.id] = { x: node.x, y: node.y };
-          });
-          localStorage.setItem('graphNodePositions', JSON.stringify(currentPositions));
-        });
 
       const link = gContainer.selectAll(".link")
         .data(links)
@@ -112,7 +107,10 @@
         .attr("r", d => d.radius)
         .style("fill", (d, i) => d3.schemeTableau10[i % 10])
         .call(d3.drag()
-          .on("start", dragStarted)
+          .on("start", function(event, d) {
+            if (savedNodePositions) simulation.alphaTarget(0.3).restart(); // Restart simulation on node drag if it was stopped
+            dragStarted(event, d);
+          })
           .on("drag", dragged)
           .on("end", dragEnded))
         .on("click", (event, d) => {
@@ -167,6 +165,7 @@
         .on("zoom", (event) => {
           gContainer.attr("transform", event.transform);
           localStorage.setItem('graphZoomState', JSON.stringify(event.transform));
+          if (savedNodePositions && !simulation.alpha()) simulation.alphaTarget(0.3).restart(); // Restart simulation on zoom if stopped
         });
 
       svg.call(zoom);
