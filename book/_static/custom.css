@@ -206,6 +206,19 @@ div.bd-main {
     border: none;
   }  
 
+/* Full-width navigation on vertical smartphone screens */
+@media (max-width: 768px) {
+    .sticky-nav {
+        width: 100vw;    /* Full width */
+        height: 50vw;    /* Adjust height for better visibility */
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 0;
+    }
+}
+
+
 /* ======================================== */
 /* Dark Mode Styling */
 /* ======================================== */
