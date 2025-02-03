@@ -141,11 +141,24 @@
         d.fy = null;
       }
 
-      svg.call(d3.zoom()
+      // Persist zoom and pan state across sessions
+      const savedZoomState = JSON.parse(localStorage.getItem('graphZoomState'));
+
+      const zoom = d3.zoom()
         .extent([[0, 0], [width, height]])
         .scaleExtent([0.5, 5])
-        .on("zoom", (event) => gContainer.attr("transform", event.transform))
-      );
+        .on("zoom", (event) => {
+          gContainer.attr("transform", event.transform);
+          localStorage.setItem('graphZoomState', JSON.stringify(event.transform));
+        });
+
+      svg.call(zoom);
+
+      // Apply saved zoom state if available
+      if (savedZoomState) {
+        svg.call(zoom.transform, d3.zoomIdentity.translate(savedZoomState.x, savedZoomState.y).scale(savedZoomState.k));
+      }
+
     })
     .catch(err => console.error('Failed to load references:', err));
 </script>
