@@ -30,11 +30,8 @@
   const width = vw;
   const height = vh;
 
-  const originalSize = 800;  // Unified original size
-  const scaleFactor = Math.min(vw, vh) / originalSize;
-
-  const svg = d3.select("#graph").attr("width", originalSize).attr("height", originalSize);
-  const gContainer = svg.append("g").attr("transform", `scale(${scaleFactor})`);
+  const svg = d3.select("#graph").attr("width", width).attr("height", height);
+  const gContainer = svg.append("g");
 
   function capitalizeWords(str) {
     return str.replace(/\b\w/g, char => char.toUpperCase());
@@ -42,18 +39,6 @@
 
   function extractTitle(filename) {
     return capitalizeWords(filename.replace('.md', '').replace(/_/g, ' '));
-  }
-
-  // Get current page name from parent window URL
-  let currentPage = '';
-  try {
-    const parentUrl = window.parent.location.href;
-    const match = parentUrl.match(/\/([^\/]+)\.html$/);
-    if (match) {
-      currentPage = match[1] + '.md';
-    }
-  } catch (e) {
-    console.warn('Unable to access parent window URL due to cross-origin restrictions.');
   }
 
   fetch('https://maxramgraber.github.io/MASTER/main/references.txt')
@@ -81,8 +66,7 @@
       });
 
       const nodes = Array.from(nodesMap.values());
-      const minRadius = 10;
-      const maxRadius = 40;
+      const minRadius = 10, maxRadius = 40;
       const maxReferences = Math.max(...referenceCounts.values());
 
       nodes.forEach(node => {
@@ -90,21 +74,10 @@
         node.radius = minRadius + (maxRadius - minRadius) * (count / maxReferences);
       });
 
-      // Load and denormalize saved node positions
-      const savedNodePositions = JSON.parse(localStorage.getItem('graphNodePositions'));
-      if (savedNodePositions) {
-        nodes.forEach(node => {
-          if (savedNodePositions[node.id]) {
-            node.fx = savedNodePositions[node.id].x * originalSize;  // Denormalize
-            node.fy = savedNodePositions[node.id].y * originalSize;  // Denormalize
-          }
-        });
-      }
-
       const simulation = d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id).distance(50))
         .force("charge", d3.forceManyBody().strength(-3000))
-        .force("center", d3.forceCenter(originalSize / 2, originalSize / 2))
+        .force("center", d3.forceCenter(width / 2, height / 2))
         .on("tick", ticked);
 
       const link = gContainer.selectAll(".link")
@@ -120,7 +93,6 @@
         .attr("class", "node")
         .attr("r", d => d.radius)
         .style("fill", (d, i) => d3.schemeTableau10[i % 10])
-        .style("opacity", d => d.id === currentPage ? 1 : 0.3)  // Make non-current nodes semi-transparent
         .call(d3.drag()
           .on("start", dragStarted)
           .on("drag", dragged)
@@ -164,43 +136,17 @@
 
       function dragEnded(event, d) {
         if (!event.active) simulation.alphaTarget(0);
-        const currentPositions = JSON.parse(localStorage.getItem('graphNodePositions')) || {};
-        currentPositions[d.id] = { x: d.x / originalSize, y: d.y / originalSize };  // Normalize before saving
-        localStorage.setItem('graphNodePositions', JSON.stringify(currentPositions));
         d.fx = null;
         d.fy = null;
       }
 
-      // Persist zoom and pan state across sessions
-      const savedZoomState = JSON.parse(localStorage.getItem('graphZoomState'));
-
-      const zoom = d3.zoom()
-        .extent([[0, 0], [originalSize, originalSize]])
+      svg.call(d3.zoom()
+        .extent([[0, 0], [width, height]])
         .scaleExtent([0.5, 5])
-        .on("zoom", (event) => {
-          gContainer.attr("transform", event.transform);
-          localStorage.setItem('graphZoomState', JSON.stringify(event.transform));
-        });
-
-      svg.call(zoom);
-
-      // Apply saved zoom state if available
-      if (savedZoomState) {
-        svg.call(zoom.transform, d3.zoomIdentity.translate(savedZoomState.x, savedZoomState.y).scale(savedZoomState.k));
-      }
-
+        .on("zoom", (event) => gContainer.attr("transform", event.transform))
+      );
     })
     .catch(err => console.error('Failed to load references:', err));
-
-  // Scaling for iframe embedding
-  window.addEventListener('load', function() {
-    const parentWidth = window.innerWidth;
-    const scale = parentWidth / originalSize;
-
-    const graph = document.getElementById('graph');
-    graph.style.transform = `scale(${scale})`;
-    graph.style.transformOrigin = 'top left';
-  });
 </script>
 
 </body>
