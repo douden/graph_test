@@ -75,6 +75,16 @@
         node.radius = minRadius + (maxRadius - minRadius) * (count / maxReferences);
       });
 
+      const savedNodePositions = JSON.parse(localStorage.getItem('graphNodePositions'));
+      if (savedNodePositions) {
+        nodes.forEach(node => {
+          if (savedNodePositions[node.id]) {
+            node.fx = savedNodePositions[node.id].x;
+            node.fy = savedNodePositions[node.id].y;
+          }
+        });
+      }
+
       const simulation = d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id).distance(50))
         .force("charge", d3.forceManyBody().strength(-3000))
@@ -137,6 +147,9 @@
 
       function dragEnded(event, d) {
         if (!event.active) simulation.alphaTarget(0);
+        const currentPositions = JSON.parse(localStorage.getItem('graphNodePositions')) || {};
+        currentPositions[d.id] = { x: d.x, y: d.y };
+        localStorage.setItem('graphNodePositions', JSON.stringify(currentPositions));
         d.fx = null;
         d.fy = null;
       }
