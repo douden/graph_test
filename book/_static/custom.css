@@ -189,8 +189,8 @@ div.bd-main {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 20vw;       /* Adjust as needed */
-    height: 10vw;      /* Square container */
+    width: 25vw;       /* Adjust as needed */
+    height: 12.5vw;      /* Square container */
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;

@@ -37,3 +37,7 @@ The interactive element below illustrates the influence of different $2 \times 2
 | $\boldsymbol{y}$ | post-transformation vector |
 | $D$ | length of $\boldsymbol{x}$ |
 ```
+
+<div class="sticky-nav">
+    <iframe src="https://maxramgraber.github.io/MASTER/main/_static/elements/navigation.html" style="width: 100%; aspect-ratio: 2 / 1; border: none; border-radius: 8px;"></iframe>
+</div>

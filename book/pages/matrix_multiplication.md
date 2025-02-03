@@ -61,3 +61,7 @@ The element below illustrates matrix multiplication in practice. Here, we combin
 | $i \times j$ | $i$-by-$j$ (matrix dimensions) |
 | $\cdot$ | dot product |
 ```
+
+<div class="sticky-nav">
+    <iframe src="https://maxramgraber.github.io/MASTER/main/_static/elements/navigation.html" style="width: 100%; aspect-ratio: 2 / 1; border: none; border-radius: 8px;"></iframe>
+</div>
