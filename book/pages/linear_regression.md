@@ -44,3 +44,7 @@ A useful way of thinking about a linear regression is that we are seeking a *lin
 | $c$ | coefficients |
 | $\epsilon$ | residual |
 ```
+
+<div style="position: fixed; bottom: 20px; right: 20px; width: 300px; height: 400px; z-index: 1000; background: #fff; border: 1px solid #ccc;">
+  <iframe src="navigation.html" style="width: 100%; height: 100%; border: none;"></iframe>
+</div>
