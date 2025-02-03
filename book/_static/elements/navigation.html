@@ -88,10 +88,13 @@
           if (savedNodePositions[node.id]) {
             node.x = savedNodePositions[node.id].x;
             node.y = savedNodePositions[node.id].y;
+            node.fx = savedNodePositions[node.id].x;  // Fix x position
+            node.fy = savedNodePositions[node.id].y;  // Fix y position
           }
         });
         simulation.stop(); // Stop simulation if loaded from memory
       }
+
 
       const link = gContainer.selectAll(".link")
         .data(links)
