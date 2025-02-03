@@ -44,6 +44,18 @@
     return capitalizeWords(filename.replace('.md', '').replace(/_/g, ' '));
   }
 
+  // Get current page name from parent window URL
+  let currentPage = '';
+  try {
+    const parentUrl = window.parent.location.href;
+    const match = parentUrl.match(/\/([^\/]+)\.html$/);
+    if (match) {
+      currentPage = match[1] + '.md';
+    }
+  } catch (e) {
+    console.warn('Unable to access parent window URL due to cross-origin restrictions.');
+  }
+
   fetch('https://maxramgraber.github.io/MASTER/main/references.txt')
     .then(response => response.text())
     .then(data => {
@@ -108,6 +120,7 @@
         .attr("class", "node")
         .attr("r", d => d.radius)
         .style("fill", (d, i) => d3.schemeTableau10[i % 10])
+        .style("opacity", d => d.id === currentPage ? 1 : 0.3)  // Make non-current nodes semi-transparent
         .call(d3.drag()
           .on("start", dragStarted)
           .on("drag", dragged)
