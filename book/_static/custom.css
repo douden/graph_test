@@ -49,6 +49,13 @@ div.bd-main {
     width: calc(100% - 220px) !important;
 }
 
+
+/* Adjusts the content area to take the full width */
+/*div.bd-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+}*/
+
 /* Hide the Previous and Next navigation links */
 div#sphinx-book-navigation {
     display: none !important;
@@ -76,16 +83,17 @@ div.bd-main {
     padding: 0.75em 1em;
     margin: 1em 0;
     border-radius: 4px;
-}
-
-.tag-pill {
+  }
+  
+  .tag-pill {
     display: inline-block;
     margin: 0 0.25em;
     padding: 0.25em 0.5em;
     background: #eee;
     border-radius: 6px;
     font-size: 0.9em;
-}
+  }
+  
 
 /* ======================================== */
 /* Styling the variable table */
@@ -106,34 +114,15 @@ div.bd-main {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     font-size: 16px;
     z-index: 1000;
-    transition: transform 0.3s ease-in-out;
-}
-
-/* Collapsible behavior for small screens */
-.sticky-variable-table.collapsed {
-    transform: translateX(100%);
-}
-
-.sticky-toggle-btn {
-    position: fixed;
-    top: 100px;
-    right: 2%;
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 1001;
-    display: none;
 }
 
 /* Style the sticky table heading */
 .sticky-variable-title {
-    text-align: center;
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-family: 'Roboto Slab', serif;
+    text-align: center;          /* Center the title */
+    font-size: 1.5em;            /* Equivalent to ### Heading size */
+    font-weight: bold;           /* Bold text */
+    margin-bottom: 10px;         /* Space below the title */
+    font-family: 'Roboto Slab', serif;  /* Optional: Use Roboto Slab font */
 }
 
 /* Table Styling */
@@ -146,13 +135,13 @@ div.bd-main {
 }
 
 .sticky-variable-table h3 {
-    text-align: center;
-    font-family: 'Roboto Slab', serif;
-    font-weight: bold;
-    font-size: 20px;
-    margin: 5px 0 !important;
-    padding: 0 !important;
-    color: #333;
+    text-align: center;               /* Center the heading */
+    font-family: 'Roboto Slab', serif; /* Apply custom font */
+    font-weight: bold;                /* Make it bold */
+    font-size: 20px;                  /* Adjust font size */
+    margin: 5px 0 !important;         /* Adjust spacing */
+    padding: 0 !important;            /* Remove extra padding */
+    color: #333;                      /* Set heading color */
 }
 
 /* Table Header */
@@ -184,40 +173,10 @@ div.bd-main {
     background-color: #f1f1f1;
 }
 
-/* Responsive adjustments for small screens */
+/* Hide on small screens */
 @media (max-width: 768px) {
     .sticky-variable-table {
-        width: 100vw;
-        left: 0;
-        right: 0;
-        top: auto;
-        bottom: 0;
-        border-radius: 0;
-        transform: translateY(100%);
-    }
-
-    .sticky-variable-table.expanded {
-        transform: translateY(0);
-    }
-
-    .sticky-toggle-btn {
-        display: block;
-        bottom: 10px;
-        right: 10px;
-    }
-
-    .sticky-nav {
-        width: 100vw;
-        height: 50vh;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 0;
-        transform: translateY(100%);
-    }
-
-    .sticky-nav.expanded {
-        transform: translateY(0);
+        display: none;
     }
 }
 
@@ -225,28 +184,27 @@ div.bd-main {
 /* Styling the graph navigation */
 /* ======================================== */
 
-/* Sticky Navigation Container */
+/* Sticky Navigation Container (square and responsive) */
 .sticky-nav {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 25vw;
-    height: 12.5vw;
+    width: 25vw;       /* Adjust as needed */
+    height: 12.5vw;      /* Square container */
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    overflow: hidden;  /* Prevent content overflow */
     z-index: 1000;
-    transition: transform 0.3s ease-in-out;
-}
-
-/* Make sure the iframe fills the container */
-.sticky-nav iframe {
+  }
+  
+  /* Make sure the iframe fills the container */
+  .sticky-nav iframe {
     width: 100%;
     height: 100%;
     border: none;
-}
+  }  
 
 /* ======================================== */
 /* Dark Mode Styling */
@@ -260,8 +218,7 @@ body.theme-dark {
 
 body.theme-dark .bd-toc,
 body.theme-dark .tags-box,
-body.theme-dark .sticky-variable-table,
-body.theme-dark .sticky-nav {
+body.theme-dark .sticky-variable-table {
     background-color: #1e1e1e;
     border: 1px solid #444;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
@@ -292,4 +249,3 @@ body.theme-dark .sticky-variable-table td {
 body.theme-dark .sticky-variable-table tr:hover {
     background-color: #2a2a2a;
 }
-

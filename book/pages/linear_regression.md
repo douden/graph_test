@@ -48,22 +48,3 @@ A useful way of thinking about a linear regression is that we are seeking a *lin
 <div class="sticky-nav">
     <iframe src="https://maxramgraber.github.io/MASTER/main/_static/elements/navigation.html" style="width: 100%; aspect-ratio: 2 / 1; border: none; border-radius: 8px;"></iframe>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const toggleBtn = document.createElement('div');
-    toggleBtn.className = 'sticky-toggle-btn';
-    toggleBtn.textContent = 'Toggle Navigation';
-    document.body.appendChild(toggleBtn);
-
-    const stickyNav = document.querySelector('.sticky-variable-table');
-    toggleBtn.addEventListener('click', () => {
-      stickyNav.classList.toggle('expanded');
-    });
-
-    const stickyGraphNav = document.querySelector('.sticky-nav');
-    toggleBtn.addEventListener('click', () => {
-      stickyGraphNav.classList.toggle('expanded');
-    });
-  });
-</script>
