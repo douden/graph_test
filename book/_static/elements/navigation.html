@@ -78,12 +78,13 @@
         node.radius = minRadius + (maxRadius - minRadius) * (count / maxReferences);
       });
 
+      // Load and denormalize saved node positions
       const savedNodePositions = JSON.parse(localStorage.getItem('graphNodePositions'));
       if (savedNodePositions) {
         nodes.forEach(node => {
           if (savedNodePositions[node.id]) {
-            node.fx = savedNodePositions[node.id].x;
-            node.fy = savedNodePositions[node.id].y;
+            node.fx = savedNodePositions[node.id].x * originalSize;  // Denormalize
+            node.fy = savedNodePositions[node.id].y * originalSize;  // Denormalize
           }
         });
       }
@@ -151,7 +152,7 @@
       function dragEnded(event, d) {
         if (!event.active) simulation.alphaTarget(0);
         const currentPositions = JSON.parse(localStorage.getItem('graphNodePositions')) || {};
-        currentPositions[d.id] = { x: d.x, y: d.y };
+        currentPositions[d.id] = { x: d.x / originalSize, y: d.y / originalSize };  // Normalize before saving
         localStorage.setItem('graphNodePositions', JSON.stringify(currentPositions));
         d.fx = null;
         d.fy = null;
