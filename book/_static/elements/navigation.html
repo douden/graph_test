@@ -66,17 +66,17 @@
       });
 
       const nodes = Array.from(nodesMap.values());
-      const minRadius = 10, maxRadius = 40;
-      const maxReferences = Math.max(...referenceCounts.values());
+      const minRadius = height*0.025, maxRadius = height*0.1;
+      const maxReferences = 10; //Math.max(...referenceCounts.values());
 
       nodes.forEach(node => {
         const count = referenceCounts.get(node.id) || 0;
-        node.radius = minRadius + (maxRadius - minRadius) * (count / maxReferences);
+        node.radius = minRadius + (maxRadius - minRadius) * Math.min(count / maxReferences, 1);
       });
 
       const simulation = d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => d.id).distance(50))
-        .force("charge", d3.forceManyBody().strength(-3000))
+        .force("link", d3.forceLink(links).id(d => d.id).distance(height*0.01))
+        .force("charge", d3.forceManyBody().strength(-height*5))
         .force("center", d3.forceCenter(width / 2, height / 2))
         .on("tick", ticked);
 
