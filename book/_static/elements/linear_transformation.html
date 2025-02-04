@@ -102,7 +102,7 @@
         .style("text-anchor", "left")
         .text("show originals")
         .style("font-family", "arial")
-        .style("font-size", (12*width/600).toString()+"px")
+      // .style("font-size", (12*width/600).toString()+"px")
           
       // Draw the x axis
       svg
@@ -115,7 +115,7 @@
               "translate(" + (math.mean(window_x)).toString() + "," + (height * 0.95).toString() + ")")
           .style("text-anchor", "middle")
           .text("x1")
-          .style("font-size", (10 * width / 600).toString() + "px")
+      //    .style("font-size", (10 * width / 600).toString() + "px")
 
       // Draw the y axis
       svg
@@ -130,7 +130,7 @@
               "translate(" + (width * 0.05).toString() + "," + (math.mean(window_y)).toString() + ") rotate(270)")
           .style("text-anchor", "middle")
           .text("x2")
-          .style("font-size", (10 * width / 600).toString() + "px")
+      //    .style("font-size", (10 * width / 600).toString() + "px")
 
 
 			// Draw Gaussian samples
@@ -255,8 +255,8 @@
           .style("text-anchor", "middle")
           .text("selected matrix entry")
           .style("font-family", "arial")
-          .style("font-size", (12*width/600).toString()+"px")
-          .attr("class","valslider");
+          .attr("class","valslider")
+        //  .style("font-size", (12*width/600).toString()+"px")
 
         var sliderSimple = d3
           .sliderBottom()
