@@ -7,8 +7,11 @@ parts:
     - file: pages/linear_algebra.md
       sections:
       - file: pages/linear_regression.md
-      - file: pages/matrix_multiplication.md
       - file: pages/linear_transformation.md
+      - file: pages/matrix_multiplication.md
+    - file: pages/statistics.md
+      sections:
+      - file: pages/random_variable.md
     - file: references.md
     - file: changelog.md
     - file: credits.md
