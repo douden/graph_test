@@ -2,7 +2,7 @@
 
 # Random variable
 
-**Summary.** Lorem Ipsum Dolor sit amet.
+**Summary.** A random variable is a numerical value that represents the outcome of a random phenomenon, assigning a number to each possible result in a probability space.
 
 :::{div}
 :class: tags-box
