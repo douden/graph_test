@@ -8,9 +8,10 @@
 :class: tags-box
 
 **Tags:**
-<span class="tag-pill">{doc}`Linear Algebra <linear_algebra>`</span>
 
 :::
+
+<!-- hidden-tag:linear algebra -->
 
 ## Definition
 
@@ -62,6 +63,7 @@ The element below illustrates matrix multiplication in practice. Here, we combin
 | $\cdot$ | dot product |
 ```
 
-<div class="sticky-nav">
-    <iframe src="https://maxramgraber.github.io/MASTER/main/_static/elements/navigation.html" style="width: 100%; aspect-ratio: 2 / 1; border: none; border-radius: 8px;"></iframe>
+<div id="sticky-iframe-container">
+  <button id="toggle-iframe">↔</button>
+  <iframe id="sticky-iframe" src="https://maxramgraber.github.io/MASTER/main/_static/elements/navigation.html" style="width: 100%; aspect-ratio: 2 / 1; border: none; border-radius: 8px;"></iframe>
 </div>

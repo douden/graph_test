@@ -220,6 +220,50 @@ div.bd-main {
 
 
 /* ======================================== */
+/* Pull-out iframe */
+/* ======================================== */
+
+#sticky-iframe-container {
+    position: fixed;
+    right: -90.1vw; /* Initially hidden */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 90vw;
+    height: 90vh;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: right 0.3s ease-in-out; /* Smooth animation */
+}
+
+#sticky-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#toggle-iframe {
+    position: absolute;
+    left: -3vw;  /* Slightly bigger grab area */
+    top: 50%;
+    width: 3vw;  /* Bigger for easier dragging */
+    height: 3vw;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: grab; /* Makes it clear that it’s draggable */
+    font-size: 16px;
+    transform: translateY(-50%);
+}
+
+#toggle-iframe:hover {
+    background: #0056b3;
+}
+
+
+/* ======================================== */
 /* Dark Mode Styling */
 /* ======================================== */
 

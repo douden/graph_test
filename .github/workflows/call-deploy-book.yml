@@ -40,11 +40,23 @@ jobs:
         run: |
           cp references.txt book/references.txt || true
 
+      # --- MINIMAL CHANGE: Handle tags.txt ---
+      - name: Copy tags file into book/
+        run: |
+          cp tags.txt book/tags.txt || true
+
       - name: Upload references artifact
         uses: actions/upload-artifact@v4
         with:
           name: references
           path: references.txt
+
+      # --- MINIMAL CHANGE: Upload tags artifact ---
+      - name: Upload tags artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tags
+          path: tags.txt
           
 
   call-workflow:
@@ -56,4 +68,3 @@ jobs:
       contents: read
       pages: write
       id-token: write
-
