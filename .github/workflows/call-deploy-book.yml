@@ -25,27 +25,31 @@ jobs:
       - name: Install dependencies (if needed)
         run: |
           pip install -U pip
-          # pip install any needed libs, e.g. re, etc.
-          # or none if no extra libs are required
 
       - name: List repository structure
         run: |
           ls -R
 
-      - name: Parse references
+      - name: Parse references and tags
         run: |
           python book/parse_references.py
 
-      - name: Copy references file into book/
+      - name: Copy references and tags into book/
         run: |
           cp references.txt book/references.txt || true
+          cp tags.txt book/tags.txt || true
 
       - name: Upload references artifact
         uses: actions/upload-artifact@v4
         with:
           name: references
           path: references.txt
-          
+
+      - name: Upload tags artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tags
+          path: tags.txt
 
   call-workflow:
     name: Deploy Book
@@ -56,4 +60,3 @@ jobs:
       contents: read
       pages: write
       id-token: write
-
