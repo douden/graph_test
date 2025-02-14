@@ -3,40 +3,28 @@ document.addEventListener("DOMContentLoaded", function () {
     var toggleButton = document.getElementById("toggle-iframe");
     var isOpen = false;
     var isDragging = false;
-    var wasDragged = false; // New flag to track drag events
+    var wasDragged = false;
     var startX, startRight;
 
-    // Calculate full hidden and visible positions dynamically
+    // Calculate hidden and visible positions dynamically
     function getHiddenPosition() {
-        return -1 * (window.innerWidth * 0.901); // Slightly more than 90vw
+        return -1 * (window.innerWidth * 0.901);
     }
 
     function getVisiblePosition() {
-        return -1 * (window.innerWidth * 0.025); // Fully visible position (small gap from right)
+        return -1 * (window.innerWidth * 0.025);
     }
 
-    // Set the initial position
+    // Set initial position
     container.style.right = getHiddenPosition() + "px";
 
-    // Toggle iframe visibility (only if it was a click, not a drag)
-    toggleButton.addEventListener("click", function (e) {
-        if (!wasDragged) { // Prevent toggle if dragging occurred
-            if (isOpen) {
-                container.style.right = getHiddenPosition() + "px"; // Hide
-            } else {
-                container.style.right = getVisiblePosition() + "px"; // Show
-            }
-            isOpen = !isOpen;
-        }
-        wasDragged = false; // Reset flag after action
-    });
-
-    // Restrict dragging to horizontal movement
-    container.addEventListener("mousedown", function (e) {
+    // Dragging logic attached to the button
+    toggleButton.addEventListener("mousedown", function (e) {
         isDragging = true;
         wasDragged = false; // Reset drag detection
         startX = e.clientX;
         startRight = parseInt(window.getComputedStyle(container).right, 10);
+
         document.addEventListener("mousemove", drag);
         document.addEventListener("mouseup", stopDrag);
     });
@@ -45,12 +33,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isDragging) {
             let newRight = startRight - (e.clientX - startX);
 
-            // Ensure the iframe does not move beyond hidden or fully visible position
-            if (newRight < getHiddenPosition()) newRight = getHiddenPosition(); // Fully hidden position
-            if (newRight > getVisiblePosition()) newRight = getVisiblePosition(); // Fully visible position
+            // Ensure the button cannot be dragged beyond limits
+            if (newRight < getHiddenPosition()) newRight = getHiddenPosition();
+            if (newRight > getVisiblePosition()) newRight = getVisiblePosition();
 
             container.style.right = newRight + "px";
-            wasDragged = true; // Mark as dragged to prevent click triggering
+            wasDragged = true;
         }
     }
 
@@ -60,7 +48,20 @@ document.addEventListener("DOMContentLoaded", function () {
         document.removeEventListener("mouseup", stopDrag);
     }
 
-    // Adjust positioning dynamically when window resizes
+    // Toggle visibility when clicking (but not dragging)
+    toggleButton.addEventListener("click", function () {
+        if (!wasDragged) {
+            if (isOpen) {
+                container.style.right = getHiddenPosition() + "px"; // Hide
+            } else {
+                container.style.right = getVisiblePosition() + "px"; // Show
+            }
+            isOpen = !isOpen;
+        }
+        wasDragged = false; // Reset flag after click
+    });
+
+    // Adjust positioning dynamically on window resize
     window.addEventListener("resize", function () {
         if (!isOpen) {
             container.style.right = getHiddenPosition() + "px";
