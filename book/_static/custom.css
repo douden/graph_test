@@ -225,7 +225,7 @@ div.bd-main {
 
 #sticky-iframe-container {
     position: fixed;
-    right: -76vw; /* Initially hidden */
+    right: -90.1vw; /* Initially hidden */
     top: 50%;
     transform: translateY(-50%);
     width: 90vw;
@@ -246,7 +246,7 @@ div.bd-main {
   #toggle-iframe {
     position: absolute;
     left: -2.5vw;
-    top: 5vh;
+    top: 43.75vh;
     width: 2.5vw;
     height: 2.5vw;
     background: #007bff;

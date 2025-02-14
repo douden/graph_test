@@ -5,12 +5,24 @@ document.addEventListener("DOMContentLoaded", function () {
     var isDragging = false;
     var startX, startRight;
 
+    // Calculate full hidden and visible positions dynamically
+    function getHiddenPosition() {
+        return -1 * (window.innerWidth * 0.901); // Slightly more than 90vw
+    }
+
+    function getVisiblePosition() {
+        return -1 * (window.innerWidth * 0.025); // Fully visible position (small gap from right)
+    }
+
+    // Set the initial position
+    container.style.right = getHiddenPosition() + "px";
+
     // Toggle iframe visibility
     toggleButton.addEventListener("click", function () {
         if (isOpen) {
-            container.style.right = "-310px"; // Hide
+            container.style.right = getHiddenPosition() + "px"; // Hide
         } else {
-            container.style.right = "10px"; // Show
+            container.style.right = getVisiblePosition() + "px"; // Show
         }
         isOpen = !isOpen;
     });
@@ -28,9 +40,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isDragging) {
             let newRight = startRight - (e.clientX - startX);
 
-            // Ensure the iframe does not move away from the right edge
-            if (newRight < -310) newRight = -310; // Fully hidden position
-            if (newRight > 10) newRight = 10; // Fully visible position
+            // Ensure the iframe does not move beyond hidden or fully visible position
+            if (newRight < getHiddenPosition()) newRight = getHiddenPosition(); // Fully hidden position
+            if (newRight > getVisiblePosition()) newRight = getVisiblePosition(); // Fully visible position
 
             container.style.right = newRight + "px";
         }
@@ -41,4 +53,11 @@ document.addEventListener("DOMContentLoaded", function () {
         document.removeEventListener("mousemove", drag);
         document.removeEventListener("mouseup", stopDrag);
     }
+
+    // Adjust positioning dynamically when window resizes
+    window.addEventListener("resize", function () {
+        if (!isOpen) {
+            container.style.right = getHiddenPosition() + "px";
+        }
+    });
 });
