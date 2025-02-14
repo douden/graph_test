@@ -11,6 +11,8 @@ html:
   baseurl: "https://teachbooks.io/" # Replace this with your own URL
   extra_css:
     - _static/custom.css
+  extra_js:
+    - _static/custom.js
 
 sphinx:
   config:
