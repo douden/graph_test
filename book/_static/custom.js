@@ -23,7 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
         isDragging = true;
         wasDragged = false; // Reset drag detection
         startX = e.clientX;
-        startRight = parseInt(window.getComputedStyle(container).right, 10);
+
+        // Normalize startRight value to ensure smooth dragging
+        startRight = parseFloat(container.style.right) || getHiddenPosition();
 
         document.addEventListener("mousemove", drag);
         document.addEventListener("mouseup", stopDrag);
