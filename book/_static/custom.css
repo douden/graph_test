@@ -225,11 +225,11 @@ div.bd-main {
 
 #sticky-iframe-container {
     position: fixed;
-    right: -310px; /* Initially hidden */
+    right: -76vw; /* Initially hidden */
     top: 50%;
     transform: translateY(-50%);
-    width: 300px;
-    height: 200px;
+    width: 75vw;
+    height: 37.5vw;
     transition: right 0.3s ease-in-out;
     z-index: 1000;
     background: white; /* Ensures the background is solid white */
@@ -245,10 +245,10 @@ div.bd-main {
   
   #toggle-iframe {
     position: absolute;
-    left: -30px;
+    left: -37.5vw;
     top: 10px;
-    width: 30px;
-    height: 30px;
+    width: 2.5vw;
+    height: 2.5vw;
     background: #007bff;
     color: white;
     border: none;
