@@ -34,7 +34,7 @@ jobs:
         run: |
           python book/parse_references.py
 
-      - name: Copy references and tags into book/
+      - name: Copy references and tags files into book/
         run: |
           cp references.txt book/references.txt || true
           cp tags.txt book/tags.txt || true
