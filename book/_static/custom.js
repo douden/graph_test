@@ -50,19 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.removeEventListener("mouseup", stopDrag);
     }
 
-    // Toggle visibility when clicking (but not dragging)
-    toggleButton.addEventListener("click", function () {
-        if (!wasDragged) {
-            if (isOpen) {
-                container.style.right = getHiddenPosition() + "px"; // Hide
-            } else {
-                container.style.right = getVisiblePosition() + "px"; // Show
-            }
-            isOpen = !isOpen;
-        }
-        wasDragged = false; // Reset flag after click
-    });
-
     // Adjust positioning dynamically on window resize
     window.addEventListener("resize", function () {
         if (!isOpen) {
