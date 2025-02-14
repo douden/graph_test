@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     var container = document.getElementById("sticky-iframe-container");
     var toggleButton = document.getElementById("toggle-iframe");
-    var isOpen = false;
     var isDragging = false;
-    var wasDragged = false;
     var startX, startRight;
 
     // Calculate hidden and visible positions dynamically
@@ -21,10 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Dragging logic attached to the button
     toggleButton.addEventListener("mousedown", function (e) {
         isDragging = true;
-        wasDragged = false; // Reset drag detection
         startX = e.clientX;
-
-        // Normalize startRight value to ensure smooth dragging
         startRight = parseFloat(container.style.right) || getHiddenPosition();
 
         document.addEventListener("mousemove", drag);
@@ -40,7 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (newRight > getVisiblePosition()) newRight = getVisiblePosition();
 
             container.style.right = newRight + "px";
-            wasDragged = true;
         }
     }
 
@@ -52,8 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Adjust positioning dynamically on window resize
     window.addEventListener("resize", function () {
-        if (!isOpen) {
-            container.style.right = getHiddenPosition() + "px";
-        }
+        container.style.right = getHiddenPosition() + "px";
     });
 });
