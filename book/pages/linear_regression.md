@@ -13,6 +13,8 @@
 
 :::
 
+<!-- hidden-tag:linear algebra -->
+
 ## Definition
 
 Let us assume a collection of $n=1,\dots,N$ sets of a dependent variable of interest $y_{n}$ and $D$ explanatory variables $\{\boldsymbol{x}_{n}\}_{n=1}^{N}=\{x_{n,1},x_{n,2},\dots,x_{n,D}\}_{n=1}^{N}$. A linear regression seeks a linear function that establishes a relationship between both variable types

@@ -1,13 +1,17 @@
 import os
 import re
 
-# Regex: capture the display text and the target inside {doc}`Display <target>`
+# Regex for extracting `{doc}` references
 REFERENCE_REGEX = re.compile(r"\{doc\}`([^<]+)<([^>]+)>`")
 
-print("Starting reference parsing.")
+# Regex for extracting hidden tags from HTML comments
+HIDDEN_TAG_REGEX = re.compile(r'<!--\s*hidden:([^\s]+)\s*-->')
 
-def find_references(folder_path, output_file):
+print("Starting reference and tag parsing.")
+
+def find_references_and_tags(folder_path, references_output, tags_output):
     all_refs = []
+    all_tags = []
 
     for root, dirs, files in os.walk(folder_path):
         for fname in files:
@@ -17,32 +21,50 @@ def find_references(folder_path, output_file):
                     with open(path, "r", encoding="utf-8") as f:
                         content = f.read()
                 except Exception as e:
-                    print(f"Failed to read {path}: {e}")
+                    print(f"❌ Failed to read {path}: {e}")
                     continue
 
-                # Debug info
-                print(f"Checking: {path}")
+                # Debugging
+                print(f"🔍 Checking: {path}")
+
+                # Extract references
                 matches = REFERENCE_REGEX.findall(content)
-                print(f"Matches found: {matches}")
+                print(f"📌 References found: {matches}")
 
-                # Store unique references per file
                 unique_refs = set()
-
                 for display_text, target in matches:
                     ref = (display_text.strip(), target.strip())
                     if ref not in unique_refs:
                         unique_refs.add(ref)
                         all_refs.append((fname, *ref))  # Append only if unique
 
+                # Extract hidden tags
+                tag_matches = HIDDEN_TAG_REGEX.findall(content)
+                print(f"🏷 Hidden tags found: {tag_matches}")
+
+                unique_tags = set()
+                for tag in tag_matches:
+                    tag_entry = (fname, tag.strip())
+                    if tag_entry not in unique_tags:
+                        unique_tags.add(tag_entry)
+                        all_tags.append(tag_entry)
+
     # Write references to a text file
-    with open(output_file, "w", encoding="utf-8") as out:
+    with open(references_output, "w", encoding="utf-8") as out:
         for md_file, text, target in all_refs:
             out.write(f"{md_file} -> [text: '{text}'] [target: '{target}']\n")
 
-if __name__ == "__main__":
-    print("Looking for article files...")
-    for root, dirs, files in os.walk("book/pages"):
-        for fname in files:
-            print(fname)
+    # Write tags to a separate text file
+    with open(tags_output, "w", encoding="utf-8") as out:
+        for md_file, tag in all_tags:
+            out.write(f"{md_file} -> [tag: '{tag}']\n")
 
-    find_references("book/pages", "references.txt")
+if __name__ == "__main__":
+    print("Looking for Markdown files...")
+
+    # Define folder and output filenames
+    folder_path = "book/pages"
+    references_output = "references.txt"
+    tags_output = "tags.txt"
+
+    find_references_and_tags(folder_path, references_output, tags_output)

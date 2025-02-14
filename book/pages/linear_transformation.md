@@ -13,6 +13,8 @@
 
 :::
 
+<!-- hidden-tag:linear algebra -->
+
 ## Definition
 
 A linear transformation (also: *linear map* or *linear mapping*) is a {doc}`dot product <matrix_multiplication>` between an $i \times j$ matrix $\boldsymbol{A}\in\mathbb{R}^{i \times j}$ and either a column vector $\boldsymbol{x}^{j \times 1}$ (single sample) or a matrix $\boldsymbol{x}^{j \times N}$ ($N$ samples). This matrix multiplication can implement a number of operations, including *scaling*, *rotation*, *reflection*, or *shearing*.
