@@ -32,16 +32,9 @@ div#sphinxsidebar, div.bd-sidebar {
 
 /* Move the ToC to the left and style it */
 .bd-toc {
-    position: fixed;
-    left: 2%;
-    top: 100px; /* Adjust as needed */
-    width: 200px; /* Set appropriate width */
-    padding: 10px;
-    background-color: #f8f9fa; /* Match nomenclature background */
-    border: 1px solid #ccc; /* Match nomenclature border */
-    border-radius: 8px; /* Rounded edges */
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Dropdown shadow */
-}
+    display: none !important;
+  }
+  
 
 /* Adjust content to make space for ToC */
 div.bd-main {
