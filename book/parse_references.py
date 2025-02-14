@@ -5,7 +5,7 @@ import re
 REFERENCE_REGEX = re.compile(r"\{doc\}`([^<]+)<([^>]+)>`")
 
 # Regex for extracting hidden tags from HTML comments
-HIDDEN_TAG_REGEX = re.compile(r'<!--\s*hidden:([^\s]+)\s*-->')
+HIDDEN_TAG_REGEX = re.compile(r'<!--\s*hidden-tag:\s*(.+?)\s*-->')
 
 print("Starting reference and tag parsing.")
 
