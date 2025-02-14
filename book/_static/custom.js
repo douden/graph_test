@@ -1,12 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
     var container = document.getElementById("sticky-iframe-container");
     var toggleButton = document.getElementById("toggle-iframe");
+    var iframe = document.getElementById("sticky-iframe");
     var isOpen = false;
     var isDragging = false;
     var wasDragged = false;
     var startX, startRight;
-    
-    // Get positions dynamically
+
+    // Get hidden and visible positions dynamically
     function getHiddenPosition() {
         return -1 * (window.innerWidth * 0.901);
     }
@@ -26,6 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Ensure smooth positioning calculation
         startRight = parseFloat(window.getComputedStyle(container).right) || getHiddenPosition();
+
+        // Temporarily disable iframe interactions to allow smooth dragging
+        iframe.style.pointerEvents = "none";
 
         document.addEventListener("mousemove", drag);
         document.addEventListener("mouseup", stopDrag);
@@ -49,6 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function stopDrag() {
         isDragging = false;
+        iframe.style.pointerEvents = "auto"; // Re-enable iframe interactions
+
         document.removeEventListener("mousemove", drag);
         document.removeEventListener("mouseup", stopDrag);
     }
