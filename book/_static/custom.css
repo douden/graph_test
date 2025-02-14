@@ -234,11 +234,7 @@ div.bd-main {
     background: white;
     border: 1px solid #ccc;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* Remove transition from right to improve drag responsiveness */
-#sticky-iframe-container, #sticky-iframe {
-    transition: none; 
+    transition: right 0.3s ease-in-out; /* Smooth animation */
 }
 
 #sticky-iframe {
@@ -250,9 +246,9 @@ div.bd-main {
 #toggle-iframe {
     position: absolute;
     left: -3vw;  /* Slightly bigger grab area */
-    top: 50%;  
+    top: 50%;
     width: 3vw;  /* Bigger for easier dragging */
-    height: 3vw; 
+    height: 3vw;
     background: #007bff;
     color: white;
     border: none;
@@ -266,7 +262,6 @@ div.bd-main {
     background: #0056b3;
 }
 
-  
 
 /* ======================================== */
 /* Dark Mode Styling */

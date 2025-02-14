@@ -28,8 +28,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Ensure smooth positioning calculation
         startRight = parseFloat(window.getComputedStyle(container).right) || getHiddenPosition();
 
-        // Temporarily disable iframe interactions to allow smooth dragging
-        iframe.style.pointerEvents = "none";
+        // Disable transition during drag for instant movement
+        container.style.transition = "none";
+        iframe.style.pointerEvents = "none"; // Prevent iframe from blocking drag
 
         document.addEventListener("mousemove", drag);
         document.addEventListener("mouseup", stopDrag);
@@ -57,11 +58,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.removeEventListener("mousemove", drag);
         document.removeEventListener("mouseup", stopDrag);
+
+        // Re-enable transition after dragging stops
+        requestAnimationFrame(() => {
+            container.style.transition = "right 0.3s ease-in-out";
+        });
     }
 
     // Toggle visibility when clicking (but not dragging)
     toggleButton.addEventListener("click", function () {
         if (!wasDragged) {
+            // Ensure transition is enabled for smooth sliding
+            container.style.transition = "right 0.3s ease-in-out";
+            
             isOpen = !isOpen;
             container.style.right = isOpen ? getVisiblePosition() + "px" : getHiddenPosition() + "px";
         }
