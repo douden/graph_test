@@ -1,5 +1,8 @@
 name: deploy-book
 
+# Based on:
+# https://jupyterbook.org/en/stable/publish/gh-pages.html
+
 on:
   workflow_call:
 
@@ -225,13 +228,21 @@ jobs:
           name: _buildstatus-${{ env.MATRIX_BRANCH_NAME_CLEAN }}
           path: "buildstatus.txt"
 
-      - name: Download references and tags artifacts
+      - name: Download references artifact
         uses: actions/download-artifact@v4
         with:
+          name: references
+          path: book/
+
+      # --- MINIMAL CHANGE: Download the tags artifact ---
+      - name: Download tags artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tags
           path: book/
 
       - if: always()
-        name: Copy references.txt and tags.txt to final build output
+        name: Copy references.txt to final build output
         run: |
           if [ -f book/references.txt ]; then
             cp book/references.txt book/_build/html/references.txt
@@ -240,6 +251,10 @@ jobs:
             echo "references.txt not found!"
           fi
 
+      # --- MINIMAL CHANGE: Copy tags.txt to final build output ---
+      - if: always()
+        name: Copy tags.txt to final build output
+        run: |
           if [ -f book/tags.txt ]; then
             cp book/tags.txt book/_build/html/tags.txt
             echo "tags.txt successfully copied."
@@ -411,7 +426,7 @@ jobs:
           echo "$HTML_TEMPLATE_404_REDIRECT" | envsubst | tee final/404.html
 
       - name: Upload final Pages artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-pages-artifact@v3
         with:
           path: "final/"
 
@@ -435,35 +450,35 @@ jobs:
       - deploy-books
     runs-on: ubuntu-latest
     steps:
-      - name: Summarize
-        run: |
-          echo "${{ needs.deploy-books.outputs.summary }}" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ needs.deploy-books.outputs.summary }}" == "" ]; then
-            {
-              echo "An unknown error has occurred, cannot display summary. It may be there were too many errors or warnings in the book build process."
-              echo
-              echo "- You can try building the books locally, or inspecting the workflow run logs to troubleshoot the issue."
-            } >> $GITHUB_STEP_SUMMARY
-          fi
-          isdefault() {
-            if [ "$1" == '' ]; then
-              echo '(default value used)'
-            else
-              echo ''
-            fi
-          }
+    - name: Summarize
+      run: |
+        echo "${{ needs.deploy-books.outputs.summary }}" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ needs.deploy-books.outputs.summary }}" == "" ]; then
           {
-            echo "### Repository configuration variables"
-            echo "Variables can be set at ${{ format('{0}/{1}/settings/variables/actions', github.server_url, github.repository) }}"
-            echo '```'
-            echo "PRIMARY_BRANCH=$PRIMARY_BRANCH $(isdefault ${{ vars.PRIMARY_BRANCH }})"
-            echo "BEHAVIOR_PRIMARY=$BEHAVIOR_PRIMARY $(isdefault ${{vars.BEHAVIOR_PRIMARY}})"
-            echo "BRANCH_ALIASES=$BRANCH_ALIASES $(isdefault ${{ vars.BRANCH_ALIASES }})"
-            echo "BRANCHES_TO_DEPLOY=$BRANCHES_TO_DEPLOY $(isdefault ${{ vars.BRANCHES_TO_DEPLOY }})"
-            echo "BRANCHES_TO_PREPROCESS=$BRANCHES_TO_PREPROCESS $(isdefault ${{ vars.BRANCHES_TO_PREPROCESS }})"
-            echo "BRANCHES_ARCHIVED=$BRANCHES_ARCHIVED $(isdefault ${{ vars.BRANCHES_ARCHIVED }})"
-            echo '```'
+            echo "An unknown error has occurred, cannot display summary. It may be there were too many errors or warnings in the book build process."
+            echo
+            echo "- You can try building the books locally, or inspecting the workflow run logs to troubleshoot the issue."
           } >> $GITHUB_STEP_SUMMARY
+        fi
+        isdefault() {
+          if [ "$1" == '' ]; then
+            echo '(default value used)'
+          else
+            echo ''
+          fi
+        }
+        {
+          echo "### Repository configuration variables"
+          echo "Variables can be set at ${{ format('{0}/{1}/settings/variables/actions', github.server_url, github.repository) }}"
+          echo '```'
+          echo "PRIMARY_BRANCH=$PRIMARY_BRANCH $(isdefault ${{ vars.PRIMARY_BRANCH }})"
+          echo "BEHAVIOR_PRIMARY=$BEHAVIOR_PRIMARY $(isdefault ${{vars.BEHAVIOR_PRIMARY}})"
+          echo "BRANCH_ALIASES=$BRANCH_ALIASES $(isdefault ${{ vars.BRANCH_ALIASES }})"
+          echo "BRANCHES_TO_DEPLOY=$BRANCHES_TO_DEPLOY $(isdefault ${{ vars.BRANCHES_TO_DEPLOY }})"
+          echo "BRANCHES_TO_PREPROCESS=$BRANCHES_TO_PREPROCESS $(isdefault ${{ vars.BRANCHES_TO_PREPROCESS }})"
+          echo "BRANCHES_ARCHIVED=$BRANCHES_ARCHIVED $(isdefault ${{ vars.BRANCHES_ARCHIVED }})"
+          echo '```'
+        } >> $GITHUB_STEP_SUMMARY
 
 permissions:
   contents: read
