@@ -8,7 +8,6 @@
 :class: tags-box
 
 **Tags:**
-<span class="tag-pill">{doc}`Linear Algebra <linear_algebra>`</span>
 <span class="tag-pill">{doc}`Matrix Multiplication <matrix_multiplication>`</span>
 
 :::
