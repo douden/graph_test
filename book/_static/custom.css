@@ -228,8 +228,8 @@ div.bd-main {
     right: -76vw; /* Initially hidden */
     top: 50%;
     transform: translateY(-50%);
-    width: 100vw;
-    height: 100vh;
+    width: 90vw;
+    height: 90vh;
     transition: right 0.3s ease-in-out;
     z-index: 1000;
     background: white; /* Ensures the background is solid white */
@@ -246,7 +246,7 @@ div.bd-main {
   #toggle-iframe {
     position: absolute;
     left: -2.5vw;
-    top: 50vh;
+    top: 5vh;
     width: 2.5vw;
     height: 2.5vw;
     background: #007bff;
