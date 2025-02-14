@@ -15,7 +15,7 @@
 
 ## Definition
 
-Let us assume a collection of $n=1,\dots,N$ sets of a dependent variable of interest $y_{n}$ and $D$ explanatory variables $\{\boldsymbol{x}_{n}\}_{n=1}^{N}=\{x_{n,1},x_{n,2},\dots,x_{n,D}\}_{n=1}^{N}$. A linear regression seeks a linear function that establishes a relationship between both variable types
+Let us assume a collection of $n=1,\dots,N$ sets of a dependent variable of interest $y_{n}$ and $D$ explanatory variables $\{\boldsymbol{x}_{n}\}_{n=1}^{N}=\{x_{n,1},x_{n,2},\dots,x_{n,D}\}_{n=1}^{N}$. A linear regression seeks a {doc}`linear function <linear_transformation>` that establishes a relationship between both variable types
 
 $$
 y_{n} = y_{n}^{\text{lf}} + \epsilon_{n} = \underbrace{c_{0} + c_{1}x_{n,1} + c_{2}x_{n,2} + \dots + c_{D}x_{n,D}}_{\text{linear fit }y_{n}^{\text{lf}}} + \epsilon_{n},
