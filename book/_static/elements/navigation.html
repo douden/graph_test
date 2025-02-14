@@ -17,7 +17,7 @@
     .link { stroke: #999; stroke-opacity: 0.6; stroke-width: 2px; }
     .node { cursor: pointer; stroke: #fff; stroke-width: 1.5px; }
     .label { font-size: 12px; pointer-events: none; }
-    /* Hull styling is now set dynamically, but default styles are provided: */
+    /* Hull styling is set dynamically */
     .hull {
       stroke: #999;
       stroke-width: 1px;
@@ -38,10 +38,12 @@
 
   const svg = d3.select("#graph").attr("width", width).attr("height", height);
   
-  // Create a group for hulls behind other elements.
-  const hullGroup = svg.insert("g", ":first-child").attr("class", "hullLayer");
-  // Container for links, nodes, and labels.
-  const gContainer = svg.append("g");
+  // Create a common container for both hulls and the rest of the graph.
+  const container = svg.append("g");
+  // Hulls will be rendered in this layer (behind nodes).
+  const hullGroup = container.append("g").attr("class", "hullLayer");
+  // Nodes, links, and labels will be rendered here.
+  const gContainer = container.append("g");
 
   function capitalizeWords(str) {
     return str.replace(/\b\w/g, char => char.toUpperCase());
@@ -118,16 +120,29 @@
         referenceCounts.set(sourceFile, (referenceCounts.get(sourceFile) || 0) + 1);
       }
     });
+    
+    // Add nodes from tags.txt that are not in references.txt.
+    tagMap.forEach((tag, filename) => {
+      if (!nodesMap.has(filename)) {
+        nodesMap.set(filename, { 
+          id: filename, 
+          text: extractTitle(filename), 
+          link: `https://maxramgraber.github.io/MASTER/main/pages/${filename.replace('.md', '.html')}`,
+          tag: tag 
+        });
+        referenceCounts.set(filename, 0);
+      }
+    });
 
     const nodes = Array.from(nodesMap.values());
-    // Add tag property to nodes if available.
+    // Ensure each node has its tag property if available.
     nodes.forEach(node => {
-      if (tagMap.has(node.id)) {
+      if (!node.tag && tagMap.has(node.id)) {
         node.tag = tagMap.get(node.id);
       }
     });
 
-    const minRadius = height * 0.02, maxRadius = height * 0.02;
+    const minRadius = height * 0.015, maxRadius = height * 0.015;
     const maxReferences = 10;
     nodes.forEach(node => {
       const count = referenceCounts.get(node.id) || 0;
@@ -137,7 +152,7 @@
     // Create the simulation.
     const simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links).id(d => d.id).distance(height * 0.1))
-      .force("charge", d3.forceManyBody().strength(-height / 2).distanceMax(height * 0.2))
+      .force("charge", d3.forceManyBody().strength(-height / 2).distanceMax(height * 0.25))
       .force("center", d3.forceCenter(width / 2, height / 2).strength(0.1))
       .on("tick", ticked);
 
@@ -147,7 +162,7 @@
       .append("line")
       .attr("class", "link");
 
-    // Create nodes; if a node has a tag, use the color from groupColors, else gray.
+    // Create nodes; if a node has a tag, add an extra class and use the corresponding color.
     const node = gContainer.selectAll(".node")
       .data(nodes)
       .enter()
@@ -241,10 +256,11 @@
       d.fy = null;
     }
 
+    // Apply zoom transform to the common container so that hulls, nodes, links, and labels all move together.
     svg.call(d3.zoom()
       .extent([[0, 0], [width, height]])
       .scaleExtent([0.5, 5])
-      .on("zoom", (event) => gContainer.attr("transform", event.transform))
+      .on("zoom", (event) => container.attr("transform", event.transform))
     );
   })
   .catch(err => console.error('Failed to load references or tags:', err));
