@@ -10,7 +10,7 @@
       margin: 0;
       overflow: hidden;
       font-family: Helvetica, sans-serif;
-      background: #f0f0f0;
+      background: transparent;
     }
     /* Main container */
     #my_datavisualization {
@@ -135,7 +135,7 @@
     var hgt = height*( 1 - originalScale)
     
     svg.append("line")
-    	.attr("x1", width*0.1)
+    	.attr("x1", width*0.)
       .attr("y1", hgt)
     	.attr("x2", width*0.425)
       .attr("y2", hgt)
