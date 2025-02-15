@@ -26,7 +26,7 @@ The element below illustrates an example. While each individual tree in the fore
 <div style="float: right; width: 100%; margin: 10px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
     <iframe src="https://maxramgraber.github.io/MASTER/main/_static/elements/random_variable.html" style="width: 100%; aspect-ratio: 2 / 1; border: none; border-radius: 8px;"></iframe>
     <div style="text-align: justify; padding: 5px; font-size: 14px; font-family: Arial, sans-serif; color: #555;">
-        <strong>Interactive element.</strong> Drag the grey circle on the left side to adjust the height of the tree. Observe how the random variable *tree height* and the associated height bracket in the probability distribution change.
+        <strong>Interactive element.</strong> Drag the grey circle on the left side to adjust the height of the tree. Observe how the random variable tree height and the associated height bracket in the probability distribution change.
     </div>
 </div>
 
