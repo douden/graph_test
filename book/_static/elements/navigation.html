@@ -66,7 +66,7 @@
   // Utility: Compute an expanded convex hull for a set of nodes given a margin.
   function computeExpandedHull(groupNodes, margin) {
     if (groupNodes.length < 3) return null;
-    const step = Math.PI / 6;
+    const step = Math.PI / 36;
     const expandedPoints = [];
     groupNodes.forEach(d => {
       for (let angle = 0; angle < 2 * Math.PI; angle += step) {
