@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clone & Drag-Scale SVG with Handle</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/mathjs/lib/browser/math.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Helvetica, sans-serif;
+      background: #f0f0f0;
+    }
+    /* Main container */
+    #my_datavisualization {
+      position: relative;
+    }
+    /* All SVGs are absolutely positioned */
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: none;
+    }
+    /* Draggable handle style */
+    #scale-handle {
+      position: absolute;
+      background-color: black;
+      opacity: 0.25;
+      border-radius: 50%;
+      cursor: ns-resize;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main container -->
+  <div id="my_datavisualization">
+    <!-- Main canvas SVG -->
+    <svg id="click" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <!-- The original SVG (initially hidden) -->
+  <svg id="originalSvg" width="764" height="1231" 
+       xmlns="http://www.w3.org/2000/svg" 
+       xmlns:xlink="http://www.w3.org/1999/xlink" 
+       xml:space="preserve" overflow="hidden" style="display: none;">
+    <defs>
+      <clipPath id="clip0">
+        <rect x="-83" y="549" width="764" height="1231"/>
+      </clipPath>
+      <linearGradient x1="299" y1="1195" x2="299" y2="1622" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="fill1">
+        <stop offset="0" stop-color="#62C0EF"/>
+        <stop offset="1" stop-color="#4795C1"/>
+      </linearGradient>
+      <linearGradient x1="362" y1="-0.000257509" x2="362" y2="351" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="fill2">
+        <stop offset="0" stop-color="#62C0EF"/>
+        <stop offset="1" stop-color="#4795C1"/>
+      </linearGradient>
+      <linearGradient x1="304" y1="759" x2="304" y2="1139" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="fill3">
+        <stop offset="0" stop-color="#62C0EF"/>
+        <stop offset="1" stop-color="#4795C1"/>
+      </linearGradient>
+      <linearGradient x1="293.5" y1="549" x2="293.5" y2="914" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="fill4">
+        <stop offset="0" stop-color="#62C0EF"/>
+        <stop offset="1" stop-color="#4795C1"/>
+      </linearGradient>
+    </defs>
+    <!-- Retaining the original transform on the group -->
+    <g clip-path="url(#clip0)" transform="translate(83 -549)">
+      <path d="M156.272 1759.04C185.826 1787.25 362.408 1786.21 396.184 1760.59 429.961 1734.97 375.322 1801.74 358.931 1605.31 342.54 1408.88 373.336 578.645 297.835 582.01 250.647 585.375 242.452 1395.16 218.858 1591.33 195.264 1787.51 126.717 1730.83 156.272 1759.04Z" fill="#3A80A7" fill-rule="evenodd"/>
+      <path d="M-82.9998 1622C90.2721 1565.35 518.795 1497.8 681 1579.79 495.466 1372.07 405.761 1188.16 278.428 1195.19 151.094 1202.23 97.1962 1415.96-82.9998 1622Z" fill="url(#fill1)" fill-rule="evenodd"/>
+      <path d="M0 299.662C158.288 254.877 575.822 286.18 724 351 554.51 186.775 490.322 8.86759 369.655 0.310961 248.989-8.24566 183.674 161.336 0 299.662Z" fill="url(#fill2)" fill-rule="evenodd" transform="matrix(-1 0 0 1 651 1030)"/>
+      <path d="M-3.0001 1102.42C128.477 1064.75 487.92 1084.48 611 1139 470.218 1000.87 370.409 857.512 301.066 759 239.165 853.084 149.563 986.074-3.0001 1102.42Z" fill="url(#fill3)" fill-rule="evenodd"/>
+      <path d="M76 909.834C169.374 870.255 423.59 856.716 511 914 411.018 768.869 341.192 652.508 291.945 549 247.983 647.856 184.349 787.59 76 909.834Z" fill="url(#fill4)" fill-rule="evenodd"/>
+    </g>
+  </svg>
+
+  <script>
+    // ---------------------------------------------------
+    // 1. SET UP THE MAIN CANVAS (SVG with id "click")
+    // ---------------------------------------------------
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) * 0.95;
+    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0) * 0.95;
+    const aspect = 2;
+    let width, height;
+    if (vw / aspect < vh) {
+      width = vw;
+      height = vw / aspect;
+    } else {
+      width = vh * aspect;
+      height = vh;
+    }
+    const svg = d3.select("#click")
+      .attr("width", width)
+      .attr("height", height);
+      
+    svg.append("text")
+      .attr("transform", "translate(" + (width * 0.08).toString() + "," + (height*0.05).toString() + ")")
+      .style("text-anchor", "center")
+      .text("real world: tree")
+      .style("font-size", (0.035*height).toString() + "px");
+      
+
+    // ---------------------------------------------------
+    // 2. INSERT AND ADAPT THE ORIGINAL SVG INTO THE MAIN CANVAS
+    // ---------------------------------------------------
+    const originalSVG = d3.select("#originalSvg");
+    const origWidth = +originalSVG.attr("width");
+    const origHeight = +originalSVG.attr("height");
+    originalSVG.style("display", null);
+
+    // Position the original SVG at the top-left of the canvas.
+    originalSVG.style("left", "0px").style("top", "0px");
+    svg.node().appendChild(originalSVG.node());
+
+    originalSVG
+      .attr("viewBox", `0 0 ${origWidth} ${origHeight}`)
+      .attr("preserveAspectRatio", "xMinYMid meet") // Align left instead of center
+      .attr("width", width)
+      .attr("height", height);
+
+    // Set transform-origin to bottom-left.
+    originalSVG.style("transform-origin", "0% 100%");
+
+    // Initialize its scale.
+    let originalScale = 0.75;
+    function updateTransform() {
+      const translateX = (1 - originalScale) * originalSVG.attr("width") / 8;
+      originalSVG.style("transform", `translate(${translateX}px, 0) scale(${originalScale})`);
+    }
+    updateTransform();
+    
+    var hgt = height*( 1 - originalScale)
+    
+    svg.append("line")
+    	.attr("x1", width*0.1)
+      .attr("y1", hgt)
+    	.attr("x2", width*0.425)
+      .attr("y2", hgt)
+      .style("stroke","grey")
+      .style("stroke-width",height*0.005)
+      .style("stroke-dasharray", ((height*0.02).toString()+", "+(height*0.02).toString()))  // <== This line here!!
+      .attr("id","heightline")
+      .lower()
+
+    // ---------------------------------------------------
+    // 3. ADD A DRAGGABLE HANDLE FOR SCALING
+    // ---------------------------------------------------
+    const handleRadius = 30;
+    // Append the handle to the container.
+    const handle = d3.select("#my_datavisualization")
+      .append("div")
+      .attr("id", "scale-handle")
+      .style("width", (handleRadius * 2) + "px")
+      .style("height", (handleRadius * 2) + "px")
+      .style("position", "absolute")
+      .style("z-index", "100");
+
+    // For scaling with bottom-center anchoring, the vertical center of the scaled image is:
+    function updateHandlePosition() {
+      const centerX = width * 0.13; // Keep handle horizontally centered
+      const centerY = height - (height * originalScale) *0.5;
+      handle.style("left", (centerX - handleRadius) + "px")
+            .style("top", (centerY - handleRadius) + "px");
+      
+      hgt = height*( 1 - originalScale)
+
+      d3.select("#heightline")
+        .attr("y1", hgt)
+        .attr("y2", hgt)
+        .attr("id","heightline")
+    }
+    updateHandlePosition();
+
+    // Drag behavior: update scale based on vertical drag.
+    handle.call(d3.drag()
+      .on("start", function(event) {
+        d3.select(this).attr("data-startY", event.y);
+        d3.select(this).attr("data-startScale", originalScale);
+      })
+      .on("drag", function(event) {
+        const startY = +d3.select(this).attr("data-startY");
+        const startScale = +d3.select(this).attr("data-startScale");
+        // Drag upward (smaller event.y) increases scale.
+        let newScale = startScale + (startY - event.y) / 200;
+        // Clamp the scale between 0.09 and 1 (so the scaled height never exceeds canvas height).
+        newScale = Math.max(Math.min(newScale, 0.95), 0.09);
+        originalScale = newScale;
+        updateTransform();
+        updateHandlePosition();
+        
+        d3.selectAll(".allbins")
+        	.style("opacity",0.25)
+        d3.selectAll(".bin"+getFirstDecimalDigit(newScale))
+        	.style("opacity",1)
+        	
+        
+      })
+    );
+
+
+    // ---------------------------------------------------
+    // 4. DRAW THE Y AXIS ON THE MAIN CANVAS
+    // ---------------------------------------------------
+    // Old domain: [2.25, 25]
+    var old_y_limits = [25 * 0.09, 25];  // [2.25, 25]
+    // New domain extends down to 0
+    var new_y_limits = [0, 25];
+
+    // These are the pixel positions for the old domain:
+    const window_y = [height * (1 - 0.95), height * (1 - 0.09)]; // e.g. [height*0.05, height*0.91]
+
+    // Build the original (old) scale:
+    const oldYScale = d3.scaleLinear()
+      .domain(old_y_limits)
+      .range([window_y[1], window_y[0]]);  // Note: pixel values decrease upward
+
+    // Compute the linear transformation parameters from the old scale:
+    var slope = (window_y[0] - window_y[1]) / (old_y_limits[1] - old_y_limits[0]);
+    var intercept = window_y[1] - slope * old_y_limits[0];
+    // Now extrapolate to 0:
+    var pixelAtZero = slope * 0 + intercept;
+
+    // Create the new yScale that extends from 0 to 25,
+    // while ensuring that old_y_limits[0] maps to the same pixel as before.
+    const yScale = d3.scaleLinear()
+      .domain(new_y_limits)
+      .range([pixelAtZero, window_y[0]]);
+
+    // Append the axis as before:
+    svg.append("g")
+      .attr("transform", "translate(" + (width * 0.4).toString() + ",0)")
+      .attr("id", "mainyaxis")
+      .call(d3.axisLeft(yScale).ticks(5))
+      .style("font-size", (0.035 * height).toString() + "px");
+    svg.append("text")
+      .attr("transform", "translate(" + (width * 0.35).toString() + "," + (height*0.45).toString() + ") rotate(270)")
+      .style("text-anchor", "middle")
+      .text("random variable: tree height")
+      .style("font-size", (0.035*height).toString() + "px");
+
+    // ---------------------------------------------------
+    // 5. FUNCTION TO CLONE THE ORIGINAL SVG AT SPECIFIED POSITIONS/SIZES
+    // ---------------------------------------------------
+    function cloneSVG(position, size, id, classtag) {
+      let clone = originalSVG.node().cloneNode(true);
+      clone.id = id;
+
+      let scaleFactor = size.scale / origWidth; // Maintain proportional scaling
+
+      d3.select(clone)
+        .attr("width", origWidth) // Keep original width
+        .attr("height", origHeight) // Keep original height
+        .attr("viewBox", `0 0 ${origWidth} ${origHeight}`)
+        .attr("preserveAspectRatio", "xMidYMid meet")
+        .attr("class","bin"+classtag.toString()+" allbins")
+        .style("position", "absolute") // Ensure absolute positioning
+        .style("left", "0px")
+        .style("top", "0px")
+        .style("transform", `translate(${position.x}px, ${position.y}px) scale(${scaleFactor})`)
+        .style("transform-origin", "top left"); // Ensures proper scaling behavior
+
+      svg.node().appendChild(clone);
+    }
+
+    // ---------------------------------------------------
+    // Draw the beta distribution
+    // ---------------------------------------------------
+		
+    const xScale = d3.scaleLinear()
+      .domain([0, 0.2])
+      .range([width*0.425, width*0.525]);
+    
+    const a = 3;
+    const b = 4;
+    var increments = [];
+    var probability = [];
+    var height_start = 0;
+    for (let i = 0; i < 10; i++) {
+    	increments.push([i/10,(i+1)/10]);
+      probability.push(betaCDF((i+1)/10, a, b) - betaCDF(i/10, a, b))
+      
+      height_start = height * 0.05 + (window_y[1]-window_y[0])*i/9
+      
+      svg.append("rect")
+        .attr('x', width*0.425 + height*0.005)
+        .attr('y', height_start)
+        .attr('width', xScale(probability[i]) - width*0.425)
+        .attr('height', height*0.75/10)
+        .attr('class',"bin"+(9-i).toString()+" allbins")
+      
+    }
+    
+    svg.append("g")
+      .attr("transform", "translate(0,"+(height*0.025).toString()+")")
+      .attr("id", "mainxaxis")
+      .call(d3.axisBottom(xScale).ticks(2))
+      .style("font-size", (0.035*height).toString() + "px");
+    svg.append("text")
+      .attr("transform", "translate(" + (width * 0.55).toString() + "," + (height*0.05).toString() + ")")
+      .style("text-anchor", "left")
+      .text("probability")
+      .style("font-size", (0.035*height).toString() + "px");
+
+
+    // ---------------------------------------------------
+    // 6. EXAMPLE USAGE: CLONE THE SVG MULTIPLE TIMES
+    // ---------------------------------------------------
+    //cloneSVG({ x: width * 0.5, y: 20 }, { scale: height * 0.1 }, "clone_1");
+    //cloneSVG({ x: width * 0.7, y: 50 }, { scale: height * 0.15}, "clone_2");
+    //cloneSVG({ x: width * 0.9, y: height - height * 0.3 - 20 }, { scale: height * 0.25 }, "clone_3");
+
+		var seed, scale, xpos, ypos;
+    const num_trees = 100;
+    var i = -1;
+    for (let row = 0; row < 10; row++) {
+      for (let col = 0; col < 10; col++) {
+      	i++;
+        seed = math.random();
+        scale = sampleBeta(seed, b, a);
+
+        cloneSVG(
+          { x: col/9*width*0.35 + width*0.55, y: height*0.1 + row/9*height*0.7 }, 
+          { scale: height*0.15 * math.max(scale,0.1) }, 
+          "clone_"+i.toString(),
+          getFirstDecimalDigit(scale) )
+          
+        updateTreeColors(
+        	d3.select("#clone_"+i.toString()), 
+          [lerpColor("#9af764", "#005000", math.random()), 
+            lerpColor("#9af764", "#014600", math.random())], 
+          lerpColor("#b1916e", "#7f684e", math.random()));
+          
+      }
+    }
+    
+
+
+    // ---------------------------------------------------
+    // 7. UPDATE TREE COLORS
+    // ---------------------------------------------------
+    function updateTreeColors(treeSelection, gradientStopColors, nonGradientFillColor) {
+      treeSelection.selectAll("linearGradient[id^='fill']")
+        .each(function () {
+          d3.select(this)
+            .selectAll("stop")
+            .data(gradientStopColors)
+            .attr("stop-color", d => d);
+        });
+      treeSelection.selectAll("path")
+        .filter(function () {
+          const fillAttr = d3.select(this).attr("fill") || "";
+          return !fillAttr.trim().startsWith("url(");
+        })
+        .attr("fill", nonGradientFillColor);
+    }
+    updateTreeColors(d3.select("#originalSvg"), ["#71aa34", "#028f1e"], "#b1916e");
+    //updateTreeColors(d3.select("#clone_1"), ["#AAAAAA", "#BBBBBB"], "#ff5000");
+    
+    
+    d3.selectAll(".allbins")
+      .style("opacity",0.25)
+    d3.selectAll(".bin"+getFirstDecimalDigit(0.75))
+      .style("opacity",1)
+    
+    
+    
+    
+    
+    
+
+    // Beta function using the gamma function
+    function betaFunction(a, b) {
+        return gammaFunction(a) * gammaFunction(b) / gammaFunction(a + b);
+    }
+
+    // Regularized incomplete beta function using continued fraction expansion
+    function betaIncomplete(x, a, b) {
+        if (x <= 0) return 0;
+        if (x >= 1) return 1;
+
+        return Math.exp(logGamma(a + b) - logGamma(a) - logGamma(b) + 
+                        a * Math.log(x) + b * Math.log(1 - x)) * betaContinuedFraction(x, a, b) / a;
+    }
+
+    // Beta CDF using the regularized incomplete beta function
+    function betaCDF(x, a, b) {
+        return betaIncomplete(x, a, b);
+    }
+
+    // Gamma function approximation using Lanczos approximation
+    function gammaFunction(z) {
+        const g = 7;
+        const coefficients = [
+            0.99999999999980993,
+            676.5203681218851,
+            -1259.1392167224028,
+            771.32342877765313,
+            -176.61502916214059,
+            12.507343278686905,
+            -0.13857109526572012,
+            9.9843695780195716e-6,
+            1.5056327351493116e-7
+        ];
+
+        if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gammaFunction(1 - z));
+
+        z -= 1;
+        let x = coefficients[0];
+        for (let i = 1; i < g + 2; i++) {
+            x += coefficients[i] / (z + i);
+        }
+        let t = z + g + 0.5;
+        return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
+    }
+
+    // Log-Gamma function to prevent overflow in factorial calculations
+    function logGamma(z) {
+        return Math.log(gammaFunction(z));
+    };
+
+    // Continued fraction approximation of the incomplete beta function
+    function betaContinuedFraction(x, a, b, epsilon = 1e-8, maxIterations = 100) {
+        let m2, aa, del, h;
+        let qab = a + b;
+        let qap = a + 1;
+        let qam = a - 1;
+        let c = 1;
+        let d = 1 - qab * x / qap;
+
+        if (Math.abs(d) < epsilon) d = epsilon;
+        d = 1 / d;
+        h = d;
+
+        for (let m = 1, m2 = 2; m <= maxIterations; m++, m2 += 2) {
+            let mq = m * (b - m) * x / ((qam + m2) * (a + m2));
+            d = 1 + mq * d;
+            if (Math.abs(d) < epsilon) d = epsilon;
+            c = 1 + mq / c;
+            if (Math.abs(c) < epsilon) c = epsilon;
+            d = 1 / d;
+            h *= d * c;
+
+            mq = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+            d = 1 + mq * d;
+            if (Math.abs(d) < epsilon) d = epsilon;
+            c = 1 + mq / c;
+            if (Math.abs(c) < epsilon) c = epsilon;
+            d = 1 / d;
+            del = d * c;
+            h *= del;
+
+            if (Math.abs(del - 1.0) < epsilon) break;
+        }
+
+        return h;
+    }
+
+    // Inverse Beta CDF using Newton-Raphson method
+    function inverseBetaCDF(p, a, b, tol = 1e-8, maxIter = 20) {
+        if (p <= 0) return 0;
+        if (p >= 1) return 1;
+
+        let x = a / (a + b); // Initial guess using the mean of the Beta distribution
+
+        for (let i = 0; i < maxIter; i++) {
+            let fx = betaCDF(x, a, b) - p;
+            let dfx = Math.exp((a - 1) * Math.log(x) + (b - 1) * Math.log(1 - x) + 
+                               logGamma(a + b) - logGamma(a) - logGamma(b));
+
+            let x_new = x - fx / dfx;
+            if (Math.abs(x_new - x) < tol) return x_new;
+            x = Math.min(Math.max(x_new, 0), 1); // Keep within bounds
+        }
+
+        return x;
+    }
+
+    // Function to sample from Beta distribution using inverse transform sampling
+    function sampleBeta(u, a, b) {
+        return inverseBetaCDF(u, a, b);
+    }
+
+    function getFirstDecimalDigit(num) {
+      const numStr = num.toString();
+      const decimalIndex = numStr.indexOf('.');
+      if (decimalIndex !== -1 && decimalIndex < numStr.length - 1) {
+        return parseInt(numStr.charAt(decimalIndex + 1), 10);
+      }
+      return 0; // In case there's no digit after the decimal point
+    }
+    
+    function lerpColor(a, b, amount) {
+      const ah = parseInt(a.slice(1), 16),
+            bh = parseInt(b.slice(1), 16),
+            ar = ah >> 16,
+            ag = ah >> 8 & 0xff,
+            ab = ah & 0xff,
+            br = bh >> 16,
+            bg = bh >> 8 & 0xff,
+            bb = bh & 0xff,
+            rr = ar + amount * (br - ar),
+            rg = ag + amount * (bg - ag),
+            rb = ab + amount * (bb - ab);
+
+      return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
+    }
+
+  </script>
+</body>
+</html>
