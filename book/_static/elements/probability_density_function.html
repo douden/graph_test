@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <script src="https://unpkg.com/mathjs/lib/browser/math.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>  
+      <script src="https://d3js.org/d3.v4.min.js"></script>
+      <script src="https://unpkg.com/d3-simple-slider"></script>
+      <style>
+         body{
+         margin: 0; overflow: hidden;
+         font-family: Helvetica, sans-serif;
+         }
+        #myDropdown { position: absolute; top: 0; left: 0; font-family: Helvetica, sans-serif;}
+      </style>
+   </head>
+    <!-- The dropdown select element -->
+    <select id="myDropdown" >
+      <!-- Three options for the dropdown -->
+      <option value="gaussian">Gaussian</option>
+      <option value="laplace">Laplace</option>
+      <option value="beta">Beta</option>
+    </select>
+   <!-- Create a div where the graph will take place -->
+   <div id="my_datavisualization">
+      <svg id="click" xmlns="http://www.w3.org/2000/svg">
+      </svg>
+   </div>
+   <body>
+      <script>
+         const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)*0.95
+         const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)*0.95
+           
+         const aspect 	= 2;
+         
+         if (vw/aspect < vh) {
+           // Viewport width is limiting
+           var width 	= vw;
+           var height 	= vw/aspect;
+         } else {
+           // Viewport height is limiting
+           var width 	= vh*aspect;
+           var height 	= vh;
+         }
+         
+         // Create the canvas. We will use only part of it for the main plot
+         var svg = d3.select("#click") // This selects the div
+             .attr("width", width) // This defines the canvas' width
+             .attr("height", height) // This defines the canvas' height
+             
+         // Define moments of a distribution
+         var xpos = 0;
+         var Gaussian_mean = 0 ;
+         var Gaussian_std = 1;
+         var Laplace_loc = 0;
+         var Laplace_scale = 1;
+         var Beta_a = 3;
+         var Beta_b = 2;
+             
+          // D3.js code to handle the dropdown change event
+          var selected_pdf = "gaussian";
+          d3.select("#myDropdown").on("change", function() {
+            // Get the selected value
+            var selectedValue = d3.select(this).property("value");
+            // Set the copula to the selected value
+            selected_pdf = selectedValue;
+            // Update the figure
+            selectPdf()
+          });
+          
+          // Label the slider for the correlation
+          svg.append("text")             
+            .attr("transform",
+                  "translate("+(width*0.75).toString()+","+(height*0.21).toString()+")")
+            .style("text-anchor", "middle")
+            .text("selected probability density function")
+            .style("font-family", "arial")
+            .style("font-size", (12*width/600).toString()+"px")
+
+          // Place the dropdown menu
+          document.getElementById('myDropdown').style.left = (width*0.62).toString()+"px";
+          document.getElementById('myDropdown').style.top = (height*0.25).toString()+"px";
+          document.getElementById('myDropdown').style.width = (height*0.5).toString()+"px";
+          document.getElementById('myDropdown').style.height = (height*0.075).toString()+"px";
+          document.getElementById('myDropdown').style.fontSize = (12*width/600).toString()+"px";
+             
+         function linspace(start, end, resolution) {
+             var spacing = [];
+             // Go through a for-loop
+             var i;
+             for (i = 0; i < resolution; i++) {
+                 spacing.push(start + (end - start) * i / (resolution - 1))
+             }
+             return spacing; // The function returns the linspace between p1 and p2
+         }
+         
+        // Gaussian PDF function
+        function gaussianPDF(x) {
+            const mean = Gaussian_mean;
+            const stdDev = Gaussian_std;
+            return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
+        }
+
+        // Laplace PDF function
+        function laplacePDF(x) {
+            const mean = Laplace_loc;
+            const b = Laplace_scale;
+            return (1 / (2 * b)) * Math.exp(-Math.abs(x - mean) / b);
+        }
+        
+        // Beta PDF function
+        function betaPDF(x) {
+        		const alpha = Beta_a;
+            const beta = Beta_b;
+            if (x < 0 || x > 1) return 0; // The Beta distribution is defined on [0, 1]
+            
+            const numerator = Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1);
+            const denominator = gammaFunction(alpha) * gammaFunction(beta) / gammaFunction(alpha + beta);
+            return numerator / denominator;
+        }
+         
+        // Gamma function approximation using Lanczos approximation
+        function gammaFunction(z) {
+            const g = 7;
+            const coefficients = [
+                0.99999999999980993,
+                676.5203681218851,
+                -1259.1392167224028,
+                771.32342877765313,
+                -176.61502916214059,
+                12.507343278686905,
+                -0.13857109526572012,
+                9.9843695780195716e-6,
+                1.5056327351493116e-7
+            ];
+
+            if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gammaFunction(1 - z));
+
+            z -= 1;
+            let x = coefficients[0];
+            for (let i = 1; i < g + 2; i++) {
+                x += coefficients[i] / (z + i);
+            }
+            let t = z + g + 0.5;
+            return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
+        }
+         
+         function evaluate_pdf(x) {
+         			
+             result = []
+             for (let i = 0; i < x.length; i++) {
+             	if (selected_pdf == "gaussian") {
+              	result.push(gaussianPDF(x[i]))
+              } else if (selected_pdf == "laplace") {
+              	result.push(laplacePDF(x[i]))
+              } else if (selected_pdf == "beta") {
+              	result.push(betaPDF(x[i]))
+              }
+             	
+             }
+         
+             return result
+         }
+         
+             
+         // Define a subplot for the standard normal
+         const x_limits = [-3, 3];
+         const y_limits_pdf = [0, 1 / math.sqrt(2 * math.pi) * 1.2];
+         
+         const window_x_pdf = [width * 0.1, width * 0.5];
+         const window_y_pdf = [height * 0.1, height * 0.89];
+         
+         // Get scaling functions for the x scale and the y_scale
+         const xScale_pdf = d3.scaleLinear()
+             .domain([x_limits[0], x_limits[1]])
+             .range(window_x_pdf)
+         const xScale_pdf_inverse = d3.scaleLinear()
+             .domain(window_x_pdf)
+             .range([x_limits[0], x_limits[1]])
+         const yScale_pdf = d3.scaleLinear()
+             .domain([y_limits_pdf[0], y_limits_pdf[1]])
+             .range([window_y_pdf[1], window_y_pdf[0]])
+             
+         var xAxis = d3.axisBottom(xScale_pdf).ticks(5)
+         var yAxis = d3.axisLeft(yScale_pdf)
+         
+         // Draw the x axis
+         var xaxis = svg
+             .append("g")
+             .attr("transform", "translate(0," + window_y_pdf[1].toString() + ")")
+             .call(xAxis)
+             .style("font-size", (12 * width / 600).toString() + "px")
+         svg.append("text")
+             .attr("transform",
+                 "translate(" + (math.mean(window_x_pdf)).toString() + "," + (height * 0.995).toString() + ")")
+             .style("text-anchor", "middle")
+             .text("x")
+             .style("font-size", (12 * width / 600).toString() + "px")
+         
+         // Draw the y axis
+         var yaxis = svg
+             .append("g")
+             .attr("transform", "translate(" + (window_x_pdf[0]).toString() + ",0)")
+             .attr("id", "mainxaxis")
+             .call(yAxis)
+             .style("font-size", (12 * width / 600).toString() + "px");
+         svg.append("text")
+             .attr("transform",
+                 "translate(" + (width * 0.03).toString() + "," + (math.mean(window_y_pdf)).toString() + ") rotate(270)")
+             .style("text-anchor", "middle")
+             .text("probability density")
+             .style("font-size", (12 * width / 600).toString() + "px")
+         
+         
+         // Evaluate the normal pdf
+         var x = linspace(-3, 3, 201);
+         var pdf = evaluate_pdf(x);
+         
+         svg.append("circle")
+             .attr("r", 10 * height / 600)
+             .attr("cx", xScale_pdf(0))
+             .attr("cy", yScale_pdf(evaluate_pdf([0])))
+             .attr("fill", "#666666") // "#c3e7f9"
+             .attr("stroke-width", 5 * height / 600)
+             .attr("id", "marker_pdf");
+         
+         // Get the data for the path
+         var data_pdf = [];
+         for (i = 0; i < x.length; i++) {
+             data_pdf.push({
+                 x: x[i],
+                 y: pdf[i]
+             })
+         }
+         
+         
+         var valueline_pdf = d3.svg.line()
+             .x(function(d) {
+                 return xScale_pdf(d.x);
+             })
+             .y(function(d) {
+                 return yScale_pdf(d.y);
+             });
+         
+         svg.append("path")
+             .attr("class", "line")
+             .attr("d", valueline_pdf(data_pdf))
+             .attr("fill", "none")
+             .attr("stroke-width", 3 * height / 600)
+             .attr("stroke", "#666666") //"#4794c1")
+             .attr("id", "line_pdf")
+         
+					
+             
+
+         // Shift the marker around on mouseover; restrict it to the contour
+         var movex, movey, xpos
+         
+         svg
+             .on("mousemove", function() {
+                 // Get the current mouseover coordinates
+                 movex = d3.event.x;
+                 movey = d3.event.y;
+         
+                 
+                 if (movex >= window_x_pdf[0] && movex <= window_x_pdf[1]) {
+                   xpos = xScale_pdf_inverse(movex);
+                 
+                   d3.select("#marker_pdf")
+                       .attr("cx", xScale_pdf(xpos))
+                       .attr("cy", yScale_pdf(evaluate_pdf([xpos])));
+                   
+                 } 
+         
+             });
+             
+      function updatePDF(duration = 300) {
+      
+         // Get the data for the path
+         var pdf = evaluate_pdf(x);
+         var data_pdf = [];
+         for (i = 0; i < x.length; i++) {
+             data_pdf.push({
+                 x: x[i],
+                 y: pdf[i]
+             })
+         }
+         
+         var maxval = math.max(pdf)
+         yScale_pdf.domain([0, maxval*1.2]);
+         
+         d3.select("#line_pdf")
+         		 .transition()
+             		.duration(duration)
+             		.attr("d", valueline_pdf(data_pdf))
+        
+        d3.select("#marker_pdf")
+          .transition()
+          .duration(duration)
+          .attr("cx", xScale_pdf([xpos]))
+          .attr("cy", yScale_pdf(evaluate_pdf([xpos])));
+      
+        yaxis // Adjust the selector to target your axis
+          .transition()
+          .duration(300) // Duration in milliseconds
+          .call(d3.axisLeft(yScale_pdf));
+      
+      }
+             
+             
+      selectPdf();
+      
+			// Select copula
+      function selectPdf() {
+      
+      	// Remove any pre-existing sliders
+        svg.selectAll(".pdfslider")
+          .remove()
+          
+      	if (selected_pdf == "gaussian") {
+        
+        	x = linspace(-3, 3, 201);
+          xScale_pdf.domain([-3, 3]);
+          xScale_pdf_inverse.range([-3, 3])
+          xaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisBottom(xScale_pdf).ticks(5));
+        
+          svg.append("text")             
+              .attr("transform",
+                    "translate("+(width*0.75).toString()+","+(height*0.45).toString()+")")
+              .style("text-anchor", "middle")
+              .text("mean")
+              .style("font-family", "arial")
+              .style("font-size", (12*width/600).toString()+"px")
+              .attr("class","pdfslider")
+
+          var sliderSimple = d3
+            .sliderBottom()
+            .min(-4)
+            .max(4)
+            .width(width*0.4)
+            .height(height*0.1)
+            .tickPadding(0)
+            .displayValue(false)
+            .default(Gaussian_mean)
+            .handle(
+              d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(width/5)()
+            )
+            .tickFormat(d3.format(',.0f'))
+            .fill('#666')
+            .on('onchange', val => {
+              Gaussian_mean = val;
+              updatePDF(0);
+            });
+
+          var gSimple = d3
+            .select('svg')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr('transform', 'translate('+width*0.55+','+height*0.5+')')
+            .attr("class","pdfslider");
+
+          gSimple.call(sliderSimple);
+          
+          svg.append("text")             
+              .attr("transform",
+                    "translate("+(width*0.75).toString()+","+(height*0.75).toString()+")")
+              .style("text-anchor", "middle")
+              .text("standard deviation")
+              .style("font-family", "arial")
+              .style("font-size", (12*width/600).toString()+"px")
+              .attr("class","pdfslider")
+          
+          var sliderSimple2 = d3
+            .sliderBottom()
+            .min(0.1)
+            .max(3)
+            .width(width*0.4)
+            .height(height*0.1)
+            .tickValues([0.5,1,1.5,2,2.5,3])
+            .tickPadding(0)
+            .displayValue(false)
+            .default(Gaussian_std)
+            .handle(
+              d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(width/5)()
+            )
+            .tickFormat(d3.format(',.1f'))
+            .fill('#666')
+            .on('onchange', val => {
+              Gaussian_std = val;
+              updatePDF(0);
+            });
+
+          var gSimple2 = d3
+            .select('svg')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr("id","slider_corr")
+            .attr('transform', 'translate('+width*0.55+','+height*0.8+')')
+            .attr("class","pdfslider");
+
+          gSimple2.call(sliderSimple2);
+        
+        
+				 updatePDF()
+         
+         xScale_pdf.domain([-3, 3]);
+         xScale_pdf_inverse.range([-3, 3])
+         
+         
+          xaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisBottom(xScale_pdf).ticks(5));
+            
+          yaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisLeft(yScale_pdf));
+        
+        } else if (selected_pdf == "laplace") {
+        
+        	x = linspace(-3, 3, 201);
+          xScale_pdf.domain([-3, 3]);
+          xScale_pdf_inverse.range([-3, 3])
+          xaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisBottom(xScale_pdf).ticks(5));
+        
+          svg.append("text")             
+              .attr("transform",
+                    "translate("+(width*0.75).toString()+","+(height*0.45).toString()+")")
+              .style("text-anchor", "middle")
+              .text("location")
+              .style("font-family", "arial")
+              .style("font-size", (12*width/600).toString()+"px")
+              .attr("class","pdfslider")
+
+          var sliderSimple = d3
+            .sliderBottom()
+            .min(-4)
+            .max(4)
+            .width(width*0.4)
+            .height(height*0.1)
+            .tickPadding(0)
+            .displayValue(false)
+            .default(Laplace_loc)
+            .handle(
+              d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(width/5)()
+            )
+            .tickFormat(d3.format(',.0f'))
+            .fill('#666')
+            .on('onchange', val => {
+              Laplace_loc = val;
+              updatePDF(0);
+            });
+
+          var gSimple = d3
+            .select('svg')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr('transform', 'translate('+width*0.55+','+height*0.5+')')
+            .attr("class","pdfslider");
+
+          gSimple.call(sliderSimple);
+          
+          svg.append("text")             
+              .attr("transform",
+                    "translate("+(width*0.75).toString()+","+(height*0.75).toString()+")")
+              .style("text-anchor", "middle")
+              .text("scale")
+              .style("font-family", "arial")
+              .style("font-size", (12*width/600).toString()+"px")
+              .attr("class","pdfslider")
+          
+          var sliderSimple2 = d3
+            .sliderBottom()
+            .min(0.1)
+            .max(3)
+            .width(width*0.4)
+            .height(height*0.1)
+            .tickValues([0.5,1,1.5,2,2.5,3])
+            .tickPadding(0)
+            .displayValue(false)
+            .default(Laplace_scale)
+            .handle(
+              d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(width/5)()
+            )
+            .tickFormat(d3.format(',.1f'))
+            .fill('#666')
+            .on('onchange', val => {
+              Laplace_scale = val;
+              updatePDF(0);
+            });
+
+          var gSimple2 = d3
+            .select('svg')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr("id","slider_corr")
+            .attr('transform', 'translate('+width*0.55+','+height*0.8+')')
+            .attr("class","pdfslider");
+
+          gSimple2.call(sliderSimple2);
+        
+         updatePDF()
+         
+         xScale_pdf.domain([-3, 3]);
+         xScale_pdf_inverse.range([-3, 3])
+         
+          xaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisBottom(xScale_pdf).ticks(5));
+            
+          yaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisLeft(yScale_pdf));
+  
+        } else if (selected_pdf == "beta") {
+        
+        	xpos = 0;
+        	x = linspace(0, 1, 201);
+          xScale_pdf.domain([0, 1]);
+          xScale_pdf_inverse.range([0, 1])
+          xaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisBottom(xScale_pdf).ticks(5));
+        	
+          svg.append("text")             
+              .attr("transform",
+                    "translate("+(width*0.75).toString()+","+(height*0.45).toString()+")")
+              .style("text-anchor", "middle")
+              .text("alpha")
+              .style("font-family", "arial")
+              .style("font-size", (12*width/600).toString()+"px")
+              .attr("class","pdfslider")
+
+          var sliderSimple = d3
+            .sliderBottom()
+            .min(1)
+            .max(5)
+            .width(width*0.4)
+            .height(height*0.1)
+            .tickPadding(0)
+            .tickValues([1,2,3,4,5])
+            .displayValue(false)
+            .default(Beta_a)
+            .handle(
+              d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(width/5)()
+            )
+            .tickFormat(d3.format(',.1f'))
+            .fill('#666')
+            .on('onchange', val => {
+              Beta_a = val;
+              updatePDF(0);
+            });
+
+          var gSimple = d3
+            .select('svg')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr('transform', 'translate('+width*0.55+','+height*0.5+')')
+            .attr("class","pdfslider");
+
+          gSimple.call(sliderSimple);
+          
+          svg.append("text")             
+              .attr("transform",
+                    "translate("+(width*0.75).toString()+","+(height*0.75).toString()+")")
+              .style("text-anchor", "middle")
+              .text("beta")
+              .style("font-family", "arial")
+              .style("font-size", (12*width/600).toString()+"px")
+              .attr("class","pdfslider")
+          
+          var sliderSimple2 = d3
+            .sliderBottom()
+            .min(1)
+            .max(5)
+            .width(width*0.4)
+            .height(height*0.1)
+            .tickValues([1,2,3,4,5])
+            .tickPadding(0)
+            .displayValue(false)
+            .default(Beta_b)
+            .handle(
+              d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(width/5)()
+            )
+            .tickFormat(d3.format(',.1f'))
+            .fill('#666')
+            .on('onchange', val => {
+              Beta_b = val;
+              updatePDF(0);
+            });
+
+          var gSimple2 = d3
+            .select('svg')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr("id","slider_corr")
+            .attr('transform', 'translate('+width*0.55+','+height*0.8+')')
+            .attr("class","pdfslider");
+
+          gSimple2.call(sliderSimple2);
+        
+         updatePDF();
+         
+         xScale_pdf.domain([0, 1]);
+         xScale_pdf_inverse.range([0, 1]);
+         
+          xaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisBottom(xScale_pdf).ticks(5));
+            
+          yaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisLeft(yScale_pdf));
+  
+        }
+
+
+        
+
+      }
+         
+      </script>
+   </body>
+</html>
