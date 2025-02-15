@@ -54,7 +54,7 @@
   }
 
   // Margin for hull expansion.
-  const visualMargin = maxdim*0.01;
+  const visualMargin = maxdim*0.025;
 
   // Dummy dictionary mapping tag values (in lowercase) to colors.
   const groupColors = {
@@ -143,7 +143,7 @@
       }
     });
 
-    const minRadius = maxdim * 0.015, maxRadius = maxdim * 0.015;
+    const minRadius = maxdim * 0.01, maxRadius = maxdim * 0.01;
     const maxReferences = 10;
     nodes.forEach(node => {
       const count = referenceCounts.get(node.id) || 0;
@@ -196,7 +196,7 @@
       .data(nodes)
       .enter()
       .append("text")
-      .style("font-size", (maxdim * 0.02) + "px")
+      .style("font-size", (maxdim * 0.01) + "px")
       .attr("class", "label")
       .attr("text-anchor", "middle")
       .attr("dy", d => -d.radius - 5)

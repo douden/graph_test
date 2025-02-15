@@ -224,7 +224,6 @@ div.bd-main {
     width: 90vw;
     height: 90vh;
     z-index: 1000;
-    background: white;
     border: 1px solid #ccc;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     transition: right 0.3s ease-in-out; /* Smooth animation */
@@ -255,20 +254,6 @@ div.bd-main {
     background: #0056b3;
 }
 
-/* Or, if dark mode is signaled with a data attribute: */
-body[data-theme="dark"] #sticky-iframe-container {
-    background: #1e1e1e;
-    border-color: #444;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  }
-
-@media (prefers-color-scheme: dark) {
-#sticky-iframe-container {
-    background: #1e1e1e; /* Dark background */
-    border-color: #444;  /* Darker border */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-}
-}
 
 /* ======================================== */
 /* Dark Mode Styling */
