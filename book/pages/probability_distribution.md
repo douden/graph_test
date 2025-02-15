@@ -17,7 +17,7 @@
 
 A probability distribution $P(x)$ is a function associated with a discrete random variable $x$, which assigns concrete probabilities $P(x = X)$ to unique outcomes $X$ of the random process associated with the random variable $x$. By definition, all probabilities of a random process must sum that one, that is to say $\sum_{X \in x} P(X) = 1$. Since probabilities also cannot be negative, that is to say $P(x) \geq 0$, this means that all probabilities of concrete outcomes must be between $0 \leq P(x) \leq 1$. 
 
-Continuous random variables are instead associated with a probability density function.
+Continuous random variables are instead associated with a {doc}`probability density function <probability_density_function>`.
 
 ## Intuition
 
