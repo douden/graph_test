@@ -2,7 +2,7 @@
 
 # Probability density function
 
-**Summary.** A probability density function (pdf) is a {doc}`random variable <probability_distribution>` associated with a continuous {doc}`random variable <random_variable>`. Its probability densities can be converted into probabilities by integrating over ranges of the associated random variable.
+**Summary.** A probability density function (pdf) is a {doc}`probability distribution <probability_distribution>` associated with a continuous {doc}`random variable <random_variable>`. Its probability densities can be converted into probabilities by integrating over ranges of the associated random variable.
 
 :::{div}
 :class: tags-box

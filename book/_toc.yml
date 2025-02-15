@@ -4,6 +4,7 @@ root: intro.md
 parts:
   - caption: Contents
     chapters:
+    - file: pages/Gaussian_pdf.md
     - file: pages/cumulative_distribution_function.md
     - file: pages/linear_regression.md
     - file: pages/linear_transformation.md
