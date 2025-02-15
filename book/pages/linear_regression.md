@@ -48,5 +48,5 @@ A useful way of thinking about a linear regression is that we are seeking a *lin
 
 <div id="sticky-iframe-container" background="white">
   <button id="toggle-iframe">↔</button>
-  <iframe id="sticky-iframe" src="https://maxramgraber.github.io/MASTER/main/_static/elements/navigation.html" style="width: 100%; aspect-ratio: 2 / 1; border: none; border-radius: 8px;"></iframe>
+  <iframe id="sticky-iframe" src="https://maxramgraber.github.io/MASTER/main/_static/elements/navigation.html" style="width: 100%; aspect-ratio: 2 / 1; border: none; border-radius: 8px; background: white"></iframe>
 </div>
