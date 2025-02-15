@@ -262,6 +262,14 @@ body[data-theme="dark"] #sticky-iframe-container {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   }
 
+@media (prefers-color-scheme: dark) {
+#sticky-iframe-container {
+    background: #1e1e1e; /* Dark background */
+    border-color: #444;  /* Darker border */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+}
+
 /* ======================================== */
 /* Dark Mode Styling */
 /* ======================================== */

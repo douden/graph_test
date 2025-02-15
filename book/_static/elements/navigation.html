@@ -35,6 +35,7 @@
   const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
   const width = vw;
   const height = vh;
+  const maxdim = Math.max(width, height)
 
   const svg = d3.select("#graph").attr("width", width).attr("height", height);
   
@@ -53,7 +54,7 @@
   }
 
   // Margin for hull expansion.
-  const visualMargin = 15;
+  const visualMargin = maxdim*0.01;
 
   // Dummy dictionary mapping tag values (in lowercase) to colors.
   const groupColors = {
@@ -142,7 +143,7 @@
       }
     });
 
-    const minRadius = height * 0.015, maxRadius = height * 0.015;
+    const minRadius = maxdim * 0.015, maxRadius = maxdim * 0.015;
     const maxReferences = 10;
     nodes.forEach(node => {
       const count = referenceCounts.get(node.id) || 0;
@@ -151,8 +152,8 @@
 
     // Create the simulation.
     const simulation = d3.forceSimulation(nodes)
-      .force("link", d3.forceLink(links).id(d => d.id).distance(height * 0.1))
-      .force("charge", d3.forceManyBody().strength(-height / 2).distanceMax(height * 0.25))
+      .force("link", d3.forceLink(links).id(d => d.id).distance(maxdim * 0.1))
+      .force("charge", d3.forceManyBody().strength(-maxdim / 2).distanceMax(maxdim * 0.25))
       .force("center", d3.forceCenter(width / 2, height / 2).strength(0.1))
       .on("tick", ticked);
 
@@ -195,7 +196,7 @@
       .data(nodes)
       .enter()
       .append("text")
-      .style("font-size", (height * 0.02) + "px")
+      .style("font-size", (maxdim * 0.02) + "px")
       .attr("class", "label")
       .attr("text-anchor", "middle")
       .attr("dy", d => -d.radius - 5)
