@@ -19,7 +19,7 @@ A random variable is a function that assigns a numerical value to each outcome i
 
 ## Intuition
 
-In simpler terms, a random variable is simply a mathematical object that assigns numbers to conceptual things. These things are usually the outcomes of random processes, such as *upward-facing side of six-sided die has six eyes* → 6 or *height of a random tree in this forest* → 19.46 meters. The numbers obtained through this random variable can then act as input to a probability distribution, which returns a probability or probability density associated with this specific outcome. 
+In simpler terms, a random variable is simply a mathematical object that assigns numbers to conceptual things. These things are usually the outcomes of random processes, such as *roll a six-sided die* or *pick a random tree in this forest and measure its height*. A random variable then systematically assigns numbers to specific outcomes, such as *upward-facing side has six eyes* → 6 or *height of this specific tree* → 19.46 meters. The numbers obtained through this random variable can then act as input to a probability distribution, which returns a probability or probability density associated with this specific outcome. 
 
 The element below illustrates an example. While each individual tree in the forest may have a concrete height, picking one at random repeatedly will yield different heights at different frequencies. A random variable *tree height* assigns to each individual tree receives a concrete number corresponding to its height, and plugging this number into the associated probability distribution informs us how common this height is in the whole forest.
 
@@ -29,17 +29,6 @@ The element below illustrates an example. While each individual tree in the fore
         <strong>Interactive element.</strong> Drag the grey circle on the left side to adjust the height of the tree. Observe how the random variable *tree height* and the associated height bracket in the probability distribution change.
     </div>
 </div>
-
-```{div} sticky-variable-table
-### Nomenclature
-| Variable  | Description  |
-|-------|--------|
-| $\boldsymbol{A}, \boldsymbol{B}, \boldsymbol{C}$ | matrices or vectors |
-| $a, b, c$ | array entries |
-| $i, j, k$ | array dimensions |
-| $i \times j$ | $i$-by-$j$ (matrix dimensions) |
-| $\cdot$ | dot product |
-```
 
 <div id="sticky-iframe-container" background="white">
   <button id="toggle-iframe">↔</button>
