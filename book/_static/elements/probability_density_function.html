@@ -19,6 +19,8 @@
       <option value="gaussian">Gaussian</option>
       <option value="laplace">Laplace</option>
       <option value="beta">Beta</option>
+      <option value="exponential">Exponential</option>
+      <option value="uniform">Uniform</option>
     </select>
    <!-- Create a div where the graph will take place -->
    <div id="my_datavisualization">
@@ -55,6 +57,9 @@
          var Laplace_scale = 1;
          var Beta_a = 3;
          var Beta_b = 2;
+         var Exponential_rate_parameter = 1;
+         var Uniform_a = 0;
+         var Uniform_b = 1;
              
           // D3.js code to handle the dropdown change event
           var selected_pdf = "gaussian";
@@ -91,6 +96,27 @@
                  spacing.push(start + (end - start) * i / (resolution - 1))
              }
              return spacing; // The function returns the linspace between p1 and p2
+         }
+         
+         function evaluate_pdf(x) {
+         			
+             result = []
+             for (let i = 0; i < x.length; i++) {
+             	if (selected_pdf == "gaussian") {
+              	result.push(gaussianPDF(x[i]))
+              } else if (selected_pdf == "laplace") {
+              	result.push(laplacePDF(x[i]))
+              } else if (selected_pdf == "beta") {
+              	result.push(betaPDF(x[i]))
+              } else if (selected_pdf == "exponential") {
+              	result.push(exponentialPDF(x[i]))
+              } else if (selected_pdf == "uniform") {
+              	result.push(uniformPDF(x[i]))
+              }
+             	
+             }
+         
+             return result
          }
          
         // Gaussian PDF function
@@ -144,22 +170,14 @@
             return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
         }
          
-         function evaluate_pdf(x) {
-         			
-             result = []
-             for (let i = 0; i < x.length; i++) {
-             	if (selected_pdf == "gaussian") {
-              	result.push(gaussianPDF(x[i]))
-              } else if (selected_pdf == "laplace") {
-              	result.push(laplacePDF(x[i]))
-              } else if (selected_pdf == "beta") {
-              	result.push(betaPDF(x[i]))
-              }
-             	
-             }
+          function exponentialPDF(x) {
+              return x < 0 ? 0 : Exponential_rate_parameter * Math.exp(-Exponential_rate_parameter * x);
+          }
          
-             return result
-         }
+          function uniformPDF(x, a, b) {
+              return (x >= Uniform_a && x <= Uniform_b) ? 1 / (Uniform_b - Uniform_a) : 0;
+          }
+         
          
              
          // Define a subplot for the standard normal
@@ -642,6 +660,199 @@
          
          xScale_pdf.domain([0, 1]);
          xScale_pdf_inverse.range([0, 1]);
+         
+          xaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisBottom(xScale_pdf).ticks(5));
+            
+          yaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisLeft(yScale_pdf));
+  
+        } else if (selected_pdf == "exponential") {
+        
+        	xpos = 1;
+        	x = linspace(0.05, 5, 201);
+          xScale_pdf.domain([0, 5]);
+          xScale_pdf_inverse.range([0, 5])
+          xaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisBottom(xScale_pdf).ticks(5));
+        	
+          svg.append("text")             
+              .attr("transform",
+                    "translate("+(width*0.75).toString()+","+(height*0.45).toString()+")")
+              .style("text-anchor", "middle")
+              .text("rate parameter")
+              .style("font-family", "arial")
+              .style("font-size", (12*width/600).toString()+"px")
+              .attr("class","pdfslider")
+
+          var sliderSimple = d3
+            .sliderBottom()
+            .min(0)
+            .max(5)
+            .width(width*0.4)
+            .height(height*0.1)
+            .tickPadding(0)
+            .tickValues([0,1,2,3,4,5])
+            .displayValue(false)
+            .default(Exponential_rate_parameter)
+            .handle(
+              d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(width/5)()
+            )
+            .tickFormat(d3.format(',.1f'))
+            .fill('#666')
+            .on('onchange', val => {
+              Exponential_rate_parameter = val;
+              updatePDF(0);
+            });
+
+          var gSimple = d3
+            .select('svg')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr('transform', 'translate('+width*0.55+','+height*0.5+')')
+            .attr("class","pdfslider");
+
+          gSimple.call(sliderSimple);
+        
+         updatePDF();
+
+         xScale_pdf.domain([0, 5]);
+         xScale_pdf_inverse.range([0, 5]);
+         
+          xaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisBottom(xScale_pdf).ticks(5));
+            
+          yaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisLeft(yScale_pdf));
+  
+        } else if (selected_pdf == "uniform") {
+        
+        	x = linspace(-3, 3, 201);
+          xScale_pdf.domain([-3, 3]);
+          xScale_pdf_inverse.range([-3, 3])
+          xaxis // Adjust the selector to target your axis
+            .transition()
+            .duration(300) // Duration in milliseconds
+            .call(d3.axisBottom(xScale_pdf).ticks(5));
+        	
+          svg.append("text")             
+              .attr("transform",
+                    "translate("+(width*0.75).toString()+","+(height*0.45).toString()+")")
+              .style("text-anchor", "middle")
+              .text("alpha")
+              .style("font-family", "arial")
+              .style("font-size", (12*width/600).toString()+"px")
+              .attr("class","pdfslider")
+
+          var sliderSimple = d3
+            .sliderBottom()
+            .min(-3)
+            .max(3)
+            .width(width*0.4)
+            .height(height*0.1)
+            .tickPadding(0)
+            .tickValues([-3,-2,-1,0,1,2,3])
+            .displayValue(false)
+            .default(Uniform_a)
+            .handle(
+              d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(width/5)()
+            )
+            .tickFormat(d3.format(',.1f'))
+            .fill('#666')
+            .on('onchange', val => {
+            	if (Uniform_a > Uniform_b) {
+              	Uniform_b = Uniform_a + 0.3;
+                sliderSimple2.value(Uniform_b)
+                gSimple2.call(sliderSimple2)
+              } else {
+              	Uniform_a = val;
+              }
+              updatePDF(0);
+            });
+
+          var gSimple = d3
+            .select('svg')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr('transform', 'translate('+width*0.55+','+height*0.5+')')
+            .attr("class","pdfslider");
+
+          gSimple.call(sliderSimple);
+          
+          svg.append("text")             
+              .attr("transform",
+                    "translate("+(width*0.75).toString()+","+(height*0.75).toString()+")")
+              .style("text-anchor", "middle")
+              .text("beta")
+              .style("font-family", "arial")
+              .style("font-size", (12*width/600).toString()+"px")
+              .attr("class","pdfslider")
+          
+          var sliderSimple2 = d3
+            .sliderBottom()
+            .min(-3)
+            .max(3)
+            .width(width*0.4)
+            .height(height*0.1)
+            .tickValues([-3,-2,-1,0,1,2,3])
+            .tickPadding(0)
+            .displayValue(false)
+            .default(Uniform_b)
+            .handle(
+              d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(width/5)()
+            )
+            .tickFormat(d3.format(',.1f'))
+            .fill('#666')
+            .on('onchange', val => {
+            	if (Uniform_b < Uniform_a) {
+              	Uniform_a = Uniform_b - 0.3;
+                sliderSimple.value(Uniform_a)
+                gSimple.call(sliderSimple)
+              } else {
+              	Uniform_b = val;
+              }
+              updatePDF(0);
+            });
+
+          var gSimple2 = d3
+            .select('svg')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr("id","slider_corr")
+            .attr('transform', 'translate('+width*0.55+','+height*0.8+')')
+            .attr("class","pdfslider");
+
+          gSimple2.call(sliderSimple2);
+        
+         updatePDF();
+         
+         xScale_pdf.domain([-3, 3]);
+         xScale_pdf_inverse.range([-3, 3]);
          
           xaxis // Adjust the selector to target your axis
             .transition()
