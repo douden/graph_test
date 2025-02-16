@@ -15,11 +15,11 @@
 
 ## Definition
 
-A probability density function (pdf) $p(x)$ is a function associated with a continuous random variable $x$, which assigns concrete probability densities $P(x = X)$ to unique outcomes $X$ of the random process associated with the random variable $x$. By definition, all probabilities of a random process must integrate to one, that is to say $\int_{_\infty}^{\infty} p(X) = 1$. Probability densities cannot be negative: $p(x) \geq 0$.
+A probability density function (pdf) $p(x)$ is a function associated with a continuous random variable $x$, which assigns concrete probability densities $P(x = X)$ to unique outcomes $X$ of the random process associated with the random variable $x$. By definition, all probabilities of a random process must integrate to one, that is to say $\int_{-\infty}^{\infty} p(X) = 1$. Probability densities cannot be negative: $p(x) \geq 0$.
 
 ## Intuition
 
-The element below illustrates a range of different pdfs. Observe that not all pdfs have the same support (*support*: range of input values which yield non-zero output). For instance, pdfs like the Gaussian pdf or the Laplace pdf have infinite support $p(\-infty < x < \infty) > 0$, whereas the beta pdf is only defined between zero and one.
+The element below illustrates a range of different pdfs. Observe that not all pdfs have the same support (*support*: range of input values which yield non-zero output). For instance, pdfs like the Gaussian pdf or the Laplace pdf have infinite support $p(-\infty < x < \infty) > 0$, whereas the beta pdf is only defined between zero and one.
 
 <div style="float: right; width: 100%; margin: 10px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
     <iframe src="https://maxramgraber.github.io/MASTER/main/_static/elements/probability_density_function.html" style="width: 100%; aspect-ratio: 2 / 1; border: none; border-radius: 8px;"></iframe>
