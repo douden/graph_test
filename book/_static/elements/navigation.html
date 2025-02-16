@@ -189,7 +189,7 @@
         .on("drag", dragged)
         .on("end", dragEnded))
       .on("click", (event, d) => {
-        if (d.link) window.open(d.link, "_blank");
+        if (d.link) window.open(d.link, "_top");
       });
 
     const label = gContainer.selectAll(".label")
