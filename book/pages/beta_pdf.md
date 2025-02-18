@@ -2,7 +2,7 @@
 
 # Beta pfd
 
-**Summary.** A beta pdf is a common type of {doc}`probability density function <probability_density_function>` defined over the unit interval $0 \leq x \leq 1$.
+**Summary.** A beta pdf is a bounded {doc}`probability density function <probability_density_function>` defined over the unit interval $0 \leq x \leq 1$.
 
 :::{div}
 :class: tags-box
