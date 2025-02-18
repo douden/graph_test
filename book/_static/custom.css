@@ -211,105 +211,61 @@ div.bd-main {
     }
 }
 
-/* ======================================== */
-/* Pull-out iframe container & iframe */
-/* ======================================== */
-
+/* -------------------------------------------- */
+/* The pull-out iframe container (the panel)    */
+/* -------------------------------------------- */
 #sticky-iframe-container {
     position: fixed;
-    right: -90.1vw; /* initially hidden off-screen */
+    /* Example: anchor the panel to the right side, initially offscreen */
+    right: -80vw;  /* so it’s “pulled out” from the right. Adjust as needed. */
     top: 50%;
     transform: translateY(-50%);
-    width: 90vw;
+    
+    width: 80vw;
     height: 90vh;
-    z-index: 1000;
     border: 1px solid #ccc;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: right 0.3s ease-in-out; /* for the pull-in/out animation */
-    overflow: hidden; /* contain the iframe and handle */
+    transition: right 0.3s ease-in-out; /* so we can animate open/close */
+    
+    z-index: 1000;      /* The panel is on top of many things */
+    overflow: hidden;   /* So child elements that stick inside are hidden/obscured */
   }
   
+  /* The iframe itself fills the container */
   #sticky-iframe {
     width: 100%;
     height: 100%;
     border: none;
   }
   
-  /* ======================================== */
-  /* The toggle handle as a vertical half-circle */
-  /* ======================================== */
-  
+  /* -------------------------------------------- */
+  /* The circular handle on the panel's left edge */
+  /* -------------------------------------------- */
   #toggle-iframe {
     position: absolute;
     top: 50%;
-    right: 0;
+    /* We place the handle partly outside the container’s left boundary. 
+       If the container's left edge is x=0 inside the container, then
+       left: -12px puts 12px of the button outside the container. 
+       So the right edge of the button is behind the panel. */
+    left: -12px;        
     transform: translateY(-50%);
-    /* We’ll make it 50px wide, 100px tall, half-circle shape on the left side */
-    width: 50px;
-    height: 100px;
-  
-    /* A half-circle shape: the left corners are curved, the right corners remain 0 */
-    border-radius: 25px 0 0 25px;
-    background-color: #ccc;  /* grey handle */
+    
+    width: 60px;
+    height: 60px;
+    
+    background-color: #ccc;
+    border-radius: 50%;   /* Perfect circle */
     border: none;
     cursor: pointer;
-    padding: 0;
   
-    /* So the arrow icons remain within the half-circle shape: */
-    display: flex;
-    justify-content: center; /* horizontally center the arrows */
-    align-items: center;     /* vertically center the arrows */
-    overflow: hidden;        /* ensure nothing spills outside the shape */
+    /* Lower z-index than the container => where the circle overlaps
+       the container’s bounding box, it is "behind" the container. */
+    z-index: 999;
   }
   
-  /* You can hover/active states too */
+  /* Optional hover effect */
   #toggle-iframe:hover {
-    background-color: #bbb;
-  }
-  
-  /* ======================================== */
-  /* Arrow sequence animations */
-  /* ======================================== */
-  
-  .arrow-sequence {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  
-  /*
-     We have 3 arrows (<span class="arrow">), each
-     will “flash” in sequence. We'll give them a shared
-     animation but stagger their start times via delay.
-  */
-  .arrow {
-    font-size: 1.2rem;
-    color: #555; /* darker grey */
-    opacity: 0.2; /* default dimmed */
-    animation: arrowFlash 1.2s infinite;
-  }
-  
-  /* Stagger them: the nth-child in the arrow-sequence gets a delay */
-  .arrow:nth-child(1) {
-    animation-delay: 0s;
-  }
-  .arrow:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  .arrow:nth-child(3) {
-    animation-delay: 0.4s;
-  }
-  
-  /* Keyframe to flash from dim (0.2) to bright (1) and back. */
-  @keyframes arrowFlash {
-    0% {
-      opacity: 0.2;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0.2;
-    }
+    background-color: #999;
   }
   
