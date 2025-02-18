@@ -212,44 +212,104 @@ div.bd-main {
 }
 
 /* ======================================== */
-/* Pull-out iframe */
+/* Pull-out iframe container & iframe */
 /* ======================================== */
 
 #sticky-iframe-container {
     position: fixed;
-    right: -90.1vw; /* Initially hidden */
+    right: -90.1vw; /* initially hidden off-screen */
     top: 50%;
     transform: translateY(-50%);
     width: 90vw;
     height: 90vh;
     z-index: 1000;
     border: 1px solid #ccc;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: right 0.3s ease-in-out; /* Smooth animation */
-}
-
-#sticky-iframe {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: right 0.3s ease-in-out; /* for the pull-in/out animation */
+    overflow: hidden; /* contain the iframe and handle */
+  }
+  
+  #sticky-iframe {
     width: 100%;
     height: 100%;
     border: none;
-}
-
-#toggle-iframe {
+  }
+  
+  /* ======================================== */
+  /* The toggle handle as a vertical half-circle */
+  /* ======================================== */
+  
+  #toggle-iframe {
     position: absolute;
-    left: -3vw;  /* Slightly bigger grab area */
     top: 50%;
-    width: 3vw;  /* Bigger for easier dragging */
-    height: 3vw;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: grab; /* Makes it clear that it’s draggable */
-    font-size: 16px;
+    right: 0;
     transform: translateY(-50%);
-}
-
-#toggle-iframe:hover {
-    background: #0056b3;
-}
-
+    /* We’ll make it 50px wide, 100px tall, half-circle shape on the left side */
+    width: 50px;
+    height: 100px;
+  
+    /* A half-circle shape: the left corners are curved, the right corners remain 0 */
+    border-radius: 25px 0 0 25px;
+    background-color: #ccc;  /* grey handle */
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  
+    /* So the arrow icons remain within the half-circle shape: */
+    display: flex;
+    justify-content: center; /* horizontally center the arrows */
+    align-items: center;     /* vertically center the arrows */
+    overflow: hidden;        /* ensure nothing spills outside the shape */
+  }
+  
+  /* You can hover/active states too */
+  #toggle-iframe:hover {
+    background-color: #bbb;
+  }
+  
+  /* ======================================== */
+  /* Arrow sequence animations */
+  /* ======================================== */
+  
+  .arrow-sequence {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  /*
+     We have 3 arrows (<span class="arrow">), each
+     will “flash” in sequence. We'll give them a shared
+     animation but stagger their start times via delay.
+  */
+  .arrow {
+    font-size: 1.2rem;
+    color: #555; /* darker grey */
+    opacity: 0.2; /* default dimmed */
+    animation: arrowFlash 1.2s infinite;
+  }
+  
+  /* Stagger them: the nth-child in the arrow-sequence gets a delay */
+  .arrow:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .arrow:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .arrow:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  /* Keyframe to flash from dim (0.2) to bright (1) and back. */
+  @keyframes arrowFlash {
+    0% {
+      opacity: 0.2;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.2;
+    }
+  }
+  
