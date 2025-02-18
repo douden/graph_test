@@ -31,7 +31,6 @@ The element below illustrates an example. While each individual tree in the fore
 </div>
 
 <div id="sticky-iframe-container" background="white">
+  <button id="toggle-iframe">↔</button>
   <iframe id="sticky-iframe" src="https://maxramgraber.github.io/MASTER/main/_static/elements/navigation.html" style="width: 100%; aspect-ratio: 2 / 1; border: none; border-radius: 8px; background: white"></iframe>
-  <!-- The circular handle on the left side -->
-  <button id="toggle-iframe" type="button"></button>
 </div>
