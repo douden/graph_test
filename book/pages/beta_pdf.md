@@ -7,7 +7,7 @@
 :::{div}
 :class: tags-box
 
-**Tags:** {doc}`probability density function <probability_density_function>`
+**Tags:** <span class="tag-pill">{doc}`probability density function <probability_density_function>`</span> 
 
 :::
 
@@ -15,7 +15,7 @@
 
 ## Definition
 
-A beta `probability density function <probability_density_function>` is defined as
+A beta {doc}`probability density function <probability_density_function>` is defined as
 
 $$
 p(x) = \frac{x^{\alpha - 1} (1 - x)^{\beta - 1}}{B(\alpha, \beta)}, \quad 0 < x < 1,
