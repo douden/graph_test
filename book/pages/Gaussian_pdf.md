@@ -7,7 +7,7 @@
 :::{div}
 :class: tags-box
 
-**Tags:**
+**Tags:** {doc}`probability density function <probability_density_function>` {doc}`linear transformation <linear_transformation>`
 
 :::
 

@@ -7,7 +7,7 @@
 :::{div}
 :class: tags-box
 
-**Tags:**
+**Tags:** {doc}`linear transformation <linear_transformation>`
 
 :::
 

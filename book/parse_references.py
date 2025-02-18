@@ -27,21 +27,34 @@ def find_references_and_tags(folder_path, references_output, tags_output):
                 # Debugging
                 print(f"🔍 Checking: {path}")
 
-                # Extract references
-                matches = REFERENCE_REGEX.findall(content)
-                print(f"📌 References found: {matches}")
-
                 unique_refs = set()
-                for display_text, target in matches:
-                    ref = (display_text.strip(), target.strip())
-                    if ref not in unique_refs:
-                        unique_refs.add(ref)
-                        all_refs.append((fname, *ref))  # Append only if unique
+                
+                # New functionality: Extract references only within tags-box div blocks.
+                # A tags-box block starts with ":::{div}" and ends with ":::"
+                # and should contain ":class: tags-box" somewhere in the block.
+                tags_box_blocks = re.findall(r":::{div}(.*?):::", content, re.DOTALL)
+                for block in tags_box_blocks:
+                    if ":class: tags-box" in block:
+                        block_refs = REFERENCE_REGEX.findall(block)
+                        print(f"📌 Tags-box references found: {block_refs}")
+                        for display_text, target in block_refs:
+                            ref = (display_text.strip(), target.strip())
+                            if ref not in unique_refs:
+                                unique_refs.add(ref)
+                                all_refs.append((fname, *ref))
+
+                # Old functionality: Extract references from entire file content
+                # matches = REFERENCE_REGEX.findall(content)
+                # print(f"📌 References found: {matches}")
+                # for display_text, target in matches:
+                #     ref = (display_text.strip(), target.strip())
+                #     if ref not in unique_refs:
+                #         unique_refs.add(ref)
+                #         all_refs.append((fname, *ref))
 
                 # Extract hidden tags
                 tag_matches = HIDDEN_TAG_REGEX.findall(content)
                 print(f"🏷 Hidden tags found: {tag_matches}")
-
                 unique_tags = set()
                 for tag in tag_matches:
                     tag_entry = (fname, tag.strip())

@@ -7,7 +7,7 @@
 :::{div}
 :class: tags-box
 
-**Tags:**
+**Tags:** {doc}`probability distribution <probability_distribution>` {doc}`random variable <random_variable>`
 
 :::
 

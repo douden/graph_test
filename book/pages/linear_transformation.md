@@ -7,8 +7,7 @@
 :::{div}
 :class: tags-box
 
-**Tags:**
-<span class="tag-pill">{doc}`Matrix Multiplication <matrix_multiplication>`</span>
+**Tags:** <span class="tag-pill">{doc}`matrix multiplication <matrix_multiplication>`</span> 
 
 :::
 

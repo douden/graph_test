@@ -7,7 +7,7 @@
 :::{div}
 :class: tags-box
 
-**Tags:**
+**Tags:** {doc}`probability distribution <probability_distribution>` {doc}`probability density function <probability_density_function>`
 
 :::
 
