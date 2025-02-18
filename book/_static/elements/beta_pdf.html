@@ -284,7 +284,7 @@
           .displayValue(false)
           .default(Beta_a)
           .handle(d3.symbol().type(d3.symbolCircle).size(width / 5)())
-          .tickFormat(d3.format(',.1f'))
+          .tickFormat(d3.format(',.0f'))
           .fill('#666')
           .on('onchange', val => {
             Beta_a = val;
@@ -319,7 +319,7 @@
           .displayValue(false)
           .default(Beta_b)
           .handle(d3.symbol().type(d3.symbolCircle).size(width / 5)())
-          .tickFormat(d3.format(',.1f'))
+          .tickFormat(d3.format(',.0f'))
           .fill('#666')
           .on('onchange', val => {
             Beta_b = val;
