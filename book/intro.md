@@ -1,5 +1,5 @@
 (intro)=
-# Welcome to the Mathematics And Statistics Textbook for Education and Research
+# Welcome to the interactive MASTER
 
 This book provides a vertical slice of the **M**athematics **A**nd **S**tatistics **T**extbook for **E**ducation and **R**esearch (MASTER) at TU Delft. Click on the element below to navigate to one of its content articles.
 
