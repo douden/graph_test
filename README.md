@@ -1,4 +1,4 @@
-# Your first TeachBook using the GitHub template
+Duh # Your first TeachBook using the GitHub template
 
 [![call-deploy-book](https://github.com/TeachBooks/template/actions/workflows/call-deploy-book.yml/badge.svg)](https://github.com/TeachBooks/template/actions/workflows/call-deploy-book.yml)
 
