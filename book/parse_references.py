@@ -76,7 +76,7 @@ if __name__ == "__main__":
     print("Looking for Markdown files...")
 
     # Define folder and output filenames
-    folder_path = "book/pages"
+    folder_path = "book"
     references_output = "references.txt"
     tags_output = "tags.txt"
 
